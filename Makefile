@@ -20,13 +20,13 @@ CFLAGS = -Wall -Wextra -Werror -O3 -I./includes -L./libft -lft -L./MLX42 -lmlx42
 
 dev: CFLAGS += -fsanitize=address,leak,undefined -g3
 
-all: $(NAME)
-
 dev: re
 	@echo "$(RED)Cleaning object files for dev mode...$(RESET)"
 	@rm -f $(OBJS)
 	@echo "$(GREEN)Object files cleaned!$(RESET)"
 	@echo "$(RED)Development mode enabled!$(RESET)"
+
+all: $(NAME)
 
 $(NAME): $(OBJS) $(MLX_LIB) $(LIBFT)
 	@echo "$(BLUE)Compiling $(NAME)...$(RESET)"
@@ -36,7 +36,7 @@ $(NAME): $(OBJS) $(MLX_LIB) $(LIBFT)
 $(LIBFT):
 	@if [ ! -d "$(LIBFT_DIR)" ]; then echo "$(BLUE)Cloning libft...$(RESET)" && git clone https://github.com/LeoFalkins/Libft.git $(LIBFT_DIR) && echo "$(GREEN)Libft cloned successfully!$(RESET)"; fi
 	@echo "$(BLUE)Compiling libft...$(RESET)"
-	@make -C libft > /dev/null
+	@make -C libft bonus > /dev/null
 	@echo "$(GREEN)Libft compiled successfully!$(RESET)"
 
 $(MLX_LIB):

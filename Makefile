@@ -7,12 +7,12 @@ YELLOW	:= \033[1;33m
 RESET 	:= \033[0m
 
 NAME    := cub3d
-CFLAGS  := -Wall -Wextra -Werror -Ofast
+CFLAGS  := -Wall -Wextra -Werror -Ofast -g3 -fsanitize=address,undefined,leak -D_REENTRANT
 LIBMLX  := MLX42
 LIBFT   := libft
 
 HEADERS := -I./includes -I $(LIBMLX)/include
-LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm -fsanitize=address,undefined,leak
 
 SRCS    := srcs/main.c srcs/init.c
 OBJS    := $(SRCS:.c=.o)

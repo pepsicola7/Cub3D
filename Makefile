@@ -52,6 +52,7 @@ clean:
 	@echo "$(CYAN)Cleaning object files...$(RESET)"
 	@rm -rf $(OBJS)
 	@rm -rf $(LIBMLX)/build
+	@echo "$(GREEN)Object files cleaned successfully!$(RESET)"
 
 fclean: clean
 	@echo "$(CYAN)Cleaning libft...$(RESET)"

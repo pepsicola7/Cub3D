@@ -9,6 +9,9 @@
 # include <string.h>
 # include <unistd.h>
 
+# define WIN_HEIGHT 1080
+# define WIN_WIDTH 1920
+
 typedef struct s_vec2
 {
 	double			x;
@@ -17,13 +20,8 @@ typedef struct s_vec2
 
 typedef struct s_mlx
 {
-	void			*mlx;
-	void			*win;
-	void			*img;
-	char			*addr;
-	int				bits_per_pixel;
-	int				line_length;
-	int				endian;
+	mlx_t			*mlx;
+	mlx_image_t		*img;
 }					t_mlx;
 
 typedef struct s_map

@@ -16,7 +16,7 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -O3 -I./includes -L./$(LIBFT_DIR) -lft -L./$(MLX_DIR) -lmlx42
+CFLAGS = -Wall -Wextra -Werror -Ofast -I./includes -L./$(LIBFT_DIR) -lft -L./$(MLX_DIR) -lmlx42 -ldl -lglfw -pthread -lm -D_REENTRANT
 
 dev: CFLAGS += -fsanitize=address,leak,undefined -g3
 

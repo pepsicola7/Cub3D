@@ -1,9 +1,10 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "libft.h"
-# include "mlx.h"
+# include "../libft/libft.h"
+# include "../MLX42/include/MLX42/MLX42.h"
 # include <math.h>
+# include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -27,6 +28,7 @@ typedef struct s_mlx
 typedef struct s_map
 {
 	char			**map;
+	int				map_fd;
 	int				width;
 	int				height;
 }					t_map;
@@ -40,10 +42,10 @@ typedef struct s_player
 
 typedef struct s_texture_data
 {
-	mlx_texture_t		*north;
-	mlx_texture_t		*south;
-	mlx_texture_t		*east;
-	mlx_texture_t		*west;
+	mlx_texture_t	*north;
+	mlx_texture_t	*south;
+	mlx_texture_t	*east;
+	mlx_texture_t	*west;
 	int				floor_color;
 	int				ceiling_color;
 }					t_texture_data;
@@ -55,5 +57,7 @@ typedef struct s_data
 	t_player		*player_data;
 	t_texture_data	*texture_data;
 }					t_data;
+
+int					init_data(t_data *data, char *filename);
 
 #endif

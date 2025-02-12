@@ -38,23 +38,12 @@ typedef struct s_player
 	t_vec2			plane;
 }					t_player;
 
-typedef struct s_texture
-{
-	void			*img;
-	char			*addr;
-	int				width;
-	int				height;
-	int				bits_per_pixel;
-	int				line_length;
-	int				endian;
-}					t_texture;
-
 typedef struct s_texture_data
 {
-	t_texture		*north;
-	t_texture		*south;
-	t_texture		*east;
-	t_texture		*west;
+	mlx_texture_t		*north;
+	mlx_texture_t		*south;
+	mlx_texture_t		*east;
+	mlx_texture_t		*west;
 	int				floor_color;
 	int				ceiling_color;
 }					t_texture_data;

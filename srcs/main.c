@@ -4,6 +4,7 @@ int main(int ac, char **av)
 {
 	t_data *data;
 
+	mlx_set_setting(MLX_FULLSCREEN, true);
 	if (ac < 2)
 	{
 		ft_putstr_fd("Error: No map file provided\n", 2);

@@ -73,4 +73,13 @@ fclean: clean
 
 re: fclean all
 
+help:
+	@echo "$(CYAN)Available commands:$(RESET)"
+	@echo "$(YELLOW)make$(RESET) - compiles the project"
+	@echo "$(YELLOW)make dev$(RESET) - compiles the project with sanitizers"
+	@echo "$(YELLOW)make clean$(RESET) - removes object files"
+	@echo "$(YELLOW)make fclean$(RESET) - removes object files, libraries and the executable"
+	@echo "$(YELLOW)make re$(RESET) - removes object files, libraries and the executable, then recompiles the project"
+	@echo "$(YELLOW)make help$(RESET) - displays this message"
+
 .PHONY: all clean fclean re libft libmlx

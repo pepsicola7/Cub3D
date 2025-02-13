@@ -7,7 +7,7 @@ YELLOW	:= \033[1;33m
 RESET 	:= \033[0m
 
 NAME    := cub3d
-CFLAGS  := -Wall -Wextra -Werror -Ofast -g3 -fsanitize=address,undefined,leak -D_REENTRANT
+CFLAGS  := -Wall -Wextra -Werror -Ofast -D_REENTRANT
 LIBMLX  := MLX42
 LIBFT   := libft
 
@@ -47,6 +47,12 @@ libmlx:
 $(NAME): $(OBJS)
 	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
+
+dev: libft libmlx $(OBJS)
+	@echo "$(CYAN)Compiling $(NAME) with sanitizers...$(RESET)"
+	@$(CC) $(OBJS) $(LIBS) -fsanitize=address,leak,undefined -g3 $(HEADERS) -o $(NAME)
+	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
+	@echo "$(RED)Development mode enabled!$(RESET)"
 
 clean:
 	@echo "$(CYAN)Cleaning object files...$(RESET)"

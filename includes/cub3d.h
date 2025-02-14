@@ -58,6 +58,6 @@ typedef struct s_data
 	t_texture_data	*texture_data;
 }					t_data;
 
-int					init_data(t_data *data, char *filename);
-
+int		init_data(t_data *data, char *filename);
+int		parsing(t_data *data, char *filename);
 #endif

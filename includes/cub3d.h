@@ -19,10 +19,17 @@ typedef struct s_vec2
 	double			y;
 }					t_vec2;
 
+typedef struct s_vec2i
+{
+	int				x;
+	int				y;
+}					t_vec2i;
+
 typedef struct s_mlx
 {
 	mlx_t			*mlx;
 	mlx_image_t		*img;
+	bool			fullscreen;
 }					t_mlx;
 
 typedef struct s_map

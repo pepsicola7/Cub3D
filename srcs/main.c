@@ -30,76 +30,92 @@ void	exit_program(t_data *data, int status)
 	exit(status);
 }
 
-void	draw_square(t_data *data, int x, int y, int size, int color)
+void	draw_square(t_data *data, t_vec2i pos, int size, int color)
 {
-	int	row;
-	int	col;
+	t_vec2i	pixel;
 
-	row = 0;
-	while (++row < size - 1)
+	pixel.y = 0;
+	while (++pixel.y < size - 1)
 	{
-		col = 0;
-		while (++col < size - 1)
-			mlx_put_pixel(data->mlx_data->img, x + row, y + col, color);
+		pixel.x = 0;
+		while (++pixel.x < size - 1)
+			mlx_put_pixel(data->mlx_data->img, pos.x + pixel.x, pos.y + pixel.y,
+				color);
 	}
 }
 
-void	draw_background(t_data *data, int x_offset, int y_offset, int size)
+void	draw_background(t_data *data, t_vec2i offset, int size)
 {
-	int	row;
-	int	col;
+	t_vec2i	pixel;
 
-	row = -1;
-	while (++row < data->map_data->width * size)
+	pixel.y = -1;
+	while (++pixel.y < data->map_data->height * size)
 	{
-		col = -1;
-		while (++col < data->map_data->height * size)
-			mlx_put_pixel(data->mlx_data->img, x_offset + row, y_offset + col,
-				0x000000FF);
+		pixel.x = -1;
+		while (++pixel.x < data->map_data->width * size)
+			mlx_put_pixel(data->mlx_data->img, offset.x + pixel.x, offset.y
+				+ pixel.y, 0x000000FF);
 	}
 }
 
-void	get_minimap_size(t_data *data, int *square_size, int *x_offset)
+void	get_minimap_size(t_data *data, int *square_size, t_vec2i *offset)
 {
-	*square_size = (data->mlx_data->mlx->width / 5) / data->map_data->width;
+	*square_size = (data->mlx_data->mlx->width / 6) / data->map_data->width;
 	if (*square_size < 2)
 		*square_size = 2;
-	*x_offset = data->mlx_data->mlx->width + 20;
+	offset->x = data->mlx_data->mlx->width - data->map_data->width
+		* *square_size - 20;
+	offset->y = 20;
 }
 
 void	render_minimap(t_data *data)
 {
-	int	square_size;
-	int	x_offset;
-	int	y_offset;
-	int	row;
-	int	col;
+	int		square_size;
+	t_vec2i	offset;
+	t_vec2i	grid;
+	t_vec2i	pos;
 
-	y_offset = 20;
-	get_minimap_size(data, &square_size, &x_offset);
-	draw_background(data, x_offset, y_offset, square_size);
-	row = -1;
-	while (++row < data->map_data->width)
+	get_minimap_size(data, &square_size, &offset);
+	draw_background(data, offset, square_size);
+	grid.y = -1;
+	printf("Map size: %d x %d\n", data->map_data->width,
+		data->map_data->height);
+	printf("Square size: %d\n", square_size);
+	printf("Offset: %d, %d\n", offset.x, offset.y);
+	printf("Window size: %d x %d\n", data->mlx_data->mlx->width,
+		data->mlx_data->mlx->height);
+	while (++grid.y < data->map_data->height)
 	{
-		col = -1;
-		while (++col < data->map_data->height)
+		grid.x = -1;
+		while (++grid.x < data->map_data->width)
 		{
-			if (data->map_data->map[col][row] == '1')
-				draw_square(data, x_offset + row * square_size, y_offset + col
-					* square_size, square_size, 0x909090FF);
-			else if (data->map_data->map[col][row] == '0')
-				draw_square(data, x_offset + row * square_size, y_offset + col
-					* square_size, square_size, 0xFF0000FF);
+			pos = {offset.x + grid.x * square_size, offset.y + grid.y
+				* square_size};
+			if (data->map_data->map[grid.y][grid.x] == '1')
+				draw_square(data, pos, square_size, 0x909090FF);
+			else if (data->map_data->map[grid.y][grid.x] == '0')
+				draw_square(data, pos, square_size, 0xFF0000FF);
 		}
 	}
 	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
+}
+
+void	key_handling(struct mlx_key_data key_data, void *vdata)
+{
+	t_data	*data;
+
+	data = (t_data *)vdata;
+	printf("Key pressed: %d\n", key_data.key);
+	if (key_data.key == MLX_KEY_ESCAPE)
+		exit_program(data, 0);
+	else if (key_data.key == MLX_KEY_F11)
+		mlx_set_setting(MLX_FULLSCREEN, !data->mlx_data->fullscreen);
 }
 
 int	main(int ac, char **av)
 {
 	t_data	*data;
 
-	mlx_set_setting(MLX_FULLSCREEN, false);
 	if (ac < 2)
 	{
 		ft_putstr_fd("Error: No map file provided\n", 2);
@@ -113,6 +129,7 @@ int	main(int ac, char **av)
 	ft_memset(data->mlx_data->img->pixels, 255, data->mlx_data->img->width
 		* data->mlx_data->img->height * sizeof(int32_t));
 	render_minimap(data);
+	mlx_key_hook(data->mlx_data->mlx, key_handling, data);
 	mlx_loop(data->mlx_data->mlx);
 	exit_program(data, 0);
 }

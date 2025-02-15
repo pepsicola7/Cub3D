@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-void example_map(t_data *data)
+void	example_map(t_data *data)
 {
 	data->map_data->map = ft_calloc(6, sizeof(char *));
 	data->map_data->map[0] = ft_strdup("11111");

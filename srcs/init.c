@@ -1,14 +1,15 @@
 #include "cub3d.h"
 
-char **example_map(void)
+void example_map(t_data *data)
 {
-	char **map = ft_calloc(5, sizeof(char *));
-	map[0] = ft_strdup("11111");
-	map[1] = ft_strdup("10001");
-	map[2] = ft_strdup("10001");
-	map[3] = ft_strdup("10001");
-	map[4] = ft_strdup("11111");
-	return (map);
+	data->map_data->map = ft_calloc(6, sizeof(char *));
+	data->map_data->map[0] = ft_strdup("11111");
+	data->map_data->map[1] = ft_strdup("10001");
+	data->map_data->map[2] = ft_strdup("10001");
+	data->map_data->map[3] = ft_strdup("10001");
+	data->map_data->map[4] = ft_strdup("11111");
+	data->map_data->width = 5;
+	data->map_data->height = 5;
 }
 
 int	init_data(t_data *data, char *filename)
@@ -24,6 +25,6 @@ int	init_data(t_data *data, char *filename)
 	if (data->map_data->map_fd == -1 || !data->mlx_data->mlx
 		|| !data->mlx_data->img)
 		return (-1);
-	data->map_data->map = example_map();
+	example_map(data);
 	return (0);
 }

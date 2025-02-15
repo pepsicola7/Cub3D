@@ -7,12 +7,12 @@ YELLOW	:= \033[1;33m
 RESET 	:= \033[0m
 
 NAME    := cub3d
-CFLAGS  := -Wall -Wextra -Werror -Ofast -D_REENTRANT
+CFLAGS  := -Wall -Wextra -Werror -Ofast -g3 -D_REENTRANT
 LIBMLX  := MLX42
 LIBFT   := libft
 
 HEADERS := -I./includes -I $(LIBMLX)/include
-LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm -fsanitize=address,undefined,leak
+LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
 SRCS    := srcs/main.c srcs/init.c
 OBJS    := $(SRCS:.c=.o)
@@ -48,7 +48,7 @@ $(NAME): $(OBJS)
 	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 
-dev: libft libmlx $(OBJS)
+dev: fclean libft libmlx $(OBJS)
 	@echo "$(CYAN)Compiling $(NAME) with sanitizers...$(RESET)"
 	@$(CC) $(OBJS) $(LIBS) -fsanitize=address,leak,undefined -g3 $(HEADERS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"

@@ -13,11 +13,27 @@
 # define WIN_HEIGHT 1080
 # define WIN_WIDTH 1920
 
-typedef struct s_vec2
+# define BLUE 0x0000FFFF
+# define GREEN 0x00FF00FF
+# define RED 0xFF0000FF
+# define WHITE 0xFFFFFFFF
+# define BLACK 0x000000FF
+# define YELLOW 0xFFFF00FF
+# define CYAN 0x00FFFFFF
+# define MAGENTA 0xFF00FFFF
+# define ORANGE 0xFFA500FF
+# define PURPLE 0x800080FF
+# define PINK 0xFFC0CBFF
+# define BROWN 0xA52A2AFF
+# define GREY 0x808080FF
+
+# define M_PI 3.14159265358979323846
+
+typedef struct s_vec2d
 {
 	double			x;
 	double			y;
-}					t_vec2;
+}					t_vec2d;
 
 typedef struct s_vec2i
 {
@@ -42,9 +58,8 @@ typedef struct s_map
 
 typedef struct s_player
 {
-	t_vec2			pos;
-	t_vec2			dir;
-	t_vec2			plane;
+	t_vec2d			pos;
+	int				rotation;
 }					t_player;
 
 typedef struct s_texture_data

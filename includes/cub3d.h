@@ -58,7 +58,8 @@ typedef struct s_mlx
 {
 	mlx_t			*mlx;
 	mlx_image_t		*img;
-	bool			fullscreen;
+	int32_t		old_height;
+	int32_t		old_width;
 }					t_mlx;
 
 typedef struct s_map
@@ -94,10 +95,8 @@ typedef struct s_data
 	t_map			*map_data;
 	t_player		*player_data;
 	t_texture_data	*texture_data;
-	size_t			minimap_update;
 }					t_data;
 
 int					init_data(t_data *data, char *filename);
-size_t				ft_get_time(void);
 
 #endif

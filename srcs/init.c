@@ -13,7 +13,9 @@ void	example_map(t_data *data)
 	data->player_data->pos.x = 1.5;
 	data->player_data->pos.y = 1.5;
 	data->player_data->rotation = 0;
-	data->minimap_update = ft_get_time();
+	data->mlx_data->old_height = data->mlx_data->mlx->height;
+	data->mlx_data->old_width = data->mlx_data->mlx->width;
+	data->player_data->sprint = false;
 }
 
 int	init_data(t_data *data, char *filename)

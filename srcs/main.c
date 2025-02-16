@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/16 15:12:44 by lpolizzi          #+#    #+#             */
+/*   Updated: 2025/02/16 15:39:35 by lpolizzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	free_tab(char **tab)
@@ -145,7 +157,7 @@ void	draw_player(t_data *data, t_vec2i offset, int square_size)
 	line_end.x = center.x + (int)dir.x;
 	line_end.y = center.y + (int)dir.y;
 	draw_line(data, center, line_end, RED);
-	draw_circle(data, center, 5, GREEN);
+	draw_circle(data, center, square_size / 10, GREEN);
 }
 
 void	render_minimap(t_data *data)
@@ -179,10 +191,11 @@ void	move_player(t_data *data, double speed, double y, double x)
 {
 	t_vec2d	new_pos;
 
-	new_pos.x = data->player_data->pos.x + x * speed
-		* data->mlx_data->mlx->delta_time;
-	new_pos.y = data->player_data->pos.y + y * speed
-		* data->mlx_data->mlx->delta_time;
+	new_pos.x = data->player_data->pos.x + x * speed;
+	new_pos.y = data->player_data->pos.y + y * speed;
+	if (new_pos.x < 0 || new_pos.y < 0 || new_pos.x >= data->map_data->width
+		|| new_pos.y >= data->map_data->height)
+		return ;
 	if (data->map_data->map[(int)new_pos.y][(int)data->player_data->pos.x]
 		== '0')
 		data->player_data->pos.y = new_pos.y;
@@ -191,29 +204,28 @@ void	move_player(t_data *data, double speed, double y, double x)
 		data->player_data->pos.x = new_pos.x;
 }
 
-size_t	ft_get_time(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-}
-
 void	render_all(void *vdata)
 {
 	t_data	*data;
 
 	data = (t_data *)vdata;
-	if (data->player_data->last_pos.x != data->player_data->pos.x
+	if (data->mlx_data->mlx->width != data->mlx_data->old_width
+		|| data->mlx_data->mlx->height != data->mlx_data->old_height)
+	{
+		data->mlx_data->old_height = data->mlx_data->mlx->height;
+		data->mlx_data->old_width = data->mlx_data->mlx->width;
+		ft_memset(data->mlx_data->img->pixels, 255, data->mlx_data->img->width
+			* data->mlx_data->img->height * sizeof(int32_t));
+		render_minimap(data);
+	}
+	else if (data->player_data->last_pos.x != data->player_data->pos.x
 		|| data->player_data->last_pos.y != data->player_data->pos.y
 		|| data->player_data->last_rotation != data->player_data->rotation)
 	{
+		render_minimap(data);
 		data->player_data->last_pos = data->player_data->pos;
 		data->player_data->last_rotation = data->player_data->rotation;
-		ft_memset(data->mlx_data->img->pixels, 255, data->mlx_data->img->width
-			* data->mlx_data->img->height * sizeof(int32_t));
 		// raycaster(data);
-		render_minimap(data);
 	}
 }
 
@@ -223,8 +235,8 @@ void	key_handling(struct mlx_key_data key_data, void *vdata)
 	double	move_speed;
 
 	data = (t_data *)vdata;
-	move_speed = 0.3 * (2 * data->player_data->sprint + 1);
-	printf("Key pressed: %d\n", key_data.key);
+	move_speed = 0.2 * (2 * data->player_data->sprint + 1)
+		* data->mlx_data->mlx->delta_time;
 	if (key_data.key == MLX_KEY_ESCAPE)
 		exit_program(data, 0);
 	else if (key_data.key == MLX_KEY_LEFT_SHIFT)
@@ -262,9 +274,9 @@ int	main(int ac, char **av)
 		exit_program(data, 1);
 	ft_memset(data->mlx_data->img->pixels, 255, data->mlx_data->img->width
 		* data->mlx_data->img->height * sizeof(int32_t));
-	render_all(data);
+	render_minimap(data);
 	mlx_key_hook(data->mlx_data->mlx, key_handling, data);
 	mlx_loop_hook(data->mlx_data->mlx, render_all, data);
 	mlx_loop(data->mlx_data->mlx);
-	exit_program(data, 0);
+	free_data(data);
 }

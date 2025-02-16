@@ -73,6 +73,9 @@ typedef struct s_player
 {
 	t_vec2d			pos;
 	int				rotation;
+	bool			sprint;
+	t_vec2d			last_pos;
+	int				last_rotation;
 }					t_player;
 
 typedef struct s_texture_data
@@ -92,7 +95,6 @@ typedef struct s_data
 	t_player		*player_data;
 	t_texture_data	*texture_data;
 	size_t			minimap_update;
-	bool			sprint;
 }					t_data;
 
 int					init_data(t_data *data, char *filename);

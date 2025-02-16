@@ -204,11 +204,15 @@ void	render_all(void *vdata)
 	t_data	*data;
 
 	data = (t_data *)vdata;
-	if (data->minimap_update + 150 < ft_get_time())
+	if (data->player_data->last_pos.x != data->player_data->pos.x
+		|| data->player_data->last_pos.y != data->player_data->pos.y
+		|| data->player_data->last_rotation != data->player_data->rotation)
 	{
-		data->minimap_update = ft_get_time();
+		data->player_data->last_pos = data->player_data->pos;
+		data->player_data->last_rotation = data->player_data->rotation;
 		ft_memset(data->mlx_data->img->pixels, 255, data->mlx_data->img->width
 			* data->mlx_data->img->height * sizeof(int32_t));
+		// raycaster(data);
 		render_minimap(data);
 	}
 }
@@ -219,12 +223,12 @@ void	key_handling(struct mlx_key_data key_data, void *vdata)
 	double	move_speed;
 
 	data = (t_data *)vdata;
-	move_speed = 0.3 * (3 * data->sprint + 1);
+	move_speed = 0.3 * (2 * data->player_data->sprint + 1);
 	printf("Key pressed: %d\n", key_data.key);
 	if (key_data.key == MLX_KEY_ESCAPE)
 		exit_program(data, 0);
 	else if (key_data.key == MLX_KEY_LEFT_SHIFT)
-		data->sprint = !data->sprint;
+		data->player_data->sprint = !data->player_data->sprint;
 	else if (key_data.key == MLX_KEY_UP)
 		move_player(data, move_speed, sin(data->player_data->rotation * M_PI
 				/ 180), cos(data->player_data->rotation * M_PI / 180));

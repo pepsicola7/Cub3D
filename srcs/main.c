@@ -68,22 +68,84 @@ void	get_minimap_size(t_data *data, int *square_size, t_vec2i *offset)
 	offset->y = 20;
 }
 
+void	draw_circle(t_data *data, t_vec2i pos, int radius, int color)
+{
+	t_vec2i	pixel;
+	double	dist;
+
+	pixel.y = -radius;
+	while (++pixel.y < radius)
+	{
+		pixel.x = -radius;
+		while (++pixel.x < radius)
+		{
+			dist = sqrt(pixel.x * pixel.x + pixel.y * pixel.y);
+			if (dist < radius)
+				mlx_put_pixel(data->mlx_data->img, pos.x + pixel.x, pos.y
+					+ pixel.y, color);
+		}
+	}
+}
+
+void	init_bresenham_params(t_bresenham_params *params, t_vec2i start,
+		t_vec2i end)
+{
+	params->dx = abs(end.x - start.x);
+	params->dy = abs(end.y - start.y);
+	if (start.x < end.x)
+		params->step_x = 1;
+	else
+		params->step_x = -1;
+	if (start.y < end.y)
+		params->step_y = 1;
+	else
+		params->step_y = -1;
+	params->x = start.x;
+	params->y = start.y;
+	params->err = params->dx - params->dy;
+}
+
+void	draw_line(t_data *data, t_vec2i start, t_vec2i end, int color)
+{
+	t_bresenham_params	params;
+	int					err2;
+
+	init_bresenham_params(&params, start, end);
+	while (params.x != end.x || params.y != end.y)
+	{
+		mlx_put_pixel(data->mlx_data->img, params.x, params.y, color);
+		err2 = params.err * 2;
+		if (err2 > -params.dy)
+		{
+			params.err -= params.dy;
+			params.x += params.step_x;
+		}
+		if (err2 < params.dx)
+		{
+			params.err += params.dx;
+			params.y += params.step_y;
+		}
+	}
+	mlx_put_pixel(data->mlx_data->img, params.x, params.y, color);
+}
+
 void	draw_player(t_data *data, t_vec2i offset, int square_size)
 {
 	t_vec2d	pos;
 	t_vec2d	dir;
-	t_vec2i	draw_pos;
+	t_vec2i	center;
 	t_vec2i	line_end;
 
 	pos.x = offset.x + data->player_data->pos.x * square_size;
 	pos.y = offset.y + data->player_data->pos.y * square_size;
-	dir.x = cos(data->player_data->rotation * M_PI / 180) * 4;
-	dir.y = sin(data->player_data->rotation * M_PI / 180) * 4;
-	draw_pos.x = (int)pos.x - 4;
-	draw_pos.y = (int)pos.y - 4;
-	line_end.x = (int)(pos.x + dir.x);
-	line_end.y = (int)(pos.y + dir.y);
-	draw_square(data, draw_pos, 8, GREEN);
+	center.x = (int)pos.x;
+	center.y = (int)pos.y;
+	dir.x = cos(data->player_data->rotation * M_PI / 180) * 12;
+	dir.y = sin(data->player_data->rotation * M_PI / 180) * 12;
+	line_end.x = center.x + (int)dir.x;
+	line_end.y = center.y + (int)dir.y;
+	draw_line(data, center, line_end, RED);
+	draw_circle(data, center, 5, GREEN);
 }
 
 void	render_minimap(t_data *data)
@@ -96,12 +158,6 @@ void	render_minimap(t_data *data)
 	get_minimap_size(data, &square_size, &offset);
 	draw_background(data, offset, square_size);
 	grid.y = -1;
-	printf("Map size: %d x %d\n", data->map_data->width,
-		data->map_data->height);
-	printf("Square size: %d\n", square_size);
-	printf("Offset: %d, %d\n", offset.x, offset.y);
-	printf("Window size: %d x %d\n", data->mlx_data->mlx->width,
-		data->mlx_data->mlx->height);
 	while (++grid.y < data->map_data->height)
 	{
 		grid.x = -1;
@@ -112,7 +168,7 @@ void	render_minimap(t_data *data)
 			if (data->map_data->map[grid.y][grid.x] == '1')
 				draw_square(data, pos, square_size, GREY);
 			else if (data->map_data->map[grid.y][grid.x] == '0')
-				draw_square(data, pos, square_size, BROWN);
+				draw_square(data, pos, square_size, BLUE);
 		}
 	}
 	draw_player(data, offset, square_size);
@@ -135,37 +191,54 @@ void	move_player(t_data *data, double speed, double y, double x)
 		data->player_data->pos.x = new_pos.x;
 }
 
+size_t	ft_get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
 void	render_all(void *vdata)
 {
 	t_data	*data;
 
 	data = (t_data *)vdata;
-	ft_memset(data->mlx_data->img->pixels, 255, data->mlx_data->img->width
-		* data->mlx_data->img->height * sizeof(int32_t));
-	render_minimap(data);
+	if (data->minimap_update + 150 < ft_get_time())
+	{
+		data->minimap_update = ft_get_time();
+		ft_memset(data->mlx_data->img->pixels, 255, data->mlx_data->img->width
+			* data->mlx_data->img->height * sizeof(int32_t));
+		render_minimap(data);
+	}
 }
 
 void	key_handling(struct mlx_key_data key_data, void *vdata)
 {
 	t_data	*data;
+	double	move_speed;
 
 	data = (t_data *)vdata;
+	move_speed = 0.3 * (3 * data->sprint + 1);
 	printf("Key pressed: %d\n", key_data.key);
-	// Debug print to get the key code
 	if (key_data.key == MLX_KEY_ESCAPE)
 		exit_program(data, 0);
-	else if (key_data.key == MLX_KEY_F11)
-		mlx_set_setting(MLX_FULLSCREEN, !data->mlx_data->fullscreen);
+	else if (key_data.key == MLX_KEY_LEFT_SHIFT)
+		data->sprint = !data->sprint;
 	else if (key_data.key == MLX_KEY_UP)
-		move_player(data, 0.1, cos(data->player_data->rotation * M_PI / 180),
-			sin(data->player_data->rotation * M_PI / 180));
+		move_player(data, move_speed, sin(data->player_data->rotation * M_PI
+				/ 180), cos(data->player_data->rotation * M_PI / 180));
 	else if (key_data.key == MLX_KEY_DOWN)
-		move_player(data, -0.1, cos(data->player_data->rotation * M_PI / 180),
-			sin(data->player_data->rotation * M_PI / 180));
+		move_player(data, -move_speed, sin(data->player_data->rotation * M_PI
+				/ 180), cos(data->player_data->rotation * M_PI / 180));
 	else if (key_data.key == MLX_KEY_LEFT)
-		data->player_data->rotation -= 5;
+		data->player_data->rotation -= 1;
 	else if (key_data.key == MLX_KEY_RIGHT)
-		data->player_data->rotation += 5;
+		data->player_data->rotation += 1;
+	if (data->player_data->rotation < 0)
+		data->player_data->rotation += 360;
+	else if (data->player_data->rotation >= 360)
+		data->player_data->rotation -= 360;
 	render_all(data);
 }
 

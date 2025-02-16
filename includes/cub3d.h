@@ -1,13 +1,15 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "../libft/libft.h"
 # include "../MLX42/include/MLX42/MLX42.h"
-# include <math.h>
+# include "../libft/libft.h"
 # include <fcntl.h>
+# include <math.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/time.h>
 # include <unistd.h>
 
 # define WIN_HEIGHT 1080
@@ -28,6 +30,17 @@
 # define GREY 0x808080FF
 
 # define M_PI 3.14159265358979323846
+
+typedef struct s_bresenham_params
+{
+	int				dx;
+	int				dy;
+	int				step_x;
+	int				step_y;
+	int				err;
+	int				x;
+	int				y;
+}					t_bresenham_params;
 
 typedef struct s_vec2d
 {
@@ -78,8 +91,11 @@ typedef struct s_data
 	t_map			*map_data;
 	t_player		*player_data;
 	t_texture_data	*texture_data;
+	size_t			minimap_update;
+	bool			sprint;
 }					t_data;
 
 int					init_data(t_data *data, char *filename);
+size_t				ft_get_time(void);
 
 #endif

@@ -15,6 +15,11 @@
 # define WIN_HEIGHT 1080
 # define WIN_WIDTH 1920
 
+# define FOV 60
+# define PI_2 M_PI / 2
+# define PI_3 M_PI * 3 / 2
+# define DEGRE 0.0174533
+
 # define BLUE 0x0000FFFF
 # define GREEN 0x00FF00FF
 # define RED 0xFF0000FF
@@ -42,16 +47,17 @@ typedef struct s_bresenham_params
 
 typedef struct s_ray
 {
-	int				radians;
-	int				mx;
-	int				my;
-	int				mp;
-	int				dof;
-	float			rx;
-	float			ry;
-	float			ra;
-	float			xo;
-	float			yo;
+	int				rays;
+	int				map_x;
+	int				map_y;
+	int				map_1d;
+	int				depth_of_field;
+	float			ray_x;
+	float			ray_y;
+	float			ray_angle;
+	float			x_offset;
+	float			y_offset;
+	float			distance;
 }					t_ray;
 
 typedef struct s_vec2f
@@ -110,5 +116,7 @@ typedef struct s_data
 }					t_data;
 
 int					init_data(t_data *data, char *filename);
+void				raycaster(t_data *data);
+void				draw_line(t_data *data, t_vec2i start, t_vec2i end, int color);
 
 #endif

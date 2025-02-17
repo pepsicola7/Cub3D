@@ -222,7 +222,7 @@ void	render_all(void *vdata)
 		render_minimap(data);
 		data->player_data->last_pos = data->player_data->pos;
 		data->player_data->last_rotation = data->player_data->rotation;
-		// raycaster(data);
+		raycaster(data);
 	}
 }
 

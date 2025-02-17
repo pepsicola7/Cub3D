@@ -14,7 +14,7 @@ LIBFT   := libft
 HEADERS := -I./includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
-SRCS    := srcs/main.c srcs/init.c
+SRCS    := srcs/main.c srcs/init.c srcs/raycasting.c
 OBJS    := $(SRCS:.c=.o)
 
 CC      := cc

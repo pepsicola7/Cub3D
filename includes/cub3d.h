@@ -29,8 +29,6 @@
 # define BROWN 0xA52A2AFF
 # define GREY 0x808080FF
 
-# define M_PI 3.14159265358979323846
-
 typedef struct s_bresenham_params
 {
 	int				dx;
@@ -42,11 +40,25 @@ typedef struct s_bresenham_params
 	int				y;
 }					t_bresenham_params;
 
-typedef struct s_vec2d
+typedef struct s_ray
 {
-	double			x;
-	double			y;
-}					t_vec2d;
+	int				radians;
+	int				mx;
+	int				my;
+	int				mp;
+	int				dof;
+	float			rx;
+	float			ry;
+	float			ra;
+	float			xo;
+	float			yo;
+}					t_ray;
+
+typedef struct s_vec2f
+{
+	float			x;
+	float			y;
+}					t_vec2f;
 
 typedef struct s_vec2i
 {
@@ -72,10 +84,10 @@ typedef struct s_map
 
 typedef struct s_player
 {
-	t_vec2d			pos;
-	int				rotation;
+	t_vec2f			pos;
+	float			rotation;
 	bool			sprint;
-	t_vec2d			last_pos;
+	t_vec2f			last_pos;
 	int				last_rotation;
 }					t_player;
 

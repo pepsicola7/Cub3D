@@ -6,7 +6,7 @@
 /*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 15:12:44 by lpolizzi          #+#    #+#             */
-/*   Updated: 2025/02/16 15:39:35 by lpolizzi         ###   ########.fr       */
+/*   Updated: 2025/02/16 17:01:33 by lpolizzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	get_minimap_size(t_data *data, int *square_size, t_vec2i *offset)
 void	draw_circle(t_data *data, t_vec2i pos, int radius, int color)
 {
 	t_vec2i	pixel;
-	double	dist;
+	float	dist;
 
 	pixel.y = -radius;
 	while (++pixel.y < radius)
@@ -143,8 +143,8 @@ void	draw_line(t_data *data, t_vec2i start, t_vec2i end, int color)
 
 void	draw_player(t_data *data, t_vec2i offset, int square_size)
 {
-	t_vec2d	pos;
-	t_vec2d	dir;
+	t_vec2f	pos;
+	t_vec2f	dir;
 	t_vec2i	center;
 	t_vec2i	line_end;
 
@@ -152,14 +152,13 @@ void	draw_player(t_data *data, t_vec2i offset, int square_size)
 	pos.y = offset.y + data->player_data->pos.y * square_size;
 	center.x = (int)pos.x;
 	center.y = (int)pos.y;
-	dir.x = cos(data->player_data->rotation * M_PI / 180) * 12;
-	dir.y = sin(data->player_data->rotation * M_PI / 180) * 12;
+	dir.x = cos(data->player_data->rotation) * 12;
+	dir.y = sin(data->player_data->rotation) * 12;
 	line_end.x = center.x + (int)dir.x;
 	line_end.y = center.y + (int)dir.y;
 	draw_line(data, center, line_end, RED);
 	draw_circle(data, center, square_size / 10, GREEN);
 }
-
 void	render_minimap(t_data *data)
 {
 	int		square_size;
@@ -187,20 +186,18 @@ void	render_minimap(t_data *data)
 	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 }
 
-void	move_player(t_data *data, double speed, double y, double x)
+void	move_player(t_data *data, float speed, float y, float x)
 {
-	t_vec2d	new_pos;
+	t_vec2f	new_pos;
 
 	new_pos.x = data->player_data->pos.x + x * speed;
 	new_pos.y = data->player_data->pos.y + y * speed;
 	if (new_pos.x < 0 || new_pos.y < 0 || new_pos.x >= data->map_data->width
 		|| new_pos.y >= data->map_data->height)
 		return ;
-	if (data->map_data->map[(int)new_pos.y][(int)data->player_data->pos.x]
-		== '0')
+	if (data->map_data->map[(int)new_pos.y][(int)data->player_data->pos.x] == '0')
 		data->player_data->pos.y = new_pos.y;
-	if (data->map_data->map[(int)data->player_data->pos.y][(int)new_pos.x]
-		== '0')
+	if (data->map_data->map[(int)data->player_data->pos.y][(int)new_pos.x] == '0')
 		data->player_data->pos.x = new_pos.x;
 }
 
@@ -232,7 +229,7 @@ void	render_all(void *vdata)
 void	key_handling(struct mlx_key_data key_data, void *vdata)
 {
 	t_data	*data;
-	double	move_speed;
+	float	move_speed;
 
 	data = (t_data *)vdata;
 	move_speed = 0.2 * (2 * data->player_data->sprint + 1)
@@ -242,19 +239,19 @@ void	key_handling(struct mlx_key_data key_data, void *vdata)
 	else if (key_data.key == MLX_KEY_LEFT_SHIFT)
 		data->player_data->sprint = !data->player_data->sprint;
 	else if (key_data.key == MLX_KEY_UP)
-		move_player(data, move_speed, sin(data->player_data->rotation * M_PI
-				/ 180), cos(data->player_data->rotation * M_PI / 180));
+		move_player(data, move_speed, sin(data->player_data->rotation),
+			cos(data->player_data->rotation));
 	else if (key_data.key == MLX_KEY_DOWN)
-		move_player(data, -move_speed, sin(data->player_data->rotation * M_PI
-				/ 180), cos(data->player_data->rotation * M_PI / 180));
+		move_player(data, -move_speed, sin(data->player_data->rotation),
+			cos(data->player_data->rotation));
 	else if (key_data.key == MLX_KEY_LEFT)
-		data->player_data->rotation -= 1;
+		data->player_data->rotation -= 0.0174533;
 	else if (key_data.key == MLX_KEY_RIGHT)
-		data->player_data->rotation += 1;
+		data->player_data->rotation += 0.0174533;
 	if (data->player_data->rotation < 0)
-		data->player_data->rotation += 360;
-	else if (data->player_data->rotation >= 360)
-		data->player_data->rotation -= 360;
+		data->player_data->rotation += 2 * M_PI;
+	else if (data->player_data->rotation >= 2 * M_PI)
+		data->player_data->rotation -= 2 * M_PI;
 	render_all(data);
 }
 

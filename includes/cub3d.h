@@ -19,6 +19,8 @@
 # define PI_2 M_PI / 2
 # define PI_3 M_PI * 3 / 2
 # define DEGRE 0.0174533
+# define EPSILON 0.0001
+# define TILE_SIZE data->mlx_data->mlx->width / 6 / data->map_data->width
 
 # define BLUE 0x0000FFFF
 # define GREEN 0x00FF00FF
@@ -47,7 +49,6 @@ typedef struct s_bresenham_params
 
 typedef struct s_ray
 {
-	int				rays;
 	int				map_x;
 	int				map_y;
 	int				map_1d;

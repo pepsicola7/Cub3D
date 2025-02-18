@@ -15,8 +15,8 @@
 	C 225,30,0   → Couleur du plafond (Ceiling) en RGB (Rouge:225, Vert:30, Bleu:0)  
 	🡆 Ces couleurs sont utilisées si le projet n'a pas de texture pour le sol et le plafond.
 	🡆 Elles sont stockées en format R,G,B (valeurs de 0 à 255).
-
-
+	Attention : r << 16 | g << 8 | b  // Convertir en format 0xRRGGBB
+	
 Cas d'erruer : Error\n suivi une ligne d'explicite 
 
 R et S ???

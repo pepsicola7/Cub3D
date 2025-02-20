@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/02/20 17:16:33 by peli             ###   ########.fr       */
+/*   Updated: 2025/02/20 17:22:18 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,28 +21,21 @@ int	read_map_2(t_data *data)
 	i = 0;
 	config_count = 0;
 	line = get_next_line(data->map_data->map_fd);
-		while (line)
+	while (line)
 	{
-		// Ignorer les lignes vides avant et entre les configurations
-		if (ft_strcmp(line, "\n") == 0)
+		if (ft_strcmp(line, "\n") == 0 && config_count < 6)
 		{
 			free(line);
 			line = get_next_line(data->map_data->map_fd);
 			continue;
 		}
-
-		// Vérifier si c'est une ligne de configuration
 		if (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0 ||
 			ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0 ||
 			ft_strncmp(line, "F", 1) == 0 || ft_strncmp(line, "C", 1) == 0)
-		{
-			store_config(data, line); // Stocker la configuration
-			config_count++; // Incrémenter le compteur
-		}
+			config_count++;
 		else
 		{
-			// Première ligne qui n'est pas une configuration => début de la carte
-			if (config_count < 6) // Vérifier si toutes les configs ont été définies
+			if (config_count < 6)
 			{
 				free(line);
 				ft_putstr_fd("Error: missing configuration in map file\n", 2);
@@ -50,19 +43,18 @@ int	read_map_2(t_data *data)
 			}
 			break;
 		}
-
 		free(line);
 		line = get_next_line(data->map_data->map_fd);
 	}
-
-	// Lire et stocker la carte
+	while (line && ft_strcmp(line, "\n") == 0)
+	{
+		free(line);
+		line = get_next_line(data->map_data->map_fd);
+	}
 	while (line)
 	{
-		if (ft_strcmp(line, "\n") != 0) // Ignorer les lignes vides dans la carte
-		{
-			data->map_data->map[i] = ft_strdup(line);
-			i++;
-		}
+		data->map_data->map[i] = ft_strdup(line);
+		i++;
 		free(line);
 		line = get_next_line(data->map_data->map_fd);
 	}

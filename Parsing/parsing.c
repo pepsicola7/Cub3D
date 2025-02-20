@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/02/18 16:00:06 by peli             ###   ########.fr       */
+/*   Updated: 2025/02/20 17:16:33 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,38 +16,66 @@ int	read_map_2(t_data *data)
 {
 	int		i;
 	char	*line;
+	int		config_count;
 
 	i = 0;
-	line = NULL;
-	while (get_next_line(data->map_data->map_fd))
+	config_count = 0;
+	line = get_next_line(data->map_data->map_fd);
+		while (line)
 	{
-		line = get_next_line(data->map_data->map_fd);
-		if (ft_strncmp(line, "C ", 2) == 0)
+		// Ignorer les lignes vides avant et entre les configurations
+		if (ft_strcmp(line, "\n") == 0)
 		{
 			free(line);
 			line = get_next_line(data->map_data->map_fd);
-			while (line == "\n")
-			{
-				free(line);
-				line = get_next_line(data->map_data->map_fd);
-				free(line);
-			}
-			while (line = get_next_line(data->map_data->map_fd))
-			{
-				data->map_data->map[i] = line;
-				i++;
-				free(line);
-			}
+			continue;
 		}
-		free (line);
+
+		// Vérifier si c'est une ligne de configuration
+		if (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0 ||
+			ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0 ||
+			ft_strncmp(line, "F", 1) == 0 || ft_strncmp(line, "C", 1) == 0)
+		{
+			store_config(data, line); // Stocker la configuration
+			config_count++; // Incrémenter le compteur
+		}
+		else
+		{
+			// Première ligne qui n'est pas une configuration => début de la carte
+			if (config_count < 6) // Vérifier si toutes les configs ont été définies
+			{
+				free(line);
+				ft_putstr_fd("Error: missing configuration in map file\n", 2);
+				return (0);
+			}
+			break;
+		}
+
+		free(line);
+		line = get_next_line(data->map_data->map_fd);
 	}
-	if (check_description(data))
-		return (0);
+
+	// Lire et stocker la carte
+	while (line)
+	{
+		if (ft_strcmp(line, "\n") != 0) // Ignorer les lignes vides dans la carte
+		{
+			data->map_data->map[i] = ft_strdup(line);
+			i++;
+		}
+		free(line);
+		line = get_next_line(data->map_data->map_fd);
+	}
+	data->map_data->map[i] = NULL; 
+	ft_printf_map(data->map_data->map);
+	// if (check_description(data))
+	// 	return (0);
 	return (1);
 }
 
 int	parsing(t_data *data, char *filename)
 {
+	data->map_data = ft_calloc(sizeof(t_map), 1);
 	data->map_data->map_fd = open(filename, O_RDONLY);
 	if (data->map_data->map_fd == -1)
 		return (0);

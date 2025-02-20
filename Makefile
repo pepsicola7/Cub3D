@@ -7,14 +7,14 @@ YELLOW	:= \033[1;33m
 RESET 	:= \033[0m
 
 NAME    := cub3d
-CFLAGS  := -Wall -Wextra -Werror -Ofast
+CFLAGS  := -Wall -Wextra -Werror -Ofast -g3 -D_REENTRANT
 LIBMLX  := MLX42
 LIBFT   := libft
 
 HEADERS := -I./includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
-SRCS    := srcs/main.c srcs/init.c Parsing/parsing.c
+SRCS    := srcs/main.c srcs/init.c Parsing/parsing.c Parsing/parser_texture.c Parsing/parser_map.c Parsing/printf.c
 OBJS    := $(SRCS:.c=.o)
 
 CC      := cc
@@ -34,7 +34,7 @@ libft:
 libmlx:
 	@if [ ! -d "$(LIBMLX)" ]; then \
 		echo "$(CYAN)Cloning MLX42...$(RESET)"; \
-		git clone https://github.com/codam-coding-college/MLX42.git $(LIBMLX) > /dev/null; \
+		git clone https://github.com/codam-coding-college/MLX42.git $(LIBMLX) /dev/null; \
 		echo "$(GREEN)MLX42 cloned successfully!$(RESET)"; \
 	fi
 	@echo "$(CYAN)Building MLX42...$(RESET)"
@@ -48,10 +48,17 @@ $(NAME): $(OBJS)
 	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 
+dev: fclean libft libmlx $(OBJS)
+	@echo "$(CYAN)Compiling $(NAME) with sanitizers...$(RESET)"
+	@$(CC) $(OBJS) $(LIBS) -fsanitize=address,leak,undefined -g3 $(HEADERS) -o $(NAME)
+	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
+	@echo "$(RED)Development mode enabled!$(RESET)"
+
 clean:
 	@echo "$(CYAN)Cleaning object files...$(RESET)"
 	@rm -rf $(OBJS)
 	@rm -rf $(LIBMLX)/build
+	@echo "$(GREEN)Object files cleaned successfully!$(RESET)"
 
 fclean: clean
 	@echo "$(CYAN)Cleaning libft...$(RESET)"
@@ -65,5 +72,14 @@ fclean: clean
 	@echo "$(GREEN)$(NAME) cleaned successfully!$(RESET)"
 
 re: fclean all
+
+help:
+	@echo "$(CYAN)Available commands:$(RESET)"
+	@echo "$(YELLOW)make$(RESET) - compiles the project"
+	@echo "$(YELLOW)make dev$(RESET) - compiles the project with sanitizers"
+	@echo "$(YELLOW)make clean$(RESET) - removes object files"
+	@echo "$(YELLOW)make fclean$(RESET) - removes object files, libraries and the executable"
+	@echo "$(YELLOW)make re$(RESET) - removes object files, libraries and the executable, then recompiles the project"
+	@echo "$(YELLOW)make help$(RESET) - displays this message"
 
 .PHONY: all clean fclean re libft libmlx

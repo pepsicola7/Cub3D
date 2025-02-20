@@ -60,4 +60,11 @@ typedef struct s_data
 
 int		init_data(t_data *data);
 int		parsing(t_data *data, char *filename);
+void	ft_printf_map(char **map);
+int		read_map_1(t_data *data);
+int		get_color(char *line, t_data *data);
+void	free_split(char **arr);
+int		get_texture(char *line, t_data *data);
+int		read_map_2(t_data *data);
+int		check_description(t_data *data);
 #endif

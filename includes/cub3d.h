@@ -18,9 +18,11 @@
 # define FOV 60
 # define PI_2 M_PI / 2
 # define PI_3 M_PI * 3 / 2
-# define DEGRE 0.0174533
+# define RADIAN 0.0174533
 # define EPSILON 0.0001
-# define TILE_SIZE data->mlx_data->mlx->width / 6 / data->map_data->width
+# define SQUARE_SIZE 32
+# define MAP_SIZE 9
+# define PADDING 1
 
 # define BLUE 0x0000FFFF
 # define GREEN 0x00FF00FF
@@ -36,16 +38,48 @@
 # define BROWN 0xA52A2AFF
 # define GREY 0x808080FF
 
-typedef struct s_bresenham_params
+typedef struct s_vec2f
 {
-	int				dx;
-	int				dy;
-	int				step_x;
-	int				step_y;
-	int				err;
+	float			x;
+	float			y;
+}					t_vec2f;
+
+typedef struct s_vec2i
+{
 	int				x;
 	int				y;
-}					t_bresenham_params;
+}					t_vec2i;
+
+typedef struct s_map_drawing
+{
+	t_vec2i			grid;
+	t_vec2i			pos;
+	t_vec2i			offset;
+	int				half_display;
+	t_vec2i			top_left;
+	t_vec2i			pixel_offset;
+	int				map_x;
+	int				map_y;
+	int				map_index;
+}					t_map_drawing;
+
+typedef struct s_bresenham
+{
+	int				delta_x;
+	int				delta_y;
+	int				step_x;
+	int				step_y;
+	int				error;
+	int				error_adjustment;
+}					t_bresenham;
+
+typedef struct s_distance
+{
+	float			ax;
+	float			ay;
+	float			bx;
+	float			by;
+}					t_distance;
 
 typedef struct s_ray
 {
@@ -61,32 +95,22 @@ typedef struct s_ray
 	float			distance;
 }					t_ray;
 
-typedef struct s_vec2f
-{
-	float			x;
-	float			y;
-}					t_vec2f;
-
-typedef struct s_vec2i
-{
-	int				x;
-	int				y;
-}					t_vec2i;
 
 typedef struct s_mlx
 {
 	mlx_t			*mlx;
 	mlx_image_t		*img;
-	int32_t		old_height;
-	int32_t		old_width;
+	int32_t			old_height;
+	int32_t			old_width;
 }					t_mlx;
 
 typedef struct s_map
 {
-	char			**map;
+	char			*map;
 	int				map_fd;
 	int				width;
 	int				height;
+	int				tile_size;
 }					t_map;
 
 typedef struct s_player
@@ -118,6 +142,8 @@ typedef struct s_data
 
 int					init_data(t_data *data, char *filename);
 void				raycaster(t_data *data);
-void				draw_line(t_data *data, t_vec2i start, t_vec2i end, int color);
+void				draw_line(t_data *data, t_vec2i start, t_vec2i end,
+						int color);
+float				deg_to_rad(int degre);
 
 #endif

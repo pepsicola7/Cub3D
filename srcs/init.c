@@ -2,16 +2,11 @@
 
 void	example_map(t_data *data)
 {
-	data->map_data->map = ft_calloc(6, sizeof(char *));
-	data->map_data->map[0] = ft_strdup("1111111");
-	data->map_data->map[1] = ft_strdup("1000001");
-	data->map_data->map[2] = ft_strdup("1001001");
-	data->map_data->map[3] = ft_strdup("1000001");
-	data->map_data->map[4] = ft_strdup("1111111");
-	data->map_data->width = 7;
-	data->map_data->height = 5;
-	data->player_data->pos.x = 1.5;
-	data->player_data->pos.y = 1.5;
+	data->map_data->map = ft_strdup("1111111111000000011000000011000000011000000011000000011000000011000000011111111111");
+	data->map_data->width = 9;
+	data->map_data->height = 9;
+	data->player_data->pos.x = 3.5;
+	data->player_data->pos.y = 3.5;
 	data->player_data->rotation = 0;
 	data->mlx_data->old_height = data->mlx_data->mlx->height;
 	data->mlx_data->old_width = data->mlx_data->mlx->width;

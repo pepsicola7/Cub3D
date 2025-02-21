@@ -12,22 +12,12 @@
 
 #include "cub3d.h"
 
-void	free_tab(char **tab)
-{
-	int	i;
-
-	i = 0;
-	while (tab && tab[i])
-		free(tab[i++]);
-	free(tab);
-}
-
 void	free_data(t_data *data)
 {
 	free(data->mlx_data);
 	free(data->player_data);
 	free(data->texture_data);
-	free_tab(data->map_data->map);
+	free(data->map_data->map);
 	free(data->map_data);
 	free(data);
 }
@@ -56,30 +46,6 @@ void	draw_square(t_data *data, t_vec2i pos, int size, int color)
 	}
 }
 
-void	draw_background(t_data *data, t_vec2i offset, int size)
-{
-	t_vec2i	pixel;
-
-	pixel.y = -1;
-	while (++pixel.y < data->map_data->height * size)
-	{
-		pixel.x = -1;
-		while (++pixel.x < data->map_data->width * size)
-			mlx_put_pixel(data->mlx_data->img, offset.x + pixel.x, offset.y
-				+ pixel.y, BLACK);
-	}
-}
-
-void	get_minimap_size(t_data *data, int *square_size, t_vec2i *offset)
-{
-	*square_size = (data->mlx_data->mlx->width / 6) / data->map_data->width;
-	if (*square_size < 2)
-		*square_size = 2;
-	offset->x = data->mlx_data->mlx->width - data->map_data->width
-		* *square_size - 20;
-	offset->y = 20;
-}
-
 void	draw_circle(t_data *data, t_vec2i pos, int radius, int color)
 {
 	t_vec2i	pixel;
@@ -94,165 +60,173 @@ void	draw_circle(t_data *data, t_vec2i pos, int radius, int color)
 			dist = sqrt(pixel.x * pixel.x + pixel.y * pixel.y);
 			if (dist < radius)
 				mlx_put_pixel(data->mlx_data->img, pos.x + pixel.x, pos.y
-					+ pixel.y, color);
+				  + pixel.y, color);
 		}
 	}
 }
 
-void	init_bresenham_params(t_bresenham_params *params, t_vec2i start,
-		t_vec2i end)
+void	init_bresenham(t_bresenham *bres, t_vec2i start, t_vec2i end)
 {
-	params->dx = abs(end.x - start.x);
-	params->dy = abs(end.y - start.y);
+	bres->delta_x = abs(end.x - start.x);
+	bres->delta_y = abs(end.y - start.y);
 	if (start.x < end.x)
-		params->step_x = 1;
+		bres->step_x = 1;
 	else
-		params->step_x = -1;
+		bres->step_x = -1;
 	if (start.y < end.y)
-		params->step_y = 1;
+		bres->step_y = 1;
 	else
-		params->step_y = -1;
-	params->x = start.x;
-	params->y = start.y;
-	params->err = params->dx - params->dy;
+		bres->step_y = -1;
+	bres->error = bres->delta_x - bres->delta_y;
 }
 
 void	draw_line(t_data *data, t_vec2i start, t_vec2i end, int color)
 {
-	t_bresenham_params	params;
-	int					err2;
+	t_bresenham	bres;
 
-	init_bresenham_params(&params, start, end);
-	while (params.x != end.x || params.y != end.y)
+	init_bresenham(&bres, start, end);
+	while (1)
 	{
-		mlx_put_pixel(data->mlx_data->img, params.x, params.y, color);
-		err2 = params.err * 2;
-		if (err2 > -params.dy)
+		mlx_put_pixel(data->mlx_data->img, start.x, start.y, color);
+		if (start.x == end.x && start.y == end.y)
+			break ;
+		bres.error_adjustment = 2 * bres.error;
+		if (bres.error_adjustment > -bres.delta_y)
 		{
-			params.err -= params.dy;
-			params.x += params.step_x;
+			bres.error -= bres.delta_y;
+			start.x += bres.step_x;
 		}
-		if (err2 < params.dx)
+		if (bres.error_adjustment < bres.delta_x)
 		{
-			params.err += params.dx;
-			params.y += params.step_y;
+			bres.error += bres.delta_x;
+			start.y += bres.step_y;
 		}
 	}
-	mlx_put_pixel(data->mlx_data->img, params.x, params.y, color);
 }
 
-void	draw_player(t_data *data, t_vec2i offset, int square_size)
+void	draw_background(t_data *data, t_vec2i pos, int size)
 {
-	t_vec2f	pos;
-	t_vec2f	dir;
+	t_vec2i	pixel;
+
+	pixel.y = 0;
+	while (++pixel.y < size)
+	{
+		pixel.x = 0;
+		while (++pixel.x < size)
+			mlx_put_pixel(data->mlx_data->img, pos.x + pixel.x, pos.y + pixel.y,
+				BLACK);
+	}
+}
+
+void	draw_player(t_data *data, t_vec2i pos, int size)
+{
 	t_vec2i	center;
-	t_vec2i	line_end;
+	t_vec2i	end;
 
-	pos.x = offset.x + data->player_data->pos.x * square_size;
-	pos.y = offset.y + data->player_data->pos.y * square_size;
-	center.x = (int)pos.x;
-	center.y = (int)pos.y;
-	dir.x = cos(data->player_data->rotation) * 12;
-	dir.y = sin(data->player_data->rotation) * 12;
-	line_end.x = center.x + (int)dir.x;
-	line_end.y = center.y + (int)dir.y;
-	draw_line(data, center, line_end, RED);
-	draw_circle(data, center, square_size / 10, GREEN);
+	center.x = pos.x + size / 2;
+	center.y = pos.y + size / 2;
+	end.x = center.x + cos(deg_to_rad(data->player_data->rotation)) * size / 2;
+	end.y = center.y + sin(deg_to_rad(data->player_data->rotation)) * size / 2;
+	draw_line(data, center, end, RED);
+	draw_circle(data, center, size / 2, GREEN);
 }
-void	render_minimap(t_data *data)
-{
-	int		square_size;
-	t_vec2i	offset;
-	t_vec2i	grid;
-	t_vec2i	pos;
 
-	get_minimap_size(data, &square_size, &offset);
-	draw_background(data, offset, square_size);
-	grid.y = -1;
-	while (++grid.y < data->map_data->height)
+int	get_map_index(t_data *data, int x, int y)
+{
+	if (x < 0 || x >= data->map_data->width || y < 0
+		|| y >= data->map_data->height)
+		return (-1);
+	return (y * data->map_data->width + x);
+}
+
+void render_minimap(t_data *data)
+{
+	t_map_drawing draw;
+
+	// Calculate half of the minimap size for centering the player
+	draw.half_display = MAP_SIZE / 2;
+
+	// Calculate the top-left corner of the minimap (with respect to player's position)
+	draw.top_left.x = (int)data->player_data->pos.x - draw.half_display;
+	draw.top_left.y = (int)data->player_data->pos.y - draw.half_display;
+
+	// Clamp the minimap's top-left position to prevent scrolling beyond the map's edges
+	if (draw.top_left.x < 0)
+		draw.top_left.x = 0;
+	if (draw.top_left.y < 0)
+		draw.top_left.y = 0;
+
+	// Ensure the minimap doesn't scroll beyond the bottom/right edge of the map
+	if (draw.top_left.x + MAP_SIZE > data->map_data->width)
+		draw.top_left.x = data->map_data->width - MAP_SIZE;
+	if (draw.top_left.y + MAP_SIZE > data->map_data->height)
+		draw.top_left.y = data->map_data->height - MAP_SIZE;
+
+	// Calculate fractional part of player's position for smooth scrolling
+	draw.pixel_offset.x = (int)((data->player_data->pos.x - (int)data->player_data->pos.x) * SQUARE_SIZE);
+	draw.pixel_offset.y = (int)((data->player_data->pos.y - (int)data->player_data->pos.y) * SQUARE_SIZE);
+
+	// Minimap screen offset (adjusted to reduce padding)
+	draw.offset.x = 5; // Reduced padding
+	draw.offset.y = 5; // Reduced padding
+
+	// Draw background
+	draw_background(data, draw.offset, MAP_SIZE * SQUARE_SIZE);
+
+	// Iterate through the grid and draw each tile
+	draw.grid.y = -1;
+	while (++(draw.grid.y) < MAP_SIZE)
 	{
-		grid.x = -1;
-		while (++grid.x < data->map_data->width)
+		draw.grid.x = -1;
+		while (++(draw.grid.x) < MAP_SIZE)
 		{
-			pos.x = offset.x + grid.x * square_size;
-			pos.y = offset.y + grid.y * square_size;
-			if (data->map_data->map[grid.y][grid.x] == '1')
-				draw_square(data, pos, square_size, GREY);
-			else if (data->map_data->map[grid.y][grid.x] == '0')
-				draw_square(data, pos, square_size, BLUE);
+			// Calculate map coordinates for each grid tile
+			draw.map_x = draw.top_left.x + draw.grid.x;
+			draw.map_y = draw.top_left.y + draw.grid.y;
+
+			// Get the map index (ensure it's within bounds)
+			draw.map_index = get_map_index(data, draw.map_x, draw.map_y);
+			if (draw.map_index == -1) {
+				// Skip this tile if the index is invalid
+				draw.grid.x++;
+				continue;
+			}
+
+			// Calculate the screen position of the current tile
+			draw.pos.x = draw.offset.x + draw.grid.x * SQUARE_SIZE - draw.pixel_offset.x;
+			draw.pos.y = draw.offset.y + draw.grid.y * SQUARE_SIZE - draw.pixel_offset.y;
+
+			// Draw the map square based on the map data
+			if (data->map_data->map[draw.map_index] == '1')
+				draw_square(data, draw.pos, SQUARE_SIZE, GREY); // No padding for squares
+			else if (data->map_data->map[draw.map_index] == '0')
+				draw_square(data, draw.pos, SQUARE_SIZE, BLUE); // No padding for squares
 		}
 	}
-	draw_player(data, offset, square_size);
-	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
+
+	// Draw the player on the minimap (small square, centered)
+	draw_player(data, draw.offset, 7); // Small player square with no padding
 }
 
-void	move_player(t_data *data, float speed, float y, float x)
-{
-	t_vec2f	new_pos;
 
-	new_pos.x = data->player_data->pos.x + x * speed;
-	new_pos.y = data->player_data->pos.y + y * speed;
-	if (new_pos.x < 0 || new_pos.y < 0 || new_pos.x >= data->map_data->width
-		|| new_pos.y >= data->map_data->height)
-		return ;
-	if (data->map_data->map[(int)new_pos.y][(int)data->player_data->pos.x] == '0')
-		data->player_data->pos.y = new_pos.y;
-	if (data->map_data->map[(int)data->player_data->pos.y][(int)new_pos.x] == '0')
-		data->player_data->pos.x = new_pos.x;
-}
-
-void	render_all(void *vdata)
+void render_all(void *vdata)
 {
 	t_data	*data;
 
 	data = (t_data *)vdata;
-	if (data->mlx_data->mlx->width != data->mlx_data->old_width
-		|| data->mlx_data->mlx->height != data->mlx_data->old_height)
-	{
-		data->mlx_data->old_height = data->mlx_data->mlx->height;
-		data->mlx_data->old_width = data->mlx_data->mlx->width;
-		ft_memset(data->mlx_data->img->pixels, 255, data->mlx_data->img->width
-			* data->mlx_data->img->height * sizeof(int32_t));
-		render_minimap(data);
-	}
-	else if (data->player_data->last_pos.x != data->player_data->pos.x
-		|| data->player_data->last_pos.y != data->player_data->pos.y
-		|| data->player_data->last_rotation != data->player_data->rotation)
-	{
-		render_minimap(data);
-		data->player_data->last_pos = data->player_data->pos;
-		data->player_data->last_rotation = data->player_data->rotation;
-		raycaster(data);
-	}
+	ft_memset(data->mlx_data->img->pixels, 255, data->mlx_data->img->width
+		* data->mlx_data->img->height * sizeof(int32_t));
+	render_minimap(data);
+	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 }
 
 void	key_handling(struct mlx_key_data key_data, void *vdata)
 {
 	t_data	*data;
-	float	move_speed;
 
 	data = (t_data *)vdata;
-	move_speed = 0.2 * (2 * data->player_data->sprint + 1)
-		* data->mlx_data->mlx->delta_time;
 	if (key_data.key == MLX_KEY_ESCAPE)
 		exit_program(data, 0);
-	else if (key_data.key == MLX_KEY_LEFT_SHIFT)
-		data->player_data->sprint = !data->player_data->sprint;
-	else if (key_data.key == MLX_KEY_UP)
-		move_player(data, move_speed, sin(data->player_data->rotation),
-			cos(data->player_data->rotation));
-	else if (key_data.key == MLX_KEY_DOWN)
-		move_player(data, -move_speed, sin(data->player_data->rotation),
-			cos(data->player_data->rotation));
-	else if (key_data.key == MLX_KEY_LEFT)
-		data->player_data->rotation -= 0.0174533;
-	else if (key_data.key == MLX_KEY_RIGHT)
-		data->player_data->rotation += 0.0174533;
-	if (data->player_data->rotation < 0)
-		data->player_data->rotation += 2 * M_PI;
-	else if (data->player_data->rotation >= 2 * M_PI)
-		data->player_data->rotation -= 2 * M_PI;
-	render_all(data);
 }
 
 int	main(int ac, char **av)

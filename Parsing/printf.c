@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:31:21 by peli              #+#    #+#             */
-/*   Updated: 2025/02/19 14:37:45 by peli             ###   ########.fr       */
+/*   Updated: 2025/02/21 18:22:27 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_printf_map(char **map)
 	i = 0;
 	while (map[i])
 	{
-		printf("%s", map[i]);
+		printf("%s\n", map[i]);
 		i++;
 	}
 	return ;

@@ -29,6 +29,7 @@ typedef struct s_map
 {
 	char			**map;
 	int				map_fd;
+	int				ligne_total;
 	int				width;
 	int				height;
 }					t_map;
@@ -67,4 +68,5 @@ void	free_split(char **arr);
 int		get_texture(char *line, t_data *data);
 int		read_map_2(t_data *data);
 int		check_description(t_data *data);
+char	*ft_get_next_line(int fd);
 #endif

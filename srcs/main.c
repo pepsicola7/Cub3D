@@ -17,6 +17,6 @@ int main(int ac, char **av)
 	parsing(data, av[1]);
 	// if (init_data(data, av[1]) == -1)
 	// 	exit_program(data, 1);
-	mlx_loop(data->mlx_data->mlx);
-	mlx_terminate(data->mlx_data->mlx);
+	// mlx_loop(data->mlx_data->mlx);
+	// mlx_terminate(data->mlx_data->mlx);
 }

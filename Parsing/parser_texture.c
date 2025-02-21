@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:15:34 by peli              #+#    #+#             */
-/*   Updated: 2025/02/20 14:27:52 by peli             ###   ########.fr       */
+/*   Updated: 2025/02/21 18:39:06 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,24 +78,32 @@ int	get_color(char *line, t_data *data)
 int	read_map_1(t_data *data)
 {
 	char	*line;
-	int		in_map;
 
-	in_map = 0;
 	line = get_next_line(data->map_data->map_fd);
+	// printf("%d\n", data->map_data->map_fd);
+	// printf("%s\n", line);
+	// fflush(stdout);
 	while (line)
 	{
-		if ( ft_strncmp(line, "NO ", 3) == 0 || ft_strncmp(line, "SO ", 3) == 0
+		if (ft_strncmp(line, "NO ", 3) == 0 || ft_strncmp(line, "SO ", 3) == 0
 			|| ft_strncmp(line, "WE ", 3) || ft_strncmp(line, "EA ", 3) == 0)
 		{
 			if (!get_texture(line, data))
+			{
+				free(line);
 				return (0);
+			}
 		}
 		if (ft_strncmp(line, "F ", 2) == 0 || ft_strncmp(line, "C ", 2) == 0)
 		{
 			if (get_color(line, data))
+			{
+				free(line);
 				return (0);
+			}
 		}
 		free (line);
+		line = get_next_line(data->map_data->map_fd);
 	}
 	return (1);
 }

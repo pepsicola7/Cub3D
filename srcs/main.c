@@ -41,7 +41,7 @@ void	draw_square(t_data *data, t_vec2i pos, int size, int color)
 	{
 		pixel.x = 0;
 		while (++pixel.x < size - 1)
-			mlx_put_pixel(data->mlx_data->img, pos.x + pixel.x, pos.y + pixel.y,
+			ft_put_pixel(data, pos.x + pixel.x, pos.y + pixel.y,
 				color);
 	}
 }
@@ -59,7 +59,7 @@ void	draw_circle(t_data *data, t_vec2i pos, int radius, int color)
 		{
 			dist = sqrt(pixel.x * pixel.x + pixel.y * pixel.y);
 			if (dist < radius)
-				mlx_put_pixel(data->mlx_data->img, pos.x + pixel.x, pos.y
+				ft_put_pixel(data, pos.x + pixel.x, pos.y
 				  + pixel.y, color);
 		}
 	}
@@ -87,7 +87,7 @@ void	draw_line(t_data *data, t_vec2i start, t_vec2i end, int color)
 	init_bresenham(&bres, start, end);
 	while (1)
 	{
-		mlx_put_pixel(data->mlx_data->img, start.x, start.y, color);
+		ft_put_pixel(data, start.x, start.y, color);
 		if (start.x == end.x && start.y == end.y)
 			break ;
 		bres.error_adjustment = 2 * bres.error;
@@ -104,17 +104,17 @@ void	draw_line(t_data *data, t_vec2i start, t_vec2i end, int color)
 	}
 }
 
-void	draw_background(t_data *data, t_vec2i pos, int size)
+void	draw_background(t_data *data, t_vec2i pos, t_vec2i end, int color)
 {
-	t_vec2i	pixel;
+	int tmp_x;
 
-	pixel.y = 0;
-	while (++pixel.y < size)
+	tmp_x = pos.x;
+	while (pos.y < end.y)
 	{
-		pixel.x = 0;
-		while (++pixel.x < size)
-			mlx_put_pixel(data->mlx_data->img, pos.x + pixel.x, pos.y + pixel.y,
-				BLACK);
+		pos.x = tmp_x;
+		while (pos.x < end.x)
+			ft_put_pixel(data, pos.x++, pos.y, color);
+		pos.y++;
 	}
 }
 
@@ -141,73 +141,26 @@ int	get_map_index(t_data *data, int x, int y)
 
 void render_minimap(t_data *data)
 {
-	t_map_drawing draw;
+	t_vec2i	pos;
+	int		index;
 
-	// Calculate half of the minimap size for centering the player
-	draw.half_display = MAP_SIZE / 2;
-
-	// Calculate the top-left corner of the minimap (with respect to player's position)
-	draw.top_left.x = (int)data->player_data->pos.x - draw.half_display;
-	draw.top_left.y = (int)data->player_data->pos.y - draw.half_display;
-
-	// Clamp the minimap's top-left position to prevent scrolling beyond the map's edges
-	if (draw.top_left.x < 0)
-		draw.top_left.x = 0;
-	if (draw.top_left.y < 0)
-		draw.top_left.y = 0;
-
-	// Ensure the minimap doesn't scroll beyond the bottom/right edge of the map
-	if (draw.top_left.x + MAP_SIZE > data->map_data->width)
-		draw.top_left.x = data->map_data->width - MAP_SIZE;
-	if (draw.top_left.y + MAP_SIZE > data->map_data->height)
-		draw.top_left.y = data->map_data->height - MAP_SIZE;
-
-	// Calculate fractional part of player's position for smooth scrolling
-	draw.pixel_offset.x = (int)((data->player_data->pos.x - (int)data->player_data->pos.x) * SQUARE_SIZE);
-	draw.pixel_offset.y = (int)((data->player_data->pos.y - (int)data->player_data->pos.y) * SQUARE_SIZE);
-
-	// Minimap screen offset (adjusted to reduce padding)
-	draw.offset.x = 5; // Reduced padding
-	draw.offset.y = 5; // Reduced padding
-
-	// Draw background
-	draw_background(data, draw.offset, MAP_SIZE * SQUARE_SIZE);
-
-	// Iterate through the grid and draw each tile
-	draw.grid.y = -1;
-	while (++(draw.grid.y) < MAP_SIZE)
+	pos.y = 0;
+	while (pos.y < data->map_data->height)
 	{
-		draw.grid.x = -1;
-		while (++(draw.grid.x) < MAP_SIZE)
+		pos.x = 0;
+		while (pos.x < data->map_data->width)
 		{
-			// Calculate map coordinates for each grid tile
-			draw.map_x = draw.top_left.x + draw.grid.x;
-			draw.map_y = draw.top_left.y + draw.grid.y;
-
-			// Get the map index (ensure it's within bounds)
-			draw.map_index = get_map_index(data, draw.map_x, draw.map_y);
-			if (draw.map_index == -1) {
-				// Skip this tile if the index is invalid
-				draw.grid.x++;
-				continue;
-			}
-
-			// Calculate the screen position of the current tile
-			draw.pos.x = draw.offset.x + draw.grid.x * SQUARE_SIZE - draw.pixel_offset.x;
-			draw.pos.y = draw.offset.y + draw.grid.y * SQUARE_SIZE - draw.pixel_offset.y;
-
-			// Draw the map square based on the map data
-			if (data->map_data->map[draw.map_index] == '1')
-				draw_square(data, draw.pos, SQUARE_SIZE, GREY); // No padding for squares
-			else if (data->map_data->map[draw.map_index] == '0')
-				draw_square(data, draw.pos, SQUARE_SIZE, BLUE); // No padding for squares
+			index = get_map_index(data, pos.x, pos.y);
+			if (data->map_data->map[index] == '1')
+				draw_square(data, pos, data->map_data->tile_size, GREY);
+			else if (data->map_data->map[index] == '0')
+				draw_square(data, pos, data->map_data->tile_size, BLUE);
+			pos.x += data->map_data->tile_size;
 		}
+		pos.y += data->map_data->tile_size;
 	}
-
-	// Draw the player on the minimap (small square, centered)
-	draw_player(data, draw.offset, 7); // Small player square with no padding
+	/*draw_player(data, data->player_data->pos, data->map_data->tile_size);*/
 }
-
 
 void render_all(void *vdata)
 {

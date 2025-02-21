@@ -14,7 +14,7 @@ LIBFT   := libft
 HEADERS := -I./includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
-SRCS    := srcs/main.c srcs/init.c srcs/raycasting.c
+SRCS    := srcs/main.c srcs/init.c srcs/raycasting.c srcs/render_utils.c
 OBJS    := $(SRCS:.c=.o)
 
 CC      := cc
@@ -57,15 +57,14 @@ dev: fclean libft libmlx $(OBJS)
 clean:
 	@echo "$(CYAN)Cleaning object files...$(RESET)"
 	@rm -rf $(OBJS)
-	@rm -rf $(LIBMLX)/build
 	@echo "$(GREEN)Object files cleaned successfully!$(RESET)"
 
 fclean: clean
 	@echo "$(CYAN)Cleaning libft...$(RESET)"
-	@make -C $(LIBFT) fclean > /dev/null
+	#@make -C $(LIBFT) fclean > /dev/null
 	@echo "$(GREEN)Libft cleaned successfully!$(RESET)"
 	@echo "$(CYAN)Cleaning MLX42...$(RESET)"
-	@rm -rf $(LIBMLX)/build
+	#@rm -rf $(LIBMLX)/build
 	@echo "$(GREEN)MLX42 cleaned successfully!$(RESET)"
 	@echo "$(CYAN)Cleaning $(NAME)...$(RESET)"
 	@rm -f $(NAME)

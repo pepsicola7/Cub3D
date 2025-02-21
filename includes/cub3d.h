@@ -145,5 +145,6 @@ void				raycaster(t_data *data);
 void				draw_line(t_data *data, t_vec2i start, t_vec2i end,
 						int color);
 float				deg_to_rad(int degre);
+void				ft_put_pixel(t_data *data, int x, int y, int color);
 
 #endif

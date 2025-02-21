@@ -20,7 +20,7 @@
 # define PI_3 M_PI * 3 / 2
 # define RADIAN 0.0174533
 # define EPSILON 0.0001
-# define SQUARE_SIZE 32
+//# define SQUARE_SIZE 32
 # define MAP_SIZE 9
 # define PADDING 1
 

@@ -5,6 +5,7 @@ void	example_map(t_data *data)
 	data->map_data->map = ft_strdup("1111111111000000011000000011000000011000000011000000011000000011000000011111111111");
 	data->map_data->width = 9;
 	data->map_data->height = 9;
+	data->map_data->tile_size = 64;
 	data->player_data->pos.x = 3.5;
 	data->player_data->pos.y = 3.5;
 	data->player_data->rotation = 0;

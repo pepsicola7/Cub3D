@@ -141,25 +141,7 @@ int	get_map_index(t_data *data, int x, int y)
 
 void render_minimap(t_data *data)
 {
-	t_vec2i	pos;
-	int		index;
 
-	pos.y = 0;
-	while (pos.y < data->map_data->height)
-	{
-		pos.x = 0;
-		while (pos.x < data->map_data->width)
-		{
-			index = get_map_index(data, pos.x, pos.y);
-			if (data->map_data->map[index] == '1')
-				draw_square(data, pos, data->map_data->tile_size, GREY);
-			else if (data->map_data->map[index] == '0')
-				draw_square(data, pos, data->map_data->tile_size, BLUE);
-			pos.x += data->map_data->tile_size;
-		}
-		pos.y += data->map_data->tile_size;
-	}
-	/*draw_player(data, data->player_data->pos, data->map_data->tile_size);*/
 }
 
 void render_all(void *vdata)

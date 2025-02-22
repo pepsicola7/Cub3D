@@ -119,9 +119,13 @@ typedef struct s_data
 	t_texture_data	*texture;
 }					t_data;
 
+/*-----------------Exit Program----------------*/
+
+void				exit_program(t_data *data, int status);
+
 /*----------------Initialization---------------*/
 
-int					init_data(t_data *data, char *filename);
+int					init_data(t_data *data);
 
 /*------------------Math Utils-----------------*/
 
@@ -140,6 +144,6 @@ void				draw_circle(t_data *data, t_vec2i pos, int radius,
 
 /*-----------------Raycasting------------------*/
 
-void				cast_rays(t_data *data);
+void				render(void *param);
 
 #endif

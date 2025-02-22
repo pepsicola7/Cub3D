@@ -6,8 +6,8 @@ void	example_map(t_data *data)
 	data->map_data->width = 9;
 	data->map_data->height = 9;
 	data->map_data->tile_size = 64;
-	data->player_data->pos.x = 3.5;
-	data->player_data->pos.y = 3.5;
+	data->player_data->pos_x = 3.5;
+	data->player_data->pos_y = 3.5;
 	data->player_data->rotation = 0;
 	data->mlx_data->old_height = data->mlx_data->mlx->height;
 	data->mlx_data->old_width = data->mlx_data->mlx->width;

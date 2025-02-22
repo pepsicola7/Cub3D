@@ -12,17 +12,12 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define WIN_HEIGHT 1080
-# define WIN_WIDTH 1920
+# define WIN_HEIGHT	1024
+# define WIN_WIDTH 900
 
 # define FOV 60
-# define PI_2 M_PI / 2
-# define PI_3 M_PI * 3 / 2
-# define RADIAN 0.0174533
-# define EPSILON 0.0001
-//# define SQUARE_SIZE 32
-# define MAP_SIZE 9
-# define PADDING 1
+# define MOVE_SPEED 0.05
+# define ROTATE_SPEED 0.03
 
 # define BLUE 0x0000FFFF
 # define GREEN 0x00FF00FF
@@ -50,18 +45,19 @@ typedef struct s_vec2i
 	int				y;
 }					t_vec2i;
 
-typedef struct s_map_drawing
+typedef struct s_ray
 {
-	t_vec2i			grid;
-	t_vec2i			pos;
-	t_vec2i			offset;
-	int				half_display;
-	t_vec2i			top_left;
-	t_vec2i			pixel_offset;
+	t_vec2f			dir;
+	t_vec2f			side_dist;
+	t_vec2f			delta_dist;
 	int				map_x;
 	int				map_y;
-	int				map_index;
-}					t_map_drawing;
+	int				step_x;
+	int				step_y;
+	int				hit;
+	int				side;
+	float			perp_wall_dist;
+}					t_ray;
 
 typedef struct s_bresenham
 {
@@ -81,21 +77,6 @@ typedef struct s_distance
 	float			by;
 }					t_distance;
 
-typedef struct s_ray
-{
-	int				map_x;
-	int				map_y;
-	int				map_1d;
-	int				depth_of_field;
-	float			ray_x;
-	float			ray_y;
-	float			ray_angle;
-	float			x_offset;
-	float			y_offset;
-	float			distance;
-}					t_ray;
-
-
 typedef struct s_mlx
 {
 	mlx_t			*mlx;
@@ -107,19 +88,17 @@ typedef struct s_mlx
 typedef struct s_map
 {
 	char			*map;
-	int				map_fd;
 	int				width;
 	int				height;
-	int				tile_size;
 }					t_map;
 
 typedef struct s_player
 {
 	t_vec2f			pos;
-	float			rotation;
-	bool			sprint;
-	t_vec2f			last_pos;
-	int				last_rotation;
+	t_vec2f			dir;
+	t_vec2f			plane;
+	t_vec2f			old_pos;
+	t_vec2f			old_dir;
 }					t_player;
 
 typedef struct s_texture_data
@@ -136,15 +115,31 @@ typedef struct s_data
 {
 	t_mlx			*mlx_data;
 	t_map			*map_data;
-	t_player		*player_data;
-	t_texture_data	*texture_data;
+	t_player		*player;
+	t_texture_data	*texture;
 }					t_data;
 
+/*----------------Initialization---------------*/
+
 int					init_data(t_data *data, char *filename);
-void				raycaster(t_data *data);
+
+/*------------------Math Utils-----------------*/
+
+float				deg_to_rad(int degre);
+int					get_map_index(t_data *data, int x, int y);
+
+/*---------------Rendering Utils---------------*/
+
+void				ft_put_pixel(t_data *data, int x, int y, int color);
+void				draw_quads(t_data *data, t_vec2i start, t_vec2i end,
+						int color);
 void				draw_line(t_data *data, t_vec2i start, t_vec2i end,
 						int color);
-float				deg_to_rad(int degre);
-void				ft_put_pixel(t_data *data, int x, int y, int color);
+void				draw_circle(t_data *data, t_vec2i pos, int radius,
+						int color);
+
+/*-----------------Raycasting------------------*/
+
+void				cast_rays(t_data *data);
 
 #endif

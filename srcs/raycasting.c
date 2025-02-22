@@ -2,7 +2,8 @@
 
 inline int	get_map_value(t_data *data, int x, int y)
 {
-	if (x < 0 || x >= data->map_data->width || y < 0 || y >= data->map_data->height)
+	if (x < 0 || x >= data->map_data->width || y < 0
+		|| y >= data->map_data->height)
 		return (1);
 	return (data->map_data->map[y * data->map_data->width + x]);
 }
@@ -54,18 +55,19 @@ void	draw_vertical_line(t_data *data, t_ray *ray, int x)
 	draw_end = line_height / 2 + data->mlx_data->old_height / 2;
 	if (draw_end >= data->mlx_data->old_height)
 		draw_end = data->mlx_data->old_height - 1;
-	// Draw ceiling
-	for (int y = 0; y < draw_start; y++)
+	// Draw ceiling (from 0 to draw_start)
+	for (int y = 0; y < draw_start && y < data->mlx_data->old_height; y++)
 		mlx_put_pixel(data->mlx_data->img, x, y, data->texture->ceiling_color);
 	// Choose texture and color based on wall side
 	if (ray->side == 0)
 		color = (ray->step_x > 0) ? BLUE : RED; // East/West
 	else
 		color = (ray->step_y > 0) ? YELLOW : GREEN; // North/South
-	// Draw wall
-	for (int y = draw_start; y < draw_end; y++)
+	// Draw wall (from draw_start to draw_end)
+	for (int y = draw_start; y < draw_end
+		&& y < data->mlx_data->old_height; y++)
 		mlx_put_pixel(data->mlx_data->img, x, y, color);
-	// Draw floor
+	// Draw floor (from draw_end to screen bottom)
 	for (int y = draw_end; y < data->mlx_data->old_height; y++)
 		mlx_put_pixel(data->mlx_data->img, x, y, data->texture->floor_color);
 }
@@ -129,35 +131,37 @@ void	render(void *param)
 
 void	move_player(mlx_key_data_t keydata, void *vdata)
 {
-	t_data		*data;
-	t_vec2f		new_pos;
-	float		dir;
-	float		angle;
-	float		old_dir_x;
-	float		old_plane_x;
+	t_data	*data;
+	t_vec2f	new_pos;
+	float	dir;
+	float	angle;
+	float	old_dir_x;
+	float	old_plane_x;
 
 	data = (t_data *)vdata;
+	if (keydata.action != MLX_PRESS && keydata.action != MLX_REPEAT)
+		return ;
 	if (keydata.key == MLX_KEY_ESCAPE)
 		exit_program(data, 0);
 	// Forward / Backward
 	if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_S)
 	{
+		printf("Moving player\n");
 		dir = (keydata.key == MLX_KEY_W) ? 1.0f : -1.0f;
 		new_pos.x = data->player->pos.x + data->player->dir.x * MOVE_SPEED
 			* dir;
 		new_pos.y = data->player->pos.y + data->player->dir.y * MOVE_SPEED
 			* dir;
 		// Collision check
-		if (!get_map_value(data, (int)new_pos.x,
-				(int)data->player->pos.y))
+		if (!get_map_value(data, (int)new_pos.x, (int)data->player->pos.y))
 			data->player->pos.x = new_pos.x;
-		if (!get_map_value(data, (int)data->player->pos.x,
-				(int)new_pos.y))
+		if (!get_map_value(data, (int)data->player->pos.x, (int)new_pos.y))
 			data->player->pos.y = new_pos.y;
 	}
 	// Rotate Left / Right
 	if (keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_RIGHT)
 	{
+		printf("Rotating player\n");
 		angle = (keydata.key == MLX_KEY_LEFT) ? ROTATE_SPEED : -ROTATE_SPEED;
 		old_dir_x = data->player->dir.x;
 		old_plane_x = data->player->plane.x;

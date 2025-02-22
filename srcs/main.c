@@ -58,15 +58,6 @@ void	render_all(void *vdata)
 	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 }
 
-void	key_handling(struct mlx_key_data key_data, void *vdata)
-{
-	t_data	*data;
-
-	data = (t_data *)vdata;
-	if (key_data.key == MLX_KEY_ESCAPE)
-		exit_program(data, 0);
-}
-
 int	main(int ac, char **av)
 {
 	t_data	*data;
@@ -83,7 +74,7 @@ int	main(int ac, char **av)
 	if (init_data(data) == -1)
 		exit_program(data, 1);
 	// render_minimap(data);
-	mlx_key_hook(data->mlx_data->mlx, key_handling, data);
+	mlx_key_hook(data->mlx_data->mlx, move_player, data);
 	mlx_loop_hook(data->mlx_data->mlx, render_all, data);
 	mlx_loop(data->mlx_data->mlx);
 	free_data(data);

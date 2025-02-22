@@ -142,6 +142,10 @@ void				draw_line(t_data *data, t_vec2i start, t_vec2i end,
 void				draw_circle(t_data *data, t_vec2i pos, int radius,
 						int color);
 
+/*----------------Key Handling-----------------*/
+
+void	move_player(mlx_key_data_t keydata, void *vdata);
+
 /*-----------------Raycasting------------------*/
 
 void				render(void *param);

@@ -12,14 +12,15 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define WIN_HEIGHT	1024
+# define WIN_HEIGHT 1024
 # define WIN_WIDTH 900
 
 # define FOV 60
-# define MOVE_SPEED 0.05
-# define ROTATE_SPEED 0.03
+# define MOVE_SPEED 0.01
+# define ROTATE_SPEED 0.01
 
 # define BLUE 0x0000FFFF
+# define LIGHT_BLUE 0xADD8E6FF
 # define GREEN 0x00FF00FF
 # define RED 0xFF0000FF
 # define WHITE 0xFFFFFFFF
@@ -134,7 +135,7 @@ int					get_map_index(t_data *data, int x, int y);
 
 /*---------------Rendering Utils---------------*/
 
-void				ft_put_pixel(t_data *data, int x, int y, int color);
+void				ft_put_pixel(mlx_image_t *img, uint32_t x, uint32_t y, uint32_t color);
 void				draw_quads(t_data *data, t_vec2i start, t_vec2i end,
 						int color);
 void				draw_line(t_data *data, t_vec2i start, t_vec2i end,
@@ -144,7 +145,7 @@ void				draw_circle(t_data *data, t_vec2i pos, int radius,
 
 /*----------------Key Handling-----------------*/
 
-void	move_player(mlx_key_data_t keydata, void *vdata);
+void				move_player(mlx_key_data_t keydata, void *vdata);
 
 /*-----------------Raycasting------------------*/
 

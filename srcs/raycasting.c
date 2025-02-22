@@ -28,7 +28,10 @@ void	perform_dda(t_data *data, t_ray *ray)
 		}
 		// Check wall hit
 		if (get_map_value(data, ray->map_x, ray->map_y))
+		{
+			printf("Ray hit at: %d, %d\n", ray->map_x, ray->map_y);
 			ray->hit = 1;
+		}
 	}
 	// Calculate perpendicular wall distance
 	if (ray->side == 0)
@@ -66,10 +69,10 @@ void	draw_vertical_line(t_data *data, t_ray *ray, int x)
 	// Draw wall (from draw_start to draw_end)
 	for (int y = draw_start; y < draw_end
 		&& y < data->mlx_data->old_height; y++)
-		mlx_put_pixel(data->mlx_data->img, x, y, color);
+		ft_put_pixel(data->mlx_data->img, x, y, color);
 	// Draw floor (from draw_end to screen bottom)
 	for (int y = draw_end; y < data->mlx_data->old_height; y++)
-		mlx_put_pixel(data->mlx_data->img, x, y, data->texture->floor_color);
+		ft_put_pixel(data->mlx_data->img, x, y, data->texture->floor_color);
 }
 
 void	cast_ray(t_data *data, int x)
@@ -121,7 +124,7 @@ void	render(void *param)
 
 	data = (t_data *)param;
 	// Cast rays
-	printf("Player pos: %f, %f\n", data->player->pos.x, data->player->pos.y);
+	printf("Player pos: %f, %f\nPlayer Rotation: %f, %f\n", data->player->pos.x, data->player->pos.y, data->player->dir.x, data->player->dir.y);
 	for (int x = 0; x < data->mlx_data->old_width; x++)
 	{
 		// printf("Casting ray for x = %d\n", x);
@@ -146,16 +149,17 @@ void	move_player(mlx_key_data_t keydata, void *vdata)
 	// Forward / Backward
 	if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_S)
 	{
-		printf("Moving player\n");
 		dir = (keydata.key == MLX_KEY_W) ? 1.0f : -1.0f;
 		new_pos.x = data->player->pos.x + data->player->dir.x * MOVE_SPEED
 			* dir;
 		new_pos.y = data->player->pos.y + data->player->dir.y * MOVE_SPEED
 			* dir;
+		printf("Moving player from: %f, %f\tto: %f, %f\n", data->player->pos.x, data->player->pos.y, new_pos.x, new_pos.y);
 		// Collision check
-		if (!get_map_value(data, (int)new_pos.x, (int)data->player->pos.y))
+		printf("Map value: %d\n", get_map_value(data, (int)new_pos.x, (int)data->player->pos.y));
+		if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
 			data->player->pos.x = new_pos.x;
-		if (!get_map_value(data, (int)data->player->pos.x, (int)new_pos.y))
+		if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
 			data->player->pos.y = new_pos.y;
 	}
 	// Rotate Left / Right

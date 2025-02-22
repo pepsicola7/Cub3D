@@ -1,15 +1,24 @@
 #include "cub3d.h"
 
-void ft_put_pixel(t_data *data, int x, int y, int color)
+void	ft_draw_pixel(uint8_t *pixel, uint32_t color)
 {
-	if (x < 0 || x >= (int)data->mlx_data->img->width || y < 0
-		|| y >= (int)data->mlx_data->img->height)
-		return ;
-	*(int *)(data->mlx_data->img->pixels + (y * data->mlx_data->img->width
-		+ x)) = color;
+	*(pixel++) = (uint8_t)(color >> 24);
+	*(pixel++) = (uint8_t)(color >> 16);
+	*(pixel++) = (uint8_t)(color >> 8);
+	*(pixel++) = (uint8_t)(color & 0xFF);
 }
 
-void draw_quads(t_data *data, t_vec2i start, t_vec2i size, int color)
+void	ft_put_pixel(mlx_image_t *image, uint32_t x, uint32_t y, uint32_t color)
+{
+	uint8_t	*pixelstart;
+
+	if (x >= image->width || y >= image->height || !image || !image->pixels)
+		return ;
+	pixelstart = &image->pixels[(y * image->width + x) * sizeof(uint32_t)];
+	ft_draw_pixel(pixelstart, color);
+}
+
+void	draw_quads(t_data *data, t_vec2i start, t_vec2i size, int color)
 {
 	t_vec2i	pixel;
 
@@ -18,7 +27,8 @@ void draw_quads(t_data *data, t_vec2i start, t_vec2i size, int color)
 	{
 		pixel.x = -size.x / 2;
 		while (++pixel.x < size.x / 2)
-			ft_put_pixel(data, start.x + pixel.x, start.y + pixel.y, color);
+			ft_put_pixel(data->mlx_data->img, start.x + pixel.x, start.y
+				+ pixel.y, color);
 	}
 }
 
@@ -35,8 +45,8 @@ void	draw_circle(t_data *data, t_vec2i pos, int radius, int color)
 		{
 			dist = sqrt(pixel.x * pixel.x + pixel.y * pixel.y);
 			if (dist < radius)
-				ft_put_pixel(data, pos.x + pixel.x, pos.y
-				  + pixel.y, color);
+				ft_put_pixel(data->mlx_data->img, pos.x + pixel.x, pos.y
+					+ pixel.y, color);
 		}
 	}
 }
@@ -63,7 +73,7 @@ void	draw_line(t_data *data, t_vec2i start, t_vec2i end, int color)
 	init_bresenham(&bres, start, end);
 	while (1)
 	{
-		ft_put_pixel(data, start.x, start.y, color);
+		ft_put_pixel(data->mlx_data->img, start.x, start.y, color);
 		if (start.x == end.x && start.y == end.y)
 			break ;
 		bres.error_adjustment = 2 * bres.error;

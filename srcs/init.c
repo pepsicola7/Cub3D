@@ -10,6 +10,8 @@ void	example_map(t_data *data)
 	data->player->plane = (t_vec2f){0.0f, 0.66f};
 	data->mlx_data->old_height = data->mlx_data->mlx->height;
 	data->mlx_data->old_width = data->mlx_data->mlx->width;
+	data->texture->ceiling_color = LIGHT_BLUE;
+	data->texture->floor_color = GREY;
 }
 
 int	init_data(t_data *data)

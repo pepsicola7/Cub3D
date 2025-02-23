@@ -82,6 +82,7 @@ typedef struct s_mlx
 {
 	mlx_t			*mlx;
 	mlx_image_t		*img;
+	mlx_image_t		*img_buffer;
 	int32_t			old_height;
 	int32_t			old_width;
 }					t_mlx;
@@ -149,6 +150,6 @@ void				move_player(mlx_key_data_t keydata, void *vdata);
 
 /*-----------------Raycasting------------------*/
 
-void				render(void *param);
+void				render_raycast(void *param);
 
 #endif

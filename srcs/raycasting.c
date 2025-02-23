@@ -80,12 +80,12 @@ void	draw_vertical_line(t_data *data, t_ray *ray, int x)
 	calculate_draw_limits(data, line_height, &draw_start, &draw_end);
 	y = 0;
 	while (y < draw_start)
-		ft_put_pixel(data->mlx_data->img, x, y++, data->texture->ceiling_color);
+		ft_put_pixel(data->mlx_data->img_buffer, x, y++, data->texture->ceiling_color);
 	color = get_wall_color(ray);
 	while (y < draw_end)
-		ft_put_pixel(data->mlx_data->img, x, y++, color);
+		ft_put_pixel(data->mlx_data->img_buffer, x, y++, color);
 	while (y < data->mlx_data->mlx->height)
-		ft_put_pixel(data->mlx_data->img, x, y++, data->texture->floor_color);
+		ft_put_pixel(data->mlx_data->img_buffer, x, y++, data->texture->floor_color);
 }
 
 void	init_ray(t_data *data, t_ray *ray, int x)
@@ -139,7 +139,7 @@ void	cast_ray(t_data *data, int x)
 	draw_vertical_line(data, &ray, x);
 }
 
-void	render(void *param)
+void	render_raycast(void *param)
 {
 	t_data	*data;
 	int		x;

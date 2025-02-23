@@ -48,13 +48,31 @@ void	exit_program(t_data *data, int status)
 // 	(void)data;
 // }
 
+void ft_swap_pointers(void **ptr1, void **ptr2)
+{
+	void	*tmp;
+
+	tmp = *ptr1;
+	*ptr1 = *ptr2;
+	*ptr2 = tmp;
+}
+
 void	render_all(void *vdata)
 {
 	t_data	*data;
 
 	data = (t_data *)vdata;
 	/*render_minimap(data);*/
-	render(data);
+	if (data->mlx_data->img_buffer)
+	{
+		mlx_delete_image(data->mlx_data->mlx, data->mlx_data->img_buffer);
+		data->mlx_data->img_buffer = NULL;
+	}
+	if (!data->mlx_data->img_buffer)
+		data->mlx_data->img_buffer = mlx_new_image(data->mlx_data->mlx,
+				data->mlx_data->mlx->width, data->mlx_data->mlx->height);
+	render_raycast(data);
+	ft_swap_pointers((void **)&data->mlx_data->img, (void **)&data->mlx_data->img_buffer);
 	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 }
 

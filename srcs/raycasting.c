@@ -39,8 +39,8 @@ void	init_vertical_line(t_data *data, t_ray *ray, int *line_height)
 	*line_height = (int)(data->mlx_data->mlx->height / ray->perp_wall_dist);
 }
 
-void	calculate_draw_limits(t_data *data, int line_height,
-		int *draw_start, int *draw_end)
+void	calculate_draw_limits(t_data *data, int line_height, int *draw_start,
+		int *draw_end)
 {
 	*draw_start = -line_height / 2 + data->mlx_data->mlx->height / 2.5;
 	*draw_end = line_height / 2 + data->mlx_data->mlx->height / 2.5;
@@ -106,22 +106,26 @@ void	init_ray_steps(t_data *data, t_ray *ray)
 	if (ray->dir.x < 0)
 	{
 		ray->step_x = -1;
-		ray->side_dist.x = (data->player->pos.x - ray->map_x) * ray->delta_dist.x;
+		ray->side_dist.x = (data->player->pos.x - ray->map_x)
+			* ray->delta_dist.x;
 	}
 	else
 	{
 		ray->step_x = 1;
-		ray->side_dist.x = (ray->map_x + 1.0f - data->player->pos.x) * ray->delta_dist.x;
+		ray->side_dist.x = (ray->map_x + 1.0f - data->player->pos.x)
+			* ray->delta_dist.x;
 	}
 	if (ray->dir.y < 0)
 	{
 		ray->step_y = -1;
-		ray->side_dist.y = (data->player->pos.y - ray->map_y) * ray->delta_dist.y;
+		ray->side_dist.y = (data->player->pos.y - ray->map_y)
+			* ray->delta_dist.y;
 	}
 	else
 	{
 		ray->step_y = 1;
-		ray->side_dist.y = (ray->map_y + 1.0f - data->player->pos.y) * ray->delta_dist.y;
+		ray->side_dist.y = (ray->map_y + 1.0f - data->player->pos.y)
+			* ray->delta_dist.y;
 	}
 }
 
@@ -156,8 +160,7 @@ void	handle_movement(t_data *data, mlx_key_data_t keydata)
 	else if (keydata.key == MLX_KEY_S)
 		dir = -1.0f;
 	else
-		return;
-
+		return ;
 	new_pos.x = data->player->pos.x + data->player->dir.x * MOVE_SPEED * dir;
 	new_pos.y = data->player->pos.y + data->player->dir.y * MOVE_SPEED * dir;
 	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
@@ -177,14 +180,17 @@ void	handle_rotation(t_data *data, mlx_key_data_t keydata)
 	else if (keydata.key == MLX_KEY_RIGHT)
 		angle = ROTATE_SPEED;
 	else
-		return;
-
+		return ;
 	old_dir_x = data->player->dir.x;
 	old_plane_x = data->player->plane.x;
-	data->player->dir.x = data->player->dir.x * cosf(angle) - data->player->dir.y * sinf(angle);
-	data->player->dir.y = old_dir_x * sinf(angle) + data->player->dir.y * cosf(angle);
-	data->player->plane.x = data->player->plane.x * cosf(angle) - data->player->plane.y * sinf(angle);
-	data->player->plane.y = old_plane_x * sinf(angle) + data->player->plane.y * cosf(angle);
+	data->player->dir.x = data->player->dir.x * cosf(angle)
+		- data->player->dir.y * sinf(angle);
+	data->player->dir.y = old_dir_x * sinf(angle) + data->player->dir.y
+		* cosf(angle);
+	data->player->plane.x = data->player->plane.x * cosf(angle)
+		- data->player->plane.y * sinf(angle);
+	data->player->plane.y = old_plane_x * sinf(angle) + data->player->plane.y
+		* cosf(angle);
 }
 
 void	handle_strafe(t_data *data, mlx_key_data_t keydata)
@@ -197,8 +203,7 @@ void	handle_strafe(t_data *data, mlx_key_data_t keydata)
 	else if (keydata.key == MLX_KEY_D)
 		dir = 1.0f;
 	else
-		return;
-
+		return ;
 	new_pos.x = data->player->pos.x + data->player->plane.x * MOVE_SPEED * dir;
 	new_pos.y = data->player->pos.y + data->player->plane.y * MOVE_SPEED * dir;
 	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
@@ -211,7 +216,7 @@ void	move_player(mlx_key_data_t keydata, void *vdata)
 {
 	t_data	*data;
 
-data = (t_data *)vdata;
+	data = (t_data *)vdata;
 	if (keydata.key == MLX_KEY_ESCAPE)
 		exit_program(data, 0);
 	handle_movement(data, keydata);

@@ -99,6 +99,7 @@ typedef struct s_player
 	t_vec2f			pos;
 	t_vec2f			dir;
 	t_vec2f			plane;
+	int				camera_y_offset;
 	t_vec2f			old_pos;
 	t_vec2f			old_dir;
 }					t_player;

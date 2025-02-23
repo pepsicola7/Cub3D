@@ -42,8 +42,8 @@ void	init_vertical_line(t_data *data, t_ray *ray, int *line_height)
 void	calculate_draw_limits(t_data *data, int line_height, int *draw_start,
 		int *draw_end)
 {
-	*draw_start = -line_height / 2 + data->mlx_data->mlx->height / 2.5;
-	*draw_end = line_height / 2 + data->mlx_data->mlx->height / 2.5;
+	*draw_start = -line_height / 2 + data->mlx_data->mlx->height / 2.5 + data->player->camera_y_offset;
+	*draw_end = line_height / 2 + data->mlx_data->mlx->height / 2.5 + data->player->camera_y_offset;
 	if (*draw_start < 0)
 		*draw_start = 0;
 	if (*draw_end >= data->mlx_data->mlx->height)
@@ -212,6 +212,14 @@ void	handle_rotation(t_data *data, mlx_key_data_t keydata)
 		* cosf(angle);
 }
 
+void handle_camera_tilt(t_data *data, mlx_key_data_t keydata)
+{
+    if (keydata.key == MLX_KEY_UP)
+        data->player->camera_y_offset += 10;
+    else if (keydata.key == MLX_KEY_DOWN)
+        data->player->camera_y_offset -= 10;
+}
+
 void	move_player(mlx_key_data_t keydata, void *vdata)
 {
 	t_data	*data;
@@ -222,4 +230,5 @@ void	move_player(mlx_key_data_t keydata, void *vdata)
 	handle_movement(data, keydata);
 	handle_rotation(data, keydata);
 	handle_strafe(data, keydata);
+	handle_camera_tilt(data, keydata);
 }

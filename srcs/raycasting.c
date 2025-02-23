@@ -169,6 +169,25 @@ void	handle_movement(t_data *data, mlx_key_data_t keydata)
 		data->player->pos.y = new_pos.y;
 }
 
+void	handle_strafe(t_data *data, mlx_key_data_t keydata)
+{
+	t_vec2f	new_pos;
+	float	dir;
+
+	if (keydata.key == MLX_KEY_A)
+		dir = -1.0f;
+	else if (keydata.key == MLX_KEY_D)
+		dir = 1.0f;
+	else
+		return ;
+	new_pos.x = data->player->pos.x + data->player->plane.x * MOVE_SPEED * dir;
+	new_pos.y = data->player->pos.y + data->player->plane.y * MOVE_SPEED * dir;
+	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
+		data->player->pos.x = new_pos.x;
+	if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
+		data->player->pos.y = new_pos.y;
+}
+
 void	handle_rotation(t_data *data, mlx_key_data_t keydata)
 {
 	float	angle;
@@ -191,25 +210,6 @@ void	handle_rotation(t_data *data, mlx_key_data_t keydata)
 		- data->player->plane.y * sinf(angle);
 	data->player->plane.y = old_plane_x * sinf(angle) + data->player->plane.y
 		* cosf(angle);
-}
-
-void	handle_strafe(t_data *data, mlx_key_data_t keydata)
-{
-	t_vec2f	new_pos;
-	float	dir;
-
-	if (keydata.key == MLX_KEY_A)
-		dir = -1.0f;
-	else if (keydata.key == MLX_KEY_D)
-		dir = 1.0f;
-	else
-		return ;
-	new_pos.x = data->player->pos.x + data->player->plane.x * MOVE_SPEED * dir;
-	new_pos.y = data->player->pos.y + data->player->plane.y * MOVE_SPEED * dir;
-	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
-		data->player->pos.x = new_pos.x;
-	if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
-		data->player->pos.y = new_pos.y;
 }
 
 void	move_player(mlx_key_data_t keydata, void *vdata)

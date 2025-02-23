@@ -12,8 +12,8 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define WIN_HEIGHT 1024
-# define WIN_WIDTH 900
+# define WIN_HEIGHT	600
+# define WIN_WIDTH 600
 
 # define FOV 60
 # define MOVE_SPEED 0.01

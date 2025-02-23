@@ -13,7 +13,6 @@ void	perform_dda(t_data *data, t_ray *ray)
 	ray->hit = 0;
 	while (ray->hit == 0)
 	{
-		// Jump to next square
 		if (ray->side_dist.x < ray->side_dist.y)
 		{
 			ray->side_dist.x += ray->delta_dist.x;
@@ -26,20 +25,47 @@ void	perform_dda(t_data *data, t_ray *ray)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		// Check wall hit
-		if (get_map_value(data, ray->map_x, ray->map_y))
-		{
-			printf("Ray hit at: %d, %d\n", ray->map_x, ray->map_y);
+		if (get_map_value(data, ray->map_x, ray->map_y) == '1')
 			ray->hit = 1;
-		}
 	}
-	// Calculate perpendicular wall distance
 	if (ray->side == 0)
-		ray->perp_wall_dist = (ray->map_x - data->player->pos.x + (1
-					- ray->step_x) / 2) / ray->dir.x;
+		ray->perp_wall_dist = (ray->side_dist.x - ray->delta_dist.x);
 	else
-		ray->perp_wall_dist = (ray->map_y - data->player->pos.y + (1
-					- ray->step_y) / 2) / ray->dir.y;
+		ray->perp_wall_dist = (ray->side_dist.y - ray->delta_dist.y);
+}
+
+void	init_vertical_line(t_data *data, t_ray *ray, int *line_height)
+{
+	*line_height = (int)(data->mlx_data->mlx->height / ray->perp_wall_dist);
+}
+
+void	calculate_draw_limits(t_data *data, int line_height,
+		int *draw_start, int *draw_end)
+{
+	*draw_start = -line_height / 2 + data->mlx_data->mlx->height / 2.5;
+	*draw_end = line_height / 2 + data->mlx_data->mlx->height / 2.5;
+	if (*draw_start < 0)
+		*draw_start = 0;
+	if (*draw_end >= data->mlx_data->mlx->height)
+		*draw_end = data->mlx_data->mlx->height - 1;
+}
+
+inline uint32_t	get_wall_color(t_ray *ray)
+{
+	if (ray->side == 0)
+	{
+		if (ray->step_x > 0)
+			return (BLUE);
+		else
+			return (RED);
+	}
+	else
+	{
+		if (ray->step_y > 0)
+			return (YELLOW);
+		else
+			return (GREEN);
+	}
 }
 
 void	draw_vertical_line(t_data *data, t_ray *ray, int x)
@@ -48,72 +74,63 @@ void	draw_vertical_line(t_data *data, t_ray *ray, int x)
 	int			draw_start;
 	int			draw_end;
 	uint32_t	color;
+	int			y;
 
-	// Calculate wall height
-	line_height = (int)(data->mlx_data->old_height / ray->perp_wall_dist);
-	// Calculate lowest and highest pixel to draw
-	draw_start = -line_height / 2 + data->mlx_data->old_height / 2;
-	if (draw_start < 0)
-		draw_start = 0;
-	draw_end = line_height / 2 + data->mlx_data->old_height / 2;
-	if (draw_end >= data->mlx_data->old_height)
-		draw_end = data->mlx_data->old_height - 1;
-	// Draw ceiling (from 0 to draw_start)
-	for (int y = 0; y < draw_start && y < data->mlx_data->old_height; y++)
-		mlx_put_pixel(data->mlx_data->img, x, y, data->texture->ceiling_color);
-	// Choose texture and color based on wall side
-	if (ray->side == 0)
-		color = (ray->step_x > 0) ? BLUE : RED; // East/West
+	init_vertical_line(data, ray, &line_height);
+	calculate_draw_limits(data, line_height, &draw_start, &draw_end);
+	y = 0;
+	while (y < draw_start)
+		ft_put_pixel(data->mlx_data->img, x, y++, data->texture->ceiling_color);
+	color = get_wall_color(ray);
+	while (y < draw_end)
+		ft_put_pixel(data->mlx_data->img, x, y++, color);
+	while (y < data->mlx_data->mlx->height)
+		ft_put_pixel(data->mlx_data->img, x, y++, data->texture->floor_color);
+}
+
+void	init_ray(t_data *data, t_ray *ray, int x)
+{
+	float	camera_x;
+
+	camera_x = 2 * x / (float)data->mlx_data->old_width - 1;
+	ray->dir.x = data->player->dir.x + data->player->plane.x * camera_x;
+	ray->dir.y = data->player->dir.y + data->player->plane.y * camera_x;
+	ray->map_x = (int)data->player->pos.x;
+	ray->map_y = (int)data->player->pos.y;
+	ray->delta_dist.x = fabsf(1 / ray->dir.x);
+	ray->delta_dist.y = fabsf(1 / ray->dir.y);
+}
+
+void	init_ray_steps(t_data *data, t_ray *ray)
+{
+	if (ray->dir.x < 0)
+	{
+		ray->step_x = -1;
+		ray->side_dist.x = (data->player->pos.x - ray->map_x) * ray->delta_dist.x;
+	}
 	else
-		color = (ray->step_y > 0) ? YELLOW : GREEN; // North/South
-	// Draw wall (from draw_start to draw_end)
-	for (int y = draw_start; y < draw_end
-		&& y < data->mlx_data->old_height; y++)
-		ft_put_pixel(data->mlx_data->img, x, y, color);
-	// Draw floor (from draw_end to screen bottom)
-	for (int y = draw_end; y < data->mlx_data->old_height; y++)
-		ft_put_pixel(data->mlx_data->img, x, y, data->texture->floor_color);
+	{
+		ray->step_x = 1;
+		ray->side_dist.x = (ray->map_x + 1.0f - data->player->pos.x) * ray->delta_dist.x;
+	}
+	if (ray->dir.y < 0)
+	{
+		ray->step_y = -1;
+		ray->side_dist.y = (data->player->pos.y - ray->map_y) * ray->delta_dist.y;
+	}
+	else
+	{
+		ray->step_y = 1;
+		ray->side_dist.y = (ray->map_y + 1.0f - data->player->pos.y) * ray->delta_dist.y;
+	}
 }
 
 void	cast_ray(t_data *data, int x)
 {
 	t_ray	ray;
-	float	camera_x;
 
-	// Calculate ray position and direction
-	camera_x = 2 * x / (float)data->mlx_data->old_width - 1;
-	ray.dir.x = data->player->dir.x + data->player->plane.x * camera_x;
-	ray.dir.y = data->player->dir.y + data->player->plane.y * camera_x;
-	// Set starting position
-	ray.map_x = (int)data->player->pos.x;
-	ray.map_y = (int)data->player->pos.y;
-	// Calculate delta distances
-	ray.delta_dist.x = fabsf(1 / ray.dir.x);
-	ray.delta_dist.y = fabsf(1 / ray.dir.y);
-	// Calculate step and initial side distances
-	if (ray.dir.x < 0)
-	{
-		ray.step_x = -1;
-		ray.side_dist.x = (data->player->pos.x - ray.map_x) * ray.delta_dist.x;
-	}
-	else
-	{
-		ray.step_x = 1;
-		ray.side_dist.x = (ray.map_x + 1.0f - data->player->pos.x)
-			* ray.delta_dist.x;
-	}
-	if (ray.dir.y < 0)
-	{
-		ray.step_y = -1;
-		ray.side_dist.y = (data->player->pos.y - ray.map_y) * ray.delta_dist.y;
-	}
-	else
-	{
-		ray.step_y = 1;
-		ray.side_dist.y = (ray.map_y + 1.0f - data->player->pos.y)
-			* ray.delta_dist.y;
-	}
-	// Perform DDA and draw
+	init_ray(data, &ray, x);
+	init_ray_steps(data, &ray);
 	perform_dda(data, &ray);
 	draw_vertical_line(data, &ray, x);
 }
@@ -121,63 +138,83 @@ void	cast_ray(t_data *data, int x)
 void	render(void *param)
 {
 	t_data	*data;
+	int		x;
 
+	x = -1;
 	data = (t_data *)param;
-	// Cast rays
-	printf("Player pos: %f, %f\nPlayer Rotation: %f, %f\n", data->player->pos.x, data->player->pos.y, data->player->dir.x, data->player->dir.y);
-	for (int x = 0; x < data->mlx_data->old_width; x++)
-	{
-		// printf("Casting ray for x = %d\n", x);
+	while (++x < data->mlx_data->old_width)
 		cast_ray(data, x);
-	}
+}
+
+void	handle_movement(t_data *data, mlx_key_data_t keydata)
+{
+	t_vec2f	new_pos;
+	float	dir;
+
+	if (keydata.key == MLX_KEY_W)
+		dir = 1.0f;
+	else if (keydata.key == MLX_KEY_S)
+		dir = -1.0f;
+	else
+		return;
+
+	new_pos.x = data->player->pos.x + data->player->dir.x * MOVE_SPEED * dir;
+	new_pos.y = data->player->pos.y + data->player->dir.y * MOVE_SPEED * dir;
+	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
+		data->player->pos.x = new_pos.x;
+	if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
+		data->player->pos.y = new_pos.y;
+}
+
+void	handle_rotation(t_data *data, mlx_key_data_t keydata)
+{
+	float	angle;
+	float	old_dir_x;
+	float	old_plane_x;
+
+	if (keydata.key == MLX_KEY_LEFT)
+		angle = -ROTATE_SPEED;
+	else if (keydata.key == MLX_KEY_RIGHT)
+		angle = ROTATE_SPEED;
+	else
+		return;
+
+	old_dir_x = data->player->dir.x;
+	old_plane_x = data->player->plane.x;
+	data->player->dir.x = data->player->dir.x * cosf(angle) - data->player->dir.y * sinf(angle);
+	data->player->dir.y = old_dir_x * sinf(angle) + data->player->dir.y * cosf(angle);
+	data->player->plane.x = data->player->plane.x * cosf(angle) - data->player->plane.y * sinf(angle);
+	data->player->plane.y = old_plane_x * sinf(angle) + data->player->plane.y * cosf(angle);
+}
+
+void	handle_strafe(t_data *data, mlx_key_data_t keydata)
+{
+	t_vec2f	new_pos;
+	float	dir;
+
+	if (keydata.key == MLX_KEY_A)
+		dir = -1.0f;
+	else if (keydata.key == MLX_KEY_D)
+		dir = 1.0f;
+	else
+		return;
+
+	new_pos.x = data->player->pos.x + data->player->plane.x * MOVE_SPEED * dir;
+	new_pos.y = data->player->pos.y + data->player->plane.y * MOVE_SPEED * dir;
+	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
+		data->player->pos.x = new_pos.x;
+	if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
+		data->player->pos.y = new_pos.y;
 }
 
 void	move_player(mlx_key_data_t keydata, void *vdata)
 {
 	t_data	*data;
-	t_vec2f	new_pos;
-	float	dir;
-	float	angle;
-	float	old_dir_x;
-	float	old_plane_x;
 
-	data = (t_data *)vdata;
-	if (keydata.action != MLX_PRESS && keydata.action != MLX_REPEAT)
-		return ;
+data = (t_data *)vdata;
 	if (keydata.key == MLX_KEY_ESCAPE)
 		exit_program(data, 0);
-	// Forward / Backward
-	if (keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_S)
-	{
-		dir = (keydata.key == MLX_KEY_W) ? 1.0f : -1.0f;
-		new_pos.x = data->player->pos.x + data->player->dir.x * MOVE_SPEED
-			* dir;
-		new_pos.y = data->player->pos.y + data->player->dir.y * MOVE_SPEED
-			* dir;
-		printf("Moving player from: %f, %f\tto: %f, %f\n", data->player->pos.x, data->player->pos.y, new_pos.x, new_pos.y);
-		// Collision check
-		printf("Map value: %d\n", get_map_value(data, (int)new_pos.x, (int)data->player->pos.y));
-		if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
-			data->player->pos.x = new_pos.x;
-		if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
-			data->player->pos.y = new_pos.y;
-	}
-	// Rotate Left / Right
-	if (keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_RIGHT)
-	{
-		printf("Rotating player\n");
-		angle = (keydata.key == MLX_KEY_LEFT) ? ROTATE_SPEED : -ROTATE_SPEED;
-		old_dir_x = data->player->dir.x;
-		old_plane_x = data->player->plane.x;
-		// Rotate direction vector
-		data->player->dir.x = data->player->dir.x * cosf(angle)
-			- data->player->dir.y * sinf(angle);
-		data->player->dir.y = old_dir_x * sinf(angle) + data->player->dir.y
-			* cosf(angle);
-		// Rotate camera plane
-		data->player->plane.x = data->player->plane.x * cosf(angle)
-			- data->player->plane.y * sinf(angle);
-		data->player->plane.y = old_plane_x * sinf(angle)
-			+ data->player->plane.y * cosf(angle);
-	}
+	handle_movement(data, keydata);
+	handle_rotation(data, keydata);
+	handle_strafe(data, keydata);
 }

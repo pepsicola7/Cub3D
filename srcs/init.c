@@ -2,11 +2,11 @@
 
 void	example_map(t_data *data)
 {
-	data->map_data->map = ft_strdup("1111111111000000011000000011000000011000000011000000011000000011000000011111111111");
+	data->map_data->map = ft_strdup("1111111111000000011000000011001000011000000011001000011000000011000000011111111111");
 	data->map_data->width = 9;
 	data->map_data->height = 9;
-	data->player->pos = (t_vec2f){3.5f, 3.5f};
-	data->player->dir = (t_vec2f){1.0f, 1.0f};
+	data->player->pos = (t_vec2f){4.5f, 4.5f};
+	data->player->dir = (t_vec2f){1.0f, 0.0f};
 	data->player->plane = (t_vec2f){0.0f, 0.66f};
 	data->mlx_data->old_height = data->mlx_data->mlx->height;
 	data->mlx_data->old_width = data->mlx_data->mlx->width;

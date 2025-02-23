@@ -26,6 +26,10 @@ void	exit_program(t_data *data, int status)
 {
 	if (data->mlx_data->mlx)
 		mlx_terminate(data->mlx_data->mlx);
+	mlx_delete_texture(data->texture->north);
+	mlx_delete_texture(data->texture->south);
+	mlx_delete_texture(data->texture->east);
+	mlx_delete_texture(data->texture->west);
 	free_data(data);
 	exit(status);
 }
@@ -48,7 +52,7 @@ void	exit_program(t_data *data, int status)
 // 	(void)data;
 // }
 
-void ft_swap_pointers(void **ptr1, void **ptr2)
+void	ft_swap_pointers(void **ptr1, void **ptr2)
 {
 	void	*tmp;
 
@@ -62,18 +66,22 @@ void	render_all(void *vdata)
 	t_data	*data;
 
 	data = (t_data *)vdata;
-	/*render_minimap(data);*/
+	handle_movement(data);
+	handle_strafe(data);
+	handle_rotation(data);
+	handle_camera_tilt(data);
+	if (!data->mlx_data->img_buffer)
+		data->mlx_data->img_buffer = mlx_new_image(data->mlx_data->mlx,
+				data->mlx_data->mlx->width, data->mlx_data->mlx->height);
+	render_raycast(data);
+	ft_swap_pointers((void **)&data->mlx_data->img,
+		(void **)&data->mlx_data->img_buffer);
+	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 	if (data->mlx_data->img_buffer)
 	{
 		mlx_delete_image(data->mlx_data->mlx, data->mlx_data->img_buffer);
 		data->mlx_data->img_buffer = NULL;
 	}
-	if (!data->mlx_data->img_buffer)
-		data->mlx_data->img_buffer = mlx_new_image(data->mlx_data->mlx,
-				data->mlx_data->mlx->width, data->mlx_data->mlx->height);
-	render_raycast(data);
-	ft_swap_pointers((void **)&data->mlx_data->img, (void **)&data->mlx_data->img_buffer);
-	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 }
 
 int	main(int ac, char **av)
@@ -92,7 +100,7 @@ int	main(int ac, char **av)
 	if (init_data(data) == -1)
 		exit_program(data, 1);
 	// render_minimap(data);
-	mlx_key_hook(data->mlx_data->mlx, move_player, data);
+	mlx_key_hook(data->mlx_data->mlx, key_callback, data);
 	mlx_loop_hook(data->mlx_data->mlx, render_all, data);
 	mlx_loop(data->mlx_data->mlx);
 	free_data(data);

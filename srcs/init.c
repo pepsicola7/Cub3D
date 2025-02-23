@@ -12,6 +12,11 @@ void	example_map(t_data *data)
 	data->mlx_data->old_width = data->mlx_data->mlx->width;
 	data->texture->ceiling_color = LIGHT_BLUE;
 	data->texture->floor_color = GREY;
+	data->texture->north = mlx_load_png("textures/north.png");
+	data->texture->south = mlx_load_png("textures/south.png");
+	data->texture->east = mlx_load_png("textures/east.png");
+	data->texture->west = mlx_load_png("textures/west.png");
+	ft_memset(&data->player->key_state, 0, sizeof(t_key_state));
 }
 
 int	init_data(t_data *data)

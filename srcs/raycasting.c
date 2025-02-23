@@ -8,7 +8,7 @@ inline int	get_map_value(t_data *data, int x, int y)
 	return (data->map_data->map[y * data->map_data->width + x]);
 }
 
-void	perform_dda(t_data *data, t_ray *ray)
+inline void	perform_dda(t_data *data, t_ray *ray)
 {
 	ray->hit = 0;
 	while (ray->hit == 0)
@@ -42,50 +42,110 @@ void	init_vertical_line(t_data *data, t_ray *ray, int *line_height)
 void	calculate_draw_limits(t_data *data, int line_height, int *draw_start,
 		int *draw_end)
 {
-	*draw_start = -line_height / 2 + data->mlx_data->mlx->height / 2.5 + data->player->camera_y_offset;
-	*draw_end = line_height / 2 + data->mlx_data->mlx->height / 2.5 + data->player->camera_y_offset;
+	*draw_start = -line_height / 2 + data->mlx_data->mlx->height / 2
+		+ data->player->camera_y_offset;
+	*draw_end = line_height / 2 + data->mlx_data->mlx->height / 2.5
+		+ data->player->camera_y_offset;
 	if (*draw_start < 0)
 		*draw_start = 0;
 	if (*draw_end >= data->mlx_data->mlx->height)
 		*draw_end = data->mlx_data->mlx->height - 1;
 }
 
-inline uint32_t	get_wall_color(t_ray *ray)
+float	calculate_wall_x(t_data *data, t_ray *ray)
+{
+	float	wall_x;
+
+	if (ray->side == 0)
+		wall_x = data->player->pos.y + ray->perp_wall_dist * ray->dir.y;
+	else
+		wall_x = data->player->pos.x + ray->perp_wall_dist * ray->dir.x;
+	wall_x -= floor(wall_x);
+	return (wall_x);
+}
+
+mlx_texture_t	*get_wall_texture(t_data *data, t_ray *ray)
 {
 	if (ray->side == 0)
 	{
 		if (ray->step_x > 0)
-			return (BLUE);
+			return (data->texture->east);
 		else
-			return (RED);
+			return (data->texture->west);
 	}
 	else
 	{
 		if (ray->step_y > 0)
-			return (YELLOW);
+			return (data->texture->south);
 		else
-			return (GREEN);
+			return (data->texture->north);
 	}
 }
 
-void	draw_vertical_line(t_data *data, t_ray *ray, int x)
+void	init_draw_context(t_data *data, t_ray *ray, t_draw_context *ctx)
 {
-	int			line_height;
-	int			draw_start;
-	int			draw_end;
+	init_vertical_line(data, ray, &ctx->line_height);
+	calculate_draw_limits(data, ctx->line_height, &ctx->draw_start,
+		&ctx->draw_end);
+	ctx->wall_texture = get_wall_texture(data, ray);
+	ctx->wall_x = calculate_wall_x(data, ray);
+	ctx->tex_x = (int)(ctx->wall_x * ctx->wall_texture->width);
+	if ((ray->side == 0 && ray->dir.x > 0) || (ray->side == 1
+			&& ray->dir.y < 0))
+		ctx->tex_x = ctx->wall_texture->width - ctx->tex_x - 1;
+	ctx->step = (float)ctx->wall_texture->height / ctx->line_height;
+	ctx->tex_pos = (ctx->draw_start - data->player->camera_y_offset
+			- data->mlx_data->mlx->height / 2 + ctx->line_height / 2)
+		* ctx->step;
+}
+
+void	draw_ceiling(t_data *data, int x, int draw_start)
+{
+	int	y;
+
+	y = 0;
+	while (y < draw_start)
+		ft_put_pixel(data->mlx_data->img_buffer, x, y++,
+			data->texture->ceiling_color);
+}
+
+void	draw_wall(t_data *data, t_draw_context *ctx, int x)
+{
+	int			tex_y;
+	uint8_t		*pixel;
 	uint32_t	color;
 	int			y;
 
-	init_vertical_line(data, ray, &line_height);
-	calculate_draw_limits(data, line_height, &draw_start, &draw_end);
-	y = 0;
-	while (y < draw_start)
-		ft_put_pixel(data->mlx_data->img_buffer, x, y++, data->texture->ceiling_color);
-	color = get_wall_color(ray);
-	while (y < draw_end)
+	y = ctx->draw_start;
+	while (y < ctx->draw_end)
+	{
+		tex_y = (int)ctx->tex_pos & (ctx->wall_texture->height - 1);
+		ctx->tex_pos += ctx->step;
+		pixel = ctx->wall_texture->pixels + (tex_y * ctx->wall_texture->width
+				+ ctx->tex_x) * ctx->wall_texture->bytes_per_pixel;
+		color = (pixel[0] << 24) | (pixel[1] << 16) | (pixel[2] << 8) | pixel[3];
 		ft_put_pixel(data->mlx_data->img_buffer, x, y++, color);
+	}
+}
+
+void	draw_floor(t_data *data, int x, int draw_end)
+{
+	int	y;
+
+	y = draw_end;
 	while (y < data->mlx_data->mlx->height)
-		ft_put_pixel(data->mlx_data->img_buffer, x, y++, data->texture->floor_color);
+		ft_put_pixel(data->mlx_data->img_buffer, x, y++,
+			data->texture->floor_color);
+}
+
+void	draw_textured_vertical_line(t_data *data, t_ray *ray, int x)
+{
+	t_draw_context	ctx;
+
+	init_draw_context(data, ray, &ctx);
+	draw_ceiling(data, x, ctx.draw_start);
+	draw_wall(data, &ctx, x);
+	draw_floor(data, x, ctx.draw_end);
 }
 
 void	init_ray(t_data *data, t_ray *ray, int x)
@@ -136,7 +196,7 @@ void	cast_ray(t_data *data, int x)
 	init_ray(data, &ray, x);
 	init_ray_steps(data, &ray);
 	perform_dda(data, &ray);
-	draw_vertical_line(data, &ray, x);
+	draw_textured_vertical_line(data, &ray, x);
 }
 
 void	render_raycast(void *param)
@@ -150,85 +210,117 @@ void	render_raycast(void *param)
 		cast_ray(data, x);
 }
 
-void	handle_movement(t_data *data, mlx_key_data_t keydata)
+void	handle_key_press(t_data *data, mlx_key_data_t keydata, bool is_pressed)
 {
-	t_vec2f	new_pos;
-	float	dir;
-
 	if (keydata.key == MLX_KEY_W)
-		dir = 1.0f;
+		data->player->key_state.w = is_pressed;
 	else if (keydata.key == MLX_KEY_S)
-		dir = -1.0f;
-	else
-		return ;
-	new_pos.x = data->player->pos.x + data->player->dir.x * MOVE_SPEED * dir;
-	new_pos.y = data->player->pos.y + data->player->dir.y * MOVE_SPEED * dir;
-	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
-		data->player->pos.x = new_pos.x;
-	if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
-		data->player->pos.y = new_pos.y;
+		data->player->key_state.s = is_pressed;
+	else if (keydata.key == MLX_KEY_A)
+		data->player->key_state.a = is_pressed;
+	else if (keydata.key == MLX_KEY_D)
+		data->player->key_state.d = is_pressed;
+	else if (keydata.key == MLX_KEY_LEFT)
+		data->player->key_state.left = is_pressed;
+	else if (keydata.key == MLX_KEY_RIGHT)
+		data->player->key_state.right = is_pressed;
+	else if (keydata.key == MLX_KEY_UP)
+		data->player->key_state.up = is_pressed;
+	else if (keydata.key == MLX_KEY_DOWN)
+		data->player->key_state.down = is_pressed;
+	else if (keydata.key == MLX_KEY_LEFT_SHIFT)
+		data->player->key_state.shift = is_pressed;
 }
 
-void	handle_strafe(t_data *data, mlx_key_data_t keydata)
+void	handle_movement(t_data *data)
 {
 	t_vec2f	new_pos;
-	float	dir;
+	float	speed;
 
-	if (keydata.key == MLX_KEY_A)
-		dir = -1.0f;
-	else if (keydata.key == MLX_KEY_D)
-		dir = 1.0f;
-	else
+	if (data->player->key_state.w == data->player->key_state.s)
 		return ;
-	new_pos.x = data->player->pos.x + data->player->plane.x * MOVE_SPEED * dir;
-	new_pos.y = data->player->pos.y + data->player->plane.y * MOVE_SPEED * dir;
+	speed = MOVE_SPEED;
+	if (data->player->key_state.shift)
+		speed *= 2.0f;
+	if (data->player->key_state.w)
+		speed *= 1.0f;
+	if (data->player->key_state.s)
+		speed *= -1.0f;
+	new_pos.x = data->player->pos.x + data->player->dir.x * speed;
+	new_pos.y = data->player->pos.y + data->player->dir.y * speed;
 	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
 		data->player->pos.x = new_pos.x;
 	if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
 		data->player->pos.y = new_pos.y;
 }
 
-void	handle_rotation(t_data *data, mlx_key_data_t keydata)
+void	handle_strafe(t_data *data)
+{
+	t_vec2f	new_pos;
+	float	speed;
+
+	if (data->player->key_state.a == data->player->key_state.d)
+		return ;
+	speed = MOVE_SPEED;
+	if (data->player->key_state.shift)
+		speed *= 2.0f;
+	if (data->player->key_state.d)
+		speed *= 1.0f;
+	if (data->player->key_state.a)
+		speed *= -1.0f;
+	new_pos.x = data->player->pos.x + data->player->plane.x * speed;
+	new_pos.y = data->player->pos.y + data->player->plane.y * speed;
+	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
+		data->player->pos.x = new_pos.x;
+	if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
+		data->player->pos.y = new_pos.y;
+}
+
+void	handle_rotation(t_data *data)
 {
 	float	angle;
 	float	old_dir_x;
 	float	old_plane_x;
+	float	cos_angle;
+	float	sin_angle;
 
-	if (keydata.key == MLX_KEY_LEFT)
-		angle = -ROTATE_SPEED;
-	else if (keydata.key == MLX_KEY_RIGHT)
-		angle = ROTATE_SPEED;
-	else
+	if (data->player->key_state.left == data->player->key_state.right)
 		return ;
+	if (data->player->key_state.right)
+		angle = ROTATE_SPEED;
+	if (data->player->key_state.left)
+		angle = -ROTATE_SPEED;
+	cos_angle = cosf(angle);
+	sin_angle = sinf(angle);
 	old_dir_x = data->player->dir.x;
 	old_plane_x = data->player->plane.x;
-	data->player->dir.x = data->player->dir.x * cosf(angle)
-		- data->player->dir.y * sinf(angle);
-	data->player->dir.y = old_dir_x * sinf(angle) + data->player->dir.y
-		* cosf(angle);
-	data->player->plane.x = data->player->plane.x * cosf(angle)
-		- data->player->plane.y * sinf(angle);
-	data->player->plane.y = old_plane_x * sinf(angle) + data->player->plane.y
-		* cosf(angle);
+	data->player->dir.x = data->player->dir.x * cos_angle - data->player->dir.y
+		* sin_angle;
+	data->player->dir.y = old_dir_x * sin_angle + data->player->dir.y
+		* cos_angle;
+	data->player->plane.x = data->player->plane.x * cos_angle
+		- data->player->plane.y * sin_angle;
+	data->player->plane.y = old_plane_x * sin_angle + data->player->plane.y
+		* cos_angle;
 }
 
-void handle_camera_tilt(t_data *data, mlx_key_data_t keydata)
+void	handle_camera_tilt(t_data *data)
 {
-    if (keydata.key == MLX_KEY_UP)
-        data->player->camera_y_offset += 10;
-    else if (keydata.key == MLX_KEY_DOWN)
-        data->player->camera_y_offset -= 10;
+	if (data->player->key_state.up == data->player->key_state.down)
+		return ;
+	if (data->player->key_state.up)
+		data->player->camera_y_offset += 10;
+	if (data->player->key_state.down)
+		data->player->camera_y_offset -= 10;
 }
 
-void	move_player(mlx_key_data_t keydata, void *vdata)
+void	key_callback(mlx_key_data_t keydata, void *vdata)
 {
 	t_data	*data;
 
 	data = (t_data *)vdata;
 	if (keydata.key == MLX_KEY_ESCAPE)
 		exit_program(data, 0);
-	handle_movement(data, keydata);
-	handle_rotation(data, keydata);
-	handle_strafe(data, keydata);
-	handle_camera_tilt(data, keydata);
+	handle_key_press(data, keydata, keydata.action == MLX_PRESS
+		|| keydata.action == MLX_REPEAT);
 }

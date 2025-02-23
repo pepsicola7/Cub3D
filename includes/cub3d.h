@@ -12,7 +12,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define WIN_HEIGHT	600
+# define WIN_HEIGHT 600
 # define WIN_WIDTH 600
 
 # define FOV 60
@@ -45,6 +45,18 @@ typedef struct s_vec2i
 	int				x;
 	int				y;
 }					t_vec2i;
+
+typedef struct s_draw_context
+{
+	int				line_height;
+	int				draw_start;
+	int				draw_end;
+	mlx_texture_t	*wall_texture;
+	float			wall_x;
+	int				tex_x;
+	float			step;
+	float			tex_pos;
+}					t_draw_context;
 
 typedef struct s_ray
 {
@@ -94,6 +106,19 @@ typedef struct s_map
 	int				height;
 }					t_map;
 
+typedef struct s_key_state
+{
+	bool			w;
+	bool			a;
+	bool			s;
+	bool			d;
+	bool			left;
+	bool			right;
+	bool			up;
+	bool			down;
+	bool			shift;
+}					t_key_state;
+
 typedef struct s_player
 {
 	t_vec2f			pos;
@@ -102,6 +127,7 @@ typedef struct s_player
 	int				camera_y_offset;
 	t_vec2f			old_pos;
 	t_vec2f			old_dir;
+	t_key_state		key_state;
 }					t_player;
 
 typedef struct s_texture_data
@@ -137,7 +163,8 @@ int					get_map_index(t_data *data, int x, int y);
 
 /*---------------Rendering Utils---------------*/
 
-void				ft_put_pixel(mlx_image_t *img, uint32_t x, uint32_t y, uint32_t color);
+void				ft_put_pixel(mlx_image_t *img, uint32_t x, uint32_t y,
+						uint32_t color);
 void				draw_quads(t_data *data, t_vec2i start, t_vec2i end,
 						int color);
 void				draw_line(t_data *data, t_vec2i start, t_vec2i end,
@@ -147,7 +174,11 @@ void				draw_circle(t_data *data, t_vec2i pos, int radius,
 
 /*----------------Key Handling-----------------*/
 
-void				move_player(mlx_key_data_t keydata, void *vdata);
+void				key_callback(mlx_key_data_t keydata, void *vdata);
+void				handle_movement(t_data *data);
+void				handle_strafe(t_data *data);
+void				handle_rotation(t_data *data);
+void				handle_camera_tilt(t_data *data);
 
 /*-----------------Raycasting------------------*/
 

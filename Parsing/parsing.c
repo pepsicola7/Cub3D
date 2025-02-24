@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/02/24 19:16:24 by peli             ###   ########.fr       */
+/*   Updated: 2025/02/24 19:30:38 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	fill_map(t_data *data, char *line)
 		i++;
 	}
 	data->map_data->map[i] = NULL;
-	ft_printf_map(data->map_data->map);
+	// ft_printf_map(data->map_data->map);
 }
 
 int	read_map_2(t_data *data, char *filename)
@@ -71,8 +71,8 @@ int	read_map_2(t_data *data, char *filename)
 	}
 	fill_map(data, line);
 	close(data->map_data->map_fd);
-	// if (check_description(data))
-	// 	return (0);
+	if (check_description(data))
+		return (0);
 	return (1);
 }
 void	count_hors_map(t_data *data, char *filename)

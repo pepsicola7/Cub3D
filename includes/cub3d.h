@@ -62,11 +62,12 @@ typedef struct s_data
 int		init_data(t_data *data);
 int		parsing(t_data *data, char *filename);
 void	ft_printf_map(char **map);
-int		read_map_1(t_data *data);
+int		read_map_1(t_data *data, char *filename);
 int		get_color(char *line, t_data *data);
 void	free_split(char **arr);
 int		get_texture(char *line, t_data *data);
-int		read_map_2(t_data *data);
+int		read_map_2(t_data *data, char *filename);
 int		check_description(t_data *data);
-char	*ft_get_next_line(int fd);
+void	count_line(t_data *data, char *filename);
+void	count_hors_map(t_data *data, char *filename);
 #endif

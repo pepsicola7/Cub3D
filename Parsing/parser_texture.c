@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:15:34 by peli              #+#    #+#             */
-/*   Updated: 2025/02/21 18:39:06 by peli             ###   ########.fr       */
+/*   Updated: 2025/02/24 16:40:59 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,12 @@ int	get_color(char *line, t_data *data)
 	return (1);
 }
 
-int	read_map_1(t_data *data)
+int	read_map_1(t_data *data, char *filename)
 {
 	char	*line;
 
+	data->map_data->map_fd = open(filename, O_RDONLY);
 	line = get_next_line(data->map_data->map_fd);
-	// printf("%d\n", data->map_data->map_fd);
-	// printf("%s\n", line);
-	// fflush(stdout);
 	while (line)
 	{
 		if (ft_strncmp(line, "NO ", 3) == 0 || ft_strncmp(line, "SO ", 3) == 0
@@ -105,5 +103,6 @@ int	read_map_1(t_data *data)
 		free (line);
 		line = get_next_line(data->map_data->map_fd);
 	}
+	close(data->map_data->map_fd);
 	return (1);
 }

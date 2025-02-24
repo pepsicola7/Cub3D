@@ -46,6 +46,22 @@ typedef struct s_vec2i
 	int				y;
 }					t_vec2i;
 
+typedef struct s_floor_ceiling
+{
+	float			wall_x;
+	float			wall_y;
+	float			wall_dist;
+	float			weight;
+	float			current_dist;
+	float			floor_x;
+	float			floor_y;
+	float			adjusted_y;
+	int				tex_x;
+	int				tex_y;
+	uint8_t			*pixel;
+	uint32_t		color;
+}					t_floor_ceiling;
+
 typedef struct s_draw_context
 {
 	int				line_height;
@@ -136,6 +152,8 @@ typedef struct s_texture_data
 	mlx_texture_t	*south;
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
+	mlx_texture_t	*floor;
+	mlx_texture_t	*ceiling;
 	int				floor_color;
 	int				ceiling_color;
 }					t_texture_data;

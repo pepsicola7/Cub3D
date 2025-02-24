@@ -35,6 +35,8 @@ void	example_map(t_data *data)
 	data->texture->south = mlx_load_png("textures/south.png");
 	data->texture->east = mlx_load_png("textures/east.png");
 	data->texture->west = mlx_load_png("textures/west.png");
+	data->texture->floor = mlx_load_png("textures/floor.png");
+	data->texture->ceiling = mlx_load_png("textures/ceiling.png");
 	ft_memset(&data->player->key_state, 0, sizeof(t_key_state));
 }
 

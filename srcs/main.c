@@ -30,6 +30,8 @@ void	exit_program(t_data *data, int status)
 	mlx_delete_texture(data->texture->south);
 	mlx_delete_texture(data->texture->east);
 	mlx_delete_texture(data->texture->west);
+	mlx_delete_texture(data->texture->floor);
+	mlx_delete_texture(data->texture->ceiling);
 	free_data(data);
 	exit(status);
 }

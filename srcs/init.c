@@ -2,10 +2,29 @@
 
 void	example_map(t_data *data)
 {
-	data->map_data->map = ft_strdup("1111111111000000011000000011001000011000000011001000011000000011000000011111111111");
-	data->map_data->width = 9;
-	data->map_data->height = 9;
-	data->player->pos = (t_vec2f){4.5f, 4.5f};
+	data->map_data->map = ft_strdup(
+	"1111111111111111111111111"
+    "1000000000000000000000001"
+    "1001111100111111001111101"
+    "1001000100100010001000101"
+    "1001000100100010001000101"
+    "1001111100111111001111101"
+    "1000000000000000000000001"
+    "1011111011111101111110101"
+    "1000001000000001000000101"
+    "1000001001111101000000101"
+    "1011101001000101011100101"
+    "1010001001000101000000101"
+    "1011111001111101111100101"
+    "1000000000000000000000001"
+    "1111011111110111111101111"
+    "1000010000000100000000001"
+    "1000010111110101111101111"
+    "1000000000000000000000001"
+    "1111111111111111111111111");
+	data->map_data->width = 25;
+	data->map_data->height = 20;
+	data->player->pos = (t_vec2f){1.5f, 1.5f};
 	data->player->dir = (t_vec2f){1.0f, 0.0f};
 	data->player->plane = (t_vec2f){0.0f, 0.66f};
 	data->mlx_data->old_height = data->mlx_data->mlx->height;
@@ -16,6 +35,8 @@ void	example_map(t_data *data)
 	data->texture->south = mlx_load_png("textures/south.png");
 	data->texture->east = mlx_load_png("textures/east.png");
 	data->texture->west = mlx_load_png("textures/west.png");
+	data->texture->floor = mlx_load_png("textures/floor.png");
+	data->texture->ceiling = mlx_load_png("textures/ceiling.png");
 	ft_memset(&data->player->key_state, 0, sizeof(t_key_state));
 }
 

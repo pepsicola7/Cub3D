@@ -42,9 +42,9 @@ void	init_vertical_line(t_data *data, t_ray *ray, int *line_height)
 void	calculate_draw_limits(t_data *data, int line_height, int *draw_start,
 		int *draw_end)
 {
-	*draw_start = -line_height / 2 + data->mlx_data->mlx->height / 2
+	*draw_start = (data->mlx_data->mlx->height / 2) - (line_height / 2)
 		+ data->player->camera_y_offset;
-	*draw_end = line_height / 2 + data->mlx_data->mlx->height / 2.5
+	*draw_end = (data->mlx_data->mlx->height / 2) + (line_height / 2)
 		+ data->player->camera_y_offset;
 	if (*draw_start < 0)
 		*draw_start = 0;
@@ -94,19 +94,9 @@ void	init_draw_context(t_data *data, t_ray *ray, t_draw_context *ctx)
 			&& ray->dir.y < 0))
 		ctx->tex_x = ctx->wall_texture->width - ctx->tex_x - 1;
 	ctx->step = (float)ctx->wall_texture->height / ctx->line_height;
-	ctx->tex_pos = (ctx->draw_start - data->player->camera_y_offset
+	ctx->tex_pos = (ctx->draw_start - (data->player->camera_y_offset * 0.5)
 			- data->mlx_data->mlx->height / 2 + ctx->line_height / 2)
 		* ctx->step;
-}
-
-void	draw_ceiling(t_data *data, int x, int draw_start)
-{
-	int	y;
-
-	y = 0;
-	while (y < draw_start)
-		ft_put_pixel(data->mlx_data->img_buffer, x, y++,
-			data->texture->ceiling_color);
 }
 
 void	draw_wall(t_data *data, t_draw_context *ctx, int x)
@@ -128,11 +118,23 @@ void	draw_wall(t_data *data, t_draw_context *ctx, int x)
 	}
 }
 
+void	draw_ceiling(t_data *data, int x, int draw_start)
+{
+	int	y;
+
+	y = 0;
+	printf("draw_start: %d\n", draw_start);
+	while (y < draw_start)
+		ft_put_pixel(data->mlx_data->img_buffer, x, y++,
+			data->texture->ceiling_color);
+}
+
 void	draw_floor(t_data *data, int x, int draw_end)
 {
 	int	y;
 
 	y = draw_end;
+	printf("draw_end: %d\n", draw_end);
 	while (y < data->mlx_data->mlx->height)
 		ft_put_pixel(data->mlx_data->img_buffer, x, y++,
 			data->texture->floor_color);

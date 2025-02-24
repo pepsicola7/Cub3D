@@ -240,12 +240,12 @@ void	handle_movement(t_data *data)
 	if (data->player->key_state.w == data->player->key_state.s)
 		return ;
 	speed = MOVE_SPEED;
-	if (data->player->key_state.shift)
-		speed *= 2.0f;
 	if (data->player->key_state.w)
 		speed *= 1.0f;
 	if (data->player->key_state.s)
 		speed *= -1.0f;
+	else if (data->player->key_state.shift)
+		speed *= 2.0f;
 	new_pos.x = data->player->pos.x + data->player->dir.x * speed;
 	new_pos.y = data->player->pos.y + data->player->dir.y * speed;
 	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
@@ -306,12 +306,20 @@ void	handle_rotation(t_data *data)
 
 void	handle_camera_tilt(t_data *data)
 {
+	int	offset;
+
 	if (data->player->key_state.up == data->player->key_state.down)
 		return ;
+	offset = data->player->camera_y_offset;
 	if (data->player->key_state.up)
-		data->player->camera_y_offset += 10;
+		offset += 10;
 	if (data->player->key_state.down)
-		data->player->camera_y_offset -= 10;
+		offset -= 10;
+	if (offset > 600)
+		offset = 600;
+	if (offset < -600)
+		offset = -600;
+	data->player->camera_y_offset = offset;
 }
 
 void	key_callback(mlx_key_data_t keydata, void *vdata)

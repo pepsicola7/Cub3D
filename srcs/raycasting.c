@@ -94,7 +94,7 @@ void	init_draw_context(t_data *data, t_ray *ray, t_draw_context *ctx)
 			&& ray->dir.y < 0))
 		ctx->tex_x = ctx->wall_texture->width - ctx->tex_x - 1;
 	ctx->step = (float)ctx->wall_texture->height / ctx->line_height;
-	ctx->tex_pos = (ctx->draw_start - (data->player->camera_y_offset * 0.5)
+	ctx->tex_pos = (ctx->draw_start - data->player->camera_y_offset
 			- data->mlx_data->mlx->height / 2 + ctx->line_height / 2)
 		* ctx->step;
 }

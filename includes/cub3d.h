@@ -16,8 +16,8 @@
 # define WIN_WIDTH 600
 
 # define FOV 60
-# define MOVE_SPEED 0.01
-# define ROTATE_SPEED 0.01
+# define MOVE_SPEED 0.02
+# define ROTATE_SPEED 0.02
 
 # define BLUE 0x0000FFFF
 # define LIGHT_BLUE 0xADD8F6FF

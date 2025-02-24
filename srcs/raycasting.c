@@ -123,7 +123,6 @@ void	draw_ceiling(t_data *data, int x, int draw_start)
 	int	y;
 
 	y = 0;
-	printf("draw_start: %d\n", draw_start);
 	while (y < draw_start)
 		ft_put_pixel(data->mlx_data->img_buffer, x, y++,
 			data->texture->ceiling_color);
@@ -134,7 +133,6 @@ void	draw_floor(t_data *data, int x, int draw_end)
 	int	y;
 
 	y = draw_end;
-	printf("draw_end: %d\n", draw_end);
 	while (y < data->mlx_data->mlx->height)
 		ft_put_pixel(data->mlx_data->img_buffer, x, y++,
 			data->texture->floor_color);

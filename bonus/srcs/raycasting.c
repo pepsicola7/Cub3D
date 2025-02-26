@@ -234,7 +234,7 @@ void	init_ray(t_data *data, t_ray *ray, int x)
 {
 	float	camera_x;
 
-	camera_x = 2 * x / (float)data->mlx_data->old_width - 1;
+	camera_x = 2 * x / (float)data->mlx_data->mlx->width - 1;
 	ray->dir.x = data->player->dir.x + data->player->plane.x * camera_x;
 	ray->dir.y = data->player->dir.y + data->player->plane.y * camera_x;
 	ray->map_x = (int)data->player->pos.x;
@@ -288,7 +288,7 @@ void	render_raycast(void *param)
 
 	x = -1;
 	data = (t_data *)param;
-	while (++x < data->mlx_data->old_width)
+	while (++x < data->mlx_data->mlx->width)
 		cast_ray(data, x);
 }
 

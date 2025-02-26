@@ -118,49 +118,86 @@ void	draw_wall(t_data *data, t_draw_context *ctx, int x)
 	}
 }
 
+void	set_wall_distance(t_data *data, t_ray *ray, t_floor_ceiling *fc)
+{
+	if (ray->side == 0)
+		fc->wall_dist = (ray->map_x - data->player->pos.x + (1 - ray->step_x)
+				/ 2) / ray->dir.x;
+	else
+		fc->wall_dist = (ray->map_y - data->player->pos.y + (1 - ray->step_y)
+				/ 2) / ray->dir.y;
+	fc->wall_x = data->player->pos.x + fc->wall_dist * ray->dir.x;
+	fc->wall_y = data->player->pos.y + fc->wall_dist * ray->dir.y;
+}
+
+void	calculate_ceiling_tex_coords(t_data *data, t_floor_ceiling *fc, int y)
+{
+	fc->adjusted_y = y - data->player->camera_y_offset;
+	fc->current_dist = data->mlx_data->mlx->height / (2.0
+			* (data->mlx_data->mlx->height - fc->adjusted_y)
+			- data->mlx_data->mlx->height);
+	fc->weight = fc->current_dist / fc->wall_dist;
+	fc->floor_x = fc->weight * fc->wall_x + (1.0 - fc->weight)
+		* data->player->pos.x;
+	fc->floor_y = fc->weight * fc->wall_y + (1.0 - fc->weight)
+		* data->player->pos.y;
+	fc->tex_x = (int)((fc->floor_x - (int)fc->floor_x)
+			* data->texture->ceiling->width);
+	fc->tex_y = (int)((fc->floor_y - (int)fc->floor_y)
+			* data->texture->ceiling->height);
+}
+
+void	draw_ceiling_pixel(t_data *data, t_floor_ceiling *fc, int x, int y)
+{
+	fc->pixel = data->texture->ceiling->pixels + (fc->tex_y
+			* data->texture->ceiling->width + fc->tex_x)
+		* data->texture->ceiling->bytes_per_pixel;
+	fc->color = (fc->pixel[0] << 24) | (fc->pixel[1] << 16) | (fc->pixel[2] << 8) | fc->pixel[3];
+	ft_put_pixel(data->mlx_data->img_buffer, x, y, fc->color);
+}
+
 void	draw_ceiling(t_data *data, t_ray *ray, int x, int draw_start)
 {
 	int				y;
 	t_floor_ceiling	fc;
 
-	// Compute wall distance (same as floor)
-	if (ray->side == 0)
-		fc.wall_dist = (ray->map_x - data->player->pos.x + (1 - ray->step_x)
-				/ 2) / ray->dir.x;
-	else
-		fc.wall_dist = (ray->map_y - data->player->pos.y + (1 - ray->step_y)
-				/ 2) / ray->dir.y;
-	// Get intersection point on the wall
-	fc.wall_x = data->player->pos.x + fc.wall_dist * ray->dir.x;
-	fc.wall_y = data->player->pos.y + fc.wall_dist * ray->dir.y;
+	set_wall_distance(data, ray, &fc);
 	y = 0;
 	while (y < draw_start)
 	{
-		fc.adjusted_y = y - data->player->camera_y_offset;
-		if (fc.adjusted_y >= data->mlx_data->mlx->height)
-		{
-			y++;
-			continue ;
-		}
-		fc.current_dist = data->mlx_data->mlx->height / (2.0
-				* (data->mlx_data->mlx->height - fc.adjusted_y)
-				- data->mlx_data->mlx->height);
-		fc.weight = fc.current_dist / fc.wall_dist;
-		fc.floor_x = fc.weight * fc.wall_x + (1.0 - fc.weight)
-			* data->player->pos.x;
-		fc.floor_y = fc.weight * fc.wall_y + (1.0 - fc.weight)
-			* data->player->pos.y;
-		fc.tex_x = (int)((fc.floor_x - (int)fc.floor_x)
-				* data->texture->ceiling->width);
-		fc.tex_y = (int)((fc.floor_y - (int)fc.floor_y)
-				* data->texture->ceiling->height);
-		fc.pixel = data->texture->ceiling->pixels + (fc.tex_y
-				* data->texture->ceiling->width + fc.tex_x)
-			* data->texture->ceiling->bytes_per_pixel;
-		fc.color = (fc.pixel[0] << 24) | (fc.pixel[1] << 16) | (fc.pixel[2] << 8) | fc.pixel[3];
-		ft_put_pixel(data->mlx_data->img_buffer, x, y, fc.color);
+		calculate_ceiling_tex_coords(data, &fc, y);
+		draw_ceiling_pixel(data, &fc, x, y);
 		y++;
 	}
+}
+
+void	calculate_floor_tex_coords(t_data *data, t_floor_ceiling *fc, int y)
+{
+	fc->adjusted_y = y - data->player->camera_y_offset;
+	fc->current_dist = data->mlx_data->mlx->height / (2.0 * fc->adjusted_y
+			- data->mlx_data->mlx->height);
+	fc->weight = fc->current_dist / fc->wall_dist;
+	fc->floor_x = fc->weight * fc->wall_x + (1.0 - fc->weight)
+		* data->player->pos.x;
+	fc->floor_y = fc->weight * fc->wall_y + (1.0 - fc->weight)
+		* data->player->pos.y;
+	fc->tex_x = (int)(fc->floor_x * data->texture->floor->width)
+		% data->texture->floor->width;
+	fc->tex_y = (int)(fc->floor_y * data->texture->floor->height)
+		% data->texture->floor->height;
+	if (fc->tex_x < 0)
+		fc->tex_x += data->texture->floor->width;
+	if (fc->tex_y < 0)
+		fc->tex_y += data->texture->floor->height;
+}
+
+void	draw_floor_pixel(t_data *data, t_floor_ceiling *fc, int x, int y)
+{
+	fc->pixel = data->texture->floor->pixels + (fc->tex_y
+			* data->texture->floor->width + fc->tex_x)
+		* data->texture->floor->bytes_per_pixel;
+	fc->color = (fc->pixel[0] << 24) | (fc->pixel[1] << 16) | (fc->pixel[2] << 8) | fc->pixel[3];
+	ft_put_pixel(data->mlx_data->img_buffer, x, y, fc->color);
 }
 
 void	draw_floor(t_data *data, t_ray *ray, int x, int draw_end)
@@ -168,43 +205,17 @@ void	draw_floor(t_data *data, t_ray *ray, int x, int draw_end)
 	int				y;
 	t_floor_ceiling	fc;
 
-	if (ray->side == 0)
-		fc.wall_dist = (ray->map_x - data->player->pos.x + (1 - ray->step_x)
-				/ 2) / ray->dir.x;
-	else
-		fc.wall_dist = (ray->map_y - data->player->pos.y + (1 - ray->step_y)
-				/ 2) / ray->dir.y;
-	fc.wall_x = data->player->pos.x + fc.wall_dist * ray->dir.x;
-	fc.wall_y = data->player->pos.y + fc.wall_dist * ray->dir.y;
+	set_wall_distance(data, ray, &fc);
 	y = draw_end;
 	while (y < data->mlx_data->mlx->height)
 	{
-		fc.adjusted_y = y - data->player->camera_y_offset;
-		if (fc.adjusted_y <= 0)
+		if (y - data->player->camera_y_offset <= 0)
 		{
 			y++;
 			continue ;
 		}
-		fc.current_dist = data->mlx_data->mlx->height / (2.0 * fc.adjusted_y
-				- data->mlx_data->mlx->height);
-		fc.weight = fc.current_dist / fc.wall_dist;
-		fc.floor_x = fc.weight * fc.wall_x + (1.0 - fc.weight)
-			* data->player->pos.x;
-		fc.floor_y = fc.weight * fc.wall_y + (1.0 - fc.weight)
-			* data->player->pos.y;
-		fc.tex_x = (int)(fc.floor_x * data->texture->floor->width)
-			% data->texture->floor->width;
-		fc.tex_y = (int)(fc.floor_y * data->texture->floor->height)
-			% data->texture->floor->height;
-		if (fc.tex_x < 0)
-			fc.tex_x += data->texture->floor->width;
-		if (fc.tex_y < 0)
-			fc.tex_y += data->texture->floor->height;
-		fc.pixel = data->texture->floor->pixels + (fc.tex_y
-				* data->texture->floor->width + fc.tex_x)
-			* data->texture->floor->bytes_per_pixel;
-		fc.color = (fc.pixel[0] << 24) | (fc.pixel[1] << 16) | (fc.pixel[2] << 8) | fc.pixel[3];
-		ft_put_pixel(data->mlx_data->img_buffer, x, y, fc.color);
+		calculate_floor_tex_coords(data, &fc, y);
+		draw_floor_pixel(data, &fc, x, y);
 		y++;
 	}
 }

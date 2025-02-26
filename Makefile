@@ -12,10 +12,13 @@ LIBMLX  := MLX42
 LIBFT   := libft
 
 HEADERS := -I./includes -I $(LIBMLX)/include
+HEADERS_BONUS := -I./bonus/includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
 SRCS    := srcs/main.c srcs/init.c srcs/raycasting.c srcs/render_utils.c
+SRCS_BONUS := bonus/srcs/main.c bonus/srcs/init.c bonus/srcs/raycasting.c bonus/srcs/render_utils.c
 OBJS    := $(SRCS:.c=.o)
+OBJS_BONUS := $(SRCS_BONUS:.c=.o)
 
 CC      := cc
 
@@ -44,19 +47,27 @@ libmlx:
 %.o: %.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "$(YELLOW)Compiling: $(PURPLE)$(notdir $<)\n$(RESET)"
 
+bonus/%.o: bonus/%.c
+	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS_BONUS) && printf "$(YELLOW)Compiling Bonus: $(PURPLE)$(notdir $<)\n$(RESET)"
+
 $(NAME): $(OBJS)
 	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 
-dev: fclean libft libmlx $(OBJS)
-	@echo "$(CYAN)Compiling $(NAME) with sanitizers...$(RESET)"
-	@$(CC) $(OBJS) $(LIBS) -fsanitize=address,leak,undefined -g3 $(HEADERS) -o $(NAME)
+bonus: libft libmlx $(OBJS_BONUS)
+	@echo "$(CYAN)Compiling $(NAME) with bonus...$(RESET)"
+	@$(CC) $(OBJS_BONUS) $(LIBS) $(HEADERS_BONUS) -o $(NAME)
+	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
+
+dev: fclean libft libmlx bonus
+	@echo "$(CYAN)Compiling $(NAME) with sanitizers (bonus included)...$(RESET)"
+	@$(CC) $(OBJS_BONUS) $(LIBS) -fsanitize=address,leak,undefined -g3 $(HEADERS_BONUS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 	@echo "$(RED)Development mode enabled!$(RESET)"
 
 clean:
 	@echo "$(CYAN)Cleaning object files...$(RESET)"
-	@rm -rf $(OBJS)
+	@rm -rf $(OBJS) $(OBJS_BONUS)
 	@echo "$(GREEN)Object files cleaned successfully!$(RESET)"
 
 fclean: clean
@@ -75,10 +86,11 @@ re: fclean all
 help:
 	@echo "$(CYAN)Available commands:$(RESET)"
 	@echo "$(YELLOW)make$(RESET) - compiles the project"
-	@echo "$(YELLOW)make dev$(RESET) - compiles the project with sanitizers"
+	@echo "$(YELLOW)make bonus$(RESET) - compiles the project with bonus source files"
+	@echo "$(YELLOW)make dev$(RESET) - compiles the project with bonus + sanitizers"
 	@echo "$(YELLOW)make clean$(RESET) - removes object files"
 	@echo "$(YELLOW)make fclean$(RESET) - removes object files, libraries and the executable"
 	@echo "$(YELLOW)make re$(RESET) - removes object files, libraries and the executable, then recompiles the project"
 	@echo "$(YELLOW)make help$(RESET) - displays this message"
 
-.PHONY: all clean fclean re libft libmlx
+.PHONY: all clean fclean re libft libmlx bonus dev help

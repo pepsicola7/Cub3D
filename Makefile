@@ -16,11 +16,11 @@ HEADERS_BONUS := -I./bonus/includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
 SRCS    := srcs/main.c srcs/init.c srcs/raycasting.c srcs/render_utils.c
-SRCS_BONUS := bonus/srcs/main.c bonus/srcs/init.c bonus/srcs/raycasting.c bonus/srcs/render_utils.c
+SRCS_BONUS := bonus/srcs/main_bonus.c bonus/srcs/init_bonus.c bonus/srcs/raycasting_bonus.c bonus/srcs/render_utils_bonus.c
 OBJS    := $(SRCS:.c=.o)
 OBJS_BONUS := $(SRCS_BONUS:.c=.o)
 
-CC      := cc
+CC      := gcc
 
 all: libft libmlx $(NAME)
 
@@ -47,6 +47,7 @@ libmlx:
 %.o: %.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "$(YELLOW)Compiling: $(PURPLE)$(notdir $<)\n$(RESET)"
 
+# Bonus object files compilation rule
 bonus/%.o: bonus/%.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS_BONUS) && printf "$(YELLOW)Compiling Bonus: $(PURPLE)$(notdir $<)\n$(RESET)"
 

@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:16:27 by peli              #+#    #+#             */
-/*   Updated: 2025/02/26 20:06:29 by peli             ###   ########.fr       */
+/*   Updated: 2025/02/27 16:57:52 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,16 +184,93 @@ void	position_player(t_data *data)
 		{
 			if (map[i][j] =='N' || map[i][j] =='S' || map[i][j] =='E' || map[i][j] =='W')
 			{
-				data->player_data->pos.x = i;
-				data->player_data->pos.y = j + 1;
-				printf("position of x : %f\n", data->player_data->pos.x);
-				printf("position of y : %f\n", data->player_data->pos.y);
+				data->player_data->pos.x = i + 0.5;
+				data->player_data->pos.y = j + 1.5;
 				return ;
 			}
 			j++;
 		}
 		i++;
 	}
+}
+
+void	flood_fill(char **map, int x, int y, t_data *data)
+{
+	int	height = data->map_data->height;
+	int	width = data->map_data->width;
+
+	if (x < 0 || x >= height || y < 0 || y >= width)
+		return;
+	if (map[x][y] == '1' || map[x][y] == 'F')
+		return;
+	map[x][y] = 'F';
+	flood_fill(map, x, y + 1, data);
+	flood_fill(map, x, y - 1, data);
+	flood_fill(map, x + 1, y, data);
+	flood_fill(map, x - 1, y, data);
+}
+
+char	**copy_map(char **map, int height)
+{
+	int		i;
+	char	**map_copy;
+
+	i = 0;
+	map_copy = ft_calloc(height + 1, sizeof(char *));
+	while(map[i])
+	{
+		map_copy[i] = ft_strdup(map[i]);
+		if (!map_copy[i])
+		{
+			free_map (map_copy);
+			return (NULL);
+		}
+		i++;
+	}
+	map_copy[i] = NULL;
+	return (map_copy);
+}
+
+void	free_map(char **map)
+{
+	int	i;
+
+	i = 0;
+	while (map[i])
+	{
+		free(map[i]);
+		i++;
+	}
+	free(map);
+}
+
+int	check_mur(t_data *data)
+{
+	char	**map;
+	int		i;
+	int		j;
+
+	i = 0;
+	map = copy_map(data->map_data->map, data->map_data->height);
+	flood_fill(map, data->player_data->pos.x, data->player_data->pos.y, data);
+	// ft_printf_map(map);
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] == '0')
+			{
+				printf("Error: Inaccessible area detected\n");
+				free_map(map);
+				return (0);
+			}
+			j++;
+		}
+		i++;
+	}
+	free_map(map);
+	return (1);
 }
 
 int	check_description(t_data *data)
@@ -212,6 +289,9 @@ int	check_description(t_data *data)
 		return (0);
 	remplace_map(data);
 	position_player(data);
-	
+	if (!check_mur(data))
+		return (0);
 	return (1);
 }
+
+	// ft_printf_map(data->map_data->map);

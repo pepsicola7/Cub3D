@@ -70,4 +70,5 @@ int		read_map_2(t_data *data, char *filename);
 int		check_description(t_data *data);
 void	count_line(t_data *data, char *filename);
 void	count_hors_map(t_data *data, char *filename);
+void	free_map(char **map);
 #endif

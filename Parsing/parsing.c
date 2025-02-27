@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/02/26 19:07:17 by peli             ###   ########.fr       */
+/*   Updated: 2025/02/27 16:35:10 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,11 @@ int	parsing(t_data *data, char *filename)
 	data->map_data = ft_calloc(sizeof(t_map), 1);
 	data->texture_data = ft_calloc(sizeof(t_map), 1);
 	data->map_data->map_fd = open(filename, O_RDONLY);
-	if (data->map_data->map_fd == -1)
+	if (data->map_data->map_fd < 0)
+	{
+		printf("Error: Invalid map file\n");
 		return (0);
+	}
 	count_line(data, filename);
 	// read_map_1(data, filename);
 	// if (!data->texture_data->floor_color || !data->texture_data->ceiling_color)

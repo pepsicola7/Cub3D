@@ -1,5 +1,19 @@
 #include "cub3d.h"
 
+void init_player_jump(t_player *player)
+{
+    player->gravity = 15.0f;
+    player->jump_force = 6.0f;
+    player->vertical_velocity = 0.0f;
+    player->is_jumping = 0;
+    player->is_grounded = 1;
+    player->jump_height = 0.5f;
+    player->base_height = 0.0f;
+    player->current_height = 0.0f;
+    player->ground_level = 0.0f;
+    player->can_jump = true;
+}
+
 void	example_map(t_data *data)
 {
 	data->map_data->map = ft_strdup(
@@ -27,17 +41,14 @@ void	example_map(t_data *data)
 	data->player->pos = (t_vec2f){1.5f, 1.5f};
 	data->player->dir = (t_vec2f){1.0f, 0.0f};
 	data->player->plane = (t_vec2f){0.0f, 0.66f};
-	data->mlx_data->old_height = data->mlx_data->mlx->height;
-	data->mlx_data->old_width = data->mlx_data->mlx->width;
-	data->texture->ceiling_color = LIGHT_BLUE;
-	data->texture->floor_color = GREY;
-	data->texture->north = mlx_load_png("textures/brick_north.png");
-	data->texture->south = mlx_load_png("textures/brick_south.png");
-	data->texture->east = mlx_load_png("textures/brick_east.png");
-	data->texture->west = mlx_load_png("textures/brick_west.png");
-	data->texture->floor = mlx_load_png("textures/grass.png");
-	data->texture->ceiling = mlx_load_png("textures/sky.png");
+	data->texture->north = mlx_load_png("textures/north.png");
+	data->texture->south = mlx_load_png("textures/south.png");
+	data->texture->east = mlx_load_png("textures/east.png");
+	data->texture->west = mlx_load_png("textures/west.png");
+	data->texture->floor = mlx_load_png("textures/floor.png");
+	data->texture->ceiling = mlx_load_png("textures/ceiling.png");
 	ft_memset(&data->player->key_state, 0, sizeof(t_key_state));
+	init_player_jump(data->player);
 }
 
 int	init_data(t_data *data)

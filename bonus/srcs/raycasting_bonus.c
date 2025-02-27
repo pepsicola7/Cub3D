@@ -312,6 +312,43 @@ void	handle_key_press(t_data *data, mlx_key_data_t keydata, bool is_pressed)
 		data->player->key_state.down = is_pressed;
 	else if (keydata.key == MLX_KEY_LEFT_SHIFT)
 		data->player->key_state.shift = is_pressed;
+	else if (keydata.key == MLX_KEY_SPACE)
+		data->player->key_state.space = is_pressed;
+	else if (keydata.key == MLX_KEY_LEFT_CONTROL)
+		data->player->key_state.control = is_pressed;
+}
+
+void	handle_jump(t_data *data, float d_time)
+{
+	float	previous_height;
+	float	height_delta;
+
+	previous_height = data->player->current_height;
+	if (data->player->key_state.space && data->player->is_grounded
+		&& data->player->can_jump)
+	{
+		data->player->is_jumping = 1;
+		data->player->is_grounded = 0;
+		data->player->vertical_velocity = data->player->jump_force;
+		data->player->can_jump = false;
+	}
+	if (!data->player->key_state.space)
+		data->player->can_jump = true;
+	if (!data->player->is_grounded)
+	{
+		data->player->vertical_velocity -= data->player->gravity * d_time;
+		data->player->current_height += data->player->vertical_velocity
+			* d_time;
+		if (data->player->current_height <= data->player->ground_level)
+		{
+			data->player->current_height = data->player->ground_level;
+			data->player->is_grounded = 1;
+			data->player->is_jumping = 0;
+			data->player->vertical_velocity = 0.0f;
+		}
+		height_delta = data->player->current_height - previous_height;
+		data->player->camera_y_offset += height_delta * 65.0f;
+	}
 }
 
 void	handle_movement(t_data *data)

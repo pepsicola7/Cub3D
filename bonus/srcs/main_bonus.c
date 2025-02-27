@@ -72,6 +72,7 @@ void	render_all(void *vdata)
 	handle_strafe(data);
 	handle_rotation(data);
 	handle_camera_tilt(data);
+	handle_jump(data, data->mlx_data->mlx->delta_time);
 	if (!data->mlx_data->img_buffer)
 		data->mlx_data->img_buffer = mlx_new_image(data->mlx_data->mlx,
 				data->mlx_data->mlx->width, data->mlx_data->mlx->height);

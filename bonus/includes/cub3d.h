@@ -111,8 +111,6 @@ typedef struct s_mlx
 	mlx_t			*mlx;
 	mlx_image_t		*img;
 	mlx_image_t		*img_buffer;
-	int32_t			old_height;
-	int32_t			old_width;
 }					t_mlx;
 
 typedef struct s_map
@@ -133,6 +131,8 @@ typedef struct s_key_state
 	bool			up;
 	bool			down;
 	bool			shift;
+	bool			space;
+	bool			control;
 }					t_key_state;
 
 typedef struct s_player
@@ -141,9 +141,20 @@ typedef struct s_player
 	t_vec2f			dir;
 	t_vec2f			plane;
 	int				camera_y_offset;
-	t_vec2f			old_pos;
-	t_vec2f			old_dir;
+	float			ws_speed;
+	float			ad_speed;
 	t_key_state		key_state;
+	float			gravity;
+	float			jump_force;
+	float			vertical_velocity;
+	int				is_jumping;
+	int				is_grounded;
+	float			jump_height;
+	float			base_height;
+	float			current_height;
+	float			ground_level;
+	bool			can_jump;
+
 }					t_player;
 
 typedef struct s_texture_data
@@ -154,8 +165,6 @@ typedef struct s_texture_data
 	mlx_texture_t	*west;
 	mlx_texture_t	*floor;
 	mlx_texture_t	*ceiling;
-	int				floor_color;
-	int				ceiling_color;
 }					t_texture_data;
 
 typedef struct s_data
@@ -197,6 +206,7 @@ void				handle_movement(t_data *data);
 void				handle_strafe(t_data *data);
 void				handle_rotation(t_data *data);
 void				handle_camera_tilt(t_data *data);
+void				handle_jump(t_data *data, float delta_time);
 
 /*-----------------Raycasting------------------*/
 

@@ -71,4 +71,18 @@ int		check_description(t_data *data);
 void	count_line(t_data *data, char *filename);
 void	count_hors_map(t_data *data, char *filename);
 void	free_map(char **map);
+void	map_width(t_data *data);
+void	free_map_partial(char **map, int index);
+char	**copy_map(char **map, int height);
+void	free_map(char **map);
+int		check_element(char **map);
+int		check_joueur(char **map);
+int		check_espace(char **map, t_data *data);
+int		check_line_vide(char **map);
+int		check_mur(t_data *data);
+void	position_player(t_data *data);
+void	flood_fill(char **map, int x, int y, t_data *data);
+int		check_flood(char **map, int height);
+void	direction_ew(t_data *data, char direction);
+void	direction_ns(t_data *data, char direction);
 #endif

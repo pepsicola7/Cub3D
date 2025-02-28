@@ -14,7 +14,7 @@ LIBFT   := libft
 HEADERS := -I./includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
-SRCS    := srcs/main.c srcs/init.c Parsing/parsing.c Parsing/parser_texture.c Parsing/parser_map.c Parsing/printf.c
+SRCS    := srcs/main.c srcs/init.c Parsing/parsing.c Parsing/parser_texture.c Parsing/parser_map.c Parsing/printf.c Parsing/check_map.c Parsing/parser_util.c Parsing/position_player.c
 OBJS    := $(SRCS:.c=.o)
 
 CC      := cc

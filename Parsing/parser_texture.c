@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:15:34 by peli              #+#    #+#             */
-/*   Updated: 2025/02/24 16:40:59 by peli             ###   ########.fr       */
+/*   Updated: 2025/02/28 16:02:27 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	get_texture(char *line, t_data *data)
 
 void	free_split(char **arr)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (arr[i])
@@ -87,18 +87,12 @@ int	read_map_1(t_data *data, char *filename)
 			|| ft_strncmp(line, "WE ", 3) || ft_strncmp(line, "EA ", 3) == 0)
 		{
 			if (!get_texture(line, data))
-			{
-				free(line);
-				return (0);
-			}
+				return (free(line), 0);
 		}
 		if (ft_strncmp(line, "F ", 2) == 0 || ft_strncmp(line, "C ", 2) == 0)
 		{
 			if (get_color(line, data))
-			{
-				free(line);
-				return (0);
-			}
+				return (free(line), 0);
 		}
 		free (line);
 		line = get_next_line(data->map_data->map_fd);

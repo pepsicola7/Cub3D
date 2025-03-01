@@ -12,8 +12,8 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define WIN_HEIGHT 600
-# define WIN_WIDTH 600
+# define WIN_HEIGHT 1080
+# define WIN_WIDTH 1920
 
 # define FOV 60
 # define MOVE_SPEED 1.0
@@ -156,7 +156,6 @@ typedef struct s_player
 	float			current_height;
 	float			ground_level;
 	bool			can_jump;
-
 }					t_player;
 
 typedef struct s_texture_data

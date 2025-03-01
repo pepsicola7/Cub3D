@@ -30,12 +30,30 @@ void	get_minimap_size(t_data *data, int *square_size, t_vec2i *offset)
 	offset->y = 20;
 }
 
+void	draw_minimap_tile(t_data *data, t_vec2i pos, int square_size, int map_value)
+{
+	int	color;
+
+	if (map_value == '0')
+		color = BLUE;
+	else if (map_value == '1')
+		color = GREY;
+	else if (map_value == '2')
+		color = YELLOW;
+	else if (map_value == '3')
+		color = BROWN;
+	else
+		return ;
+	draw_square(data, pos, square_size, color);
+}
+
 void	render_minimap(t_data *data)
 {
 	int		square_size;
 	t_vec2i	offset;
 	t_vec2i	grid;
 	t_vec2i	pos;
+	int map_value;
 
 	get_minimap_size(data, &square_size, &offset);
 	draw_background(data, offset, square_size);
@@ -47,10 +65,8 @@ void	render_minimap(t_data *data)
 		{
 			pos.x = offset.x + grid.x * square_size;
 			pos.y = offset.y + grid.y * square_size;
-			if (get_map_value(data, grid.x, grid.y) == '1')
-				draw_square(data, pos, square_size, GREY);
-			else if (get_map_value(data, grid.x, grid.y) == '0')
-				draw_square(data, pos, square_size, BLUE);
+			map_value = get_map_value(data, grid.x, grid.y);
+			draw_minimap_tile(data, pos, square_size, map_value);
 		}
 	}
 	draw_player(data, offset, square_size);

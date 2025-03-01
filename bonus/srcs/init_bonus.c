@@ -20,13 +20,13 @@ void	example_map(t_data *data)
 	"1111111111111111111111111"
     "1000000000000000000000001"
     "1001111100111111001111101"
+    "1001000100100020002000101"
     "1001000100100010001000101"
-    "1001000100100010001000101"
-    "1001111100111111001111101"
+    "1001111100112111001111101"
     "1000000000000000000000001"
-    "1011111011111101111110101"
+    "1011111011112101111110101"
     "1000001000000001000000101"
-    "1000001001111101000000101"
+    "1000001001112101000000101"
     "1011101001000101011100101"
     "1010001001000101000000101"
     "1011111001111101111100101"
@@ -57,6 +57,8 @@ int	init_data(t_data *data)
 	data->map_data = ft_calloc(1, sizeof(t_map));
 	data->player = ft_calloc(1, sizeof(t_player));
 	data->texture = ft_calloc(1, sizeof(t_texture_data));
+	if (!data->mlx_data || !data->map_data || !data->player || !data->texture)
+		return (-1);
 	data->mlx_data->mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "cub3d", true);
 	data->mlx_data->img = mlx_new_image(data->mlx_data->mlx, WIN_WIDTH,
 			WIN_HEIGHT);

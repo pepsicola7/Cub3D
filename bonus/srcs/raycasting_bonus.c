@@ -10,6 +10,8 @@ int	get_map_value(t_data *data, int x, int y)
 
 inline void	perform_dda(t_data *data, t_ray *ray)
 {
+	int	map_value;
+
 	ray->hit = 0;
 	while (ray->hit == 0)
 	{
@@ -25,7 +27,8 @@ inline void	perform_dda(t_data *data, t_ray *ray)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if (get_map_value(data, ray->map_x, ray->map_y) == '1')
+		map_value = get_map_value(data, ray->map_x, ray->map_y);
+		if (map_value == '1' || map_value == '2')
 			ray->hit = 1;
 	}
 	if (ray->side == 0)
@@ -318,12 +321,12 @@ void	handle_key_press(t_data *data, mlx_key_data_t keydata, bool is_pressed)
 		data->player->key_state.control = is_pressed;
 }
 
-void make_player_jump(t_data *data)
+void	make_player_jump(t_data *data)
 {
-		data->player->is_jumping = 1;
-		data->player->is_grounded = 0;
-		data->player->vertical_velocity = data->player->jump_force;
-		data->player->can_jump = false;
+	data->player->is_jumping = 1;
+	data->player->is_grounded = 0;
+	data->player->vertical_velocity = data->player->jump_force;
+	data->player->can_jump = false;
 }
 
 void	handle_jump(t_data *data, float d_time)
@@ -358,6 +361,7 @@ void	handle_movement(t_data *data)
 {
 	t_vec2f	new_pos;
 	float	speed;
+	int		map_value;
 
 	if (data->player->key_state.w == data->player->key_state.s)
 		return ;
@@ -370,9 +374,11 @@ void	handle_movement(t_data *data)
 		speed *= 2.0f;
 	new_pos.x = data->player->pos.x + data->player->dir.x * speed;
 	new_pos.y = data->player->pos.y + data->player->dir.y * speed;
-	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
+	map_value = get_map_value(data, (int)new_pos.x, (int)data->player->pos.y);
+	if (map_value == '0' || map_value == '3')
 		data->player->pos.x = new_pos.x;
-	if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
+	map_value = get_map_value(data, (int)data->player->pos.x, (int)new_pos.y);
+	if (map_value == '0' || map_value == '3')
 		data->player->pos.y = new_pos.y;
 }
 
@@ -380,6 +386,7 @@ void	handle_strafe(t_data *data)
 {
 	t_vec2f	new_pos;
 	float	speed;
+	int		map_value;
 
 	if (data->player->key_state.a == data->player->key_state.d)
 		return ;
@@ -392,9 +399,11 @@ void	handle_strafe(t_data *data)
 		speed *= -1.0f;
 	new_pos.x = data->player->pos.x + data->player->plane.x * speed;
 	new_pos.y = data->player->pos.y + data->player->plane.y * speed;
-	if (get_map_value(data, (int)new_pos.x, (int)data->player->pos.y) == '0')
+	map_value = get_map_value(data, (int)new_pos.x, (int)data->player->pos.y);
+	if (map_value == '0' || map_value == '3')
 		data->player->pos.x = new_pos.x;
-	if (get_map_value(data, (int)data->player->pos.x, (int)new_pos.y) == '0')
+	map_value = get_map_value(data, (int)data->player->pos.x, (int)new_pos.y);
+	if (map_value == '0' || map_value == '3')
 		data->player->pos.y = new_pos.y;
 }
 
@@ -444,6 +453,29 @@ void	handle_camera_tilt(t_data *data)
 	data->player->camera_y_offset = offset;
 }
 
+void	door_actions(t_data *data)
+{
+	t_vec2i	pos;
+	char	tile;
+	t_vec2f	ray;
+	float	distance;
+
+	ray.x = data->player->pos.x + data->player->dir.x * 0.5;
+	ray.y = data->player->pos.y + data->player->dir.y * 0.5;
+	pos.x = (int)ray.x;
+	pos.y = (int)ray.y;
+	distance = sqrt(pow(data->player->pos.x - ray.x, 2)
+			+ pow(data->player->pos.y - ray.y, 2));
+	if (distance < 1.0)
+	{
+		tile = get_map_value(data, pos.x, pos.y);
+		if (tile == '2')
+			data->map_data->map[pos.y * data->map_data->width + pos.x] = '3';
+		else if (tile == '3')
+			data->map_data->map[pos.y * data->map_data->width + pos.x] = '2';
+	}
+}
+
 void	key_callback(mlx_key_data_t keydata, void *vdata)
 {
 	t_data	*data;
@@ -451,6 +483,10 @@ void	key_callback(mlx_key_data_t keydata, void *vdata)
 	data = (t_data *)vdata;
 	if (keydata.key == MLX_KEY_ESCAPE)
 		exit_program(data, 0);
-	handle_key_press(data, keydata, keydata.action == MLX_PRESS
-		|| keydata.action == MLX_REPEAT);
+	else if (keydata.key == MLX_KEY_E && (keydata.action == MLX_PRESS
+			|| keydata.action == MLX_REPEAT))
+		door_actions(data);
+	else
+		handle_key_press(data, keydata, keydata.action == MLX_PRESS
+			|| keydata.action == MLX_REPEAT);
 }

@@ -44,6 +44,8 @@ int	init_data(t_data *data)
 	data->map_data = ft_calloc(1, sizeof(t_map));
 	data->player = ft_calloc(1, sizeof(t_player));
 	data->texture = ft_calloc(1, sizeof(t_texture_data));
+	if (!data->mlx_data || !data->map_data || !data->player || !data->texture)
+		return (-1);
 	data->mlx_data->mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "cub3d", true);
 	data->mlx_data->img = mlx_new_image(data->mlx_data->mlx, WIN_WIDTH,
 			WIN_HEIGHT);

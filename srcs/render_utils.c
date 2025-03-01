@@ -27,7 +27,7 @@ void	draw_quads(t_data *data, t_vec2i start, t_vec2i size, int color)
 	{
 		pixel.x = -size.x / 2;
 		while (++pixel.x < size.x / 2)
-			ft_put_pixel(data->mlx_data->img, start.x + pixel.x, start.y
+			ft_put_pixel(data->mlx_data->img_buffer, start.x + pixel.x, start.y
 				+ pixel.y, color);
 	}
 }
@@ -45,7 +45,7 @@ void	draw_circle(t_data *data, t_vec2i pos, int radius, int color)
 		{
 			dist = sqrt(pixel.x * pixel.x + pixel.y * pixel.y);
 			if (dist < radius)
-				ft_put_pixel(data->mlx_data->img, pos.x + pixel.x, pos.y
+				ft_put_pixel(data->mlx_data->img_buffer, pos.x + pixel.x, pos.y
 					+ pixel.y, color);
 		}
 	}
@@ -73,7 +73,7 @@ void	draw_line(t_data *data, t_vec2i start, t_vec2i end, int color)
 	init_bresenham(&bres, start, end);
 	while (1)
 	{
-		ft_put_pixel(data->mlx_data->img, start.x, start.y, color);
+		ft_put_pixel(data->mlx_data->img_buffer, start.x, start.y, color);
 		if (start.x == end.x && start.y == end.y)
 			break ;
 		bres.error_adjustment = 2 * bres.error;

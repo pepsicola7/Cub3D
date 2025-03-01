@@ -18,20 +18,6 @@ void	ft_put_pixel(mlx_image_t *image, uint32_t x, uint32_t y, uint32_t color)
 	ft_draw_pixel(pixelstart, color);
 }
 
-void	draw_quads(t_data *data, t_vec2i start, t_vec2i size, int color)
-{
-	t_vec2i	pixel;
-
-	pixel.y = -size.y / 2;
-	while (++pixel.y < size.y / 2)
-	{
-		pixel.x = -size.x / 2;
-		while (++pixel.x < size.x / 2)
-			ft_put_pixel(data->mlx_data->img, start.x + pixel.x, start.y
-				+ pixel.y, color);
-	}
-}
-
 void	draw_circle(t_data *data, t_vec2i pos, int radius, int color)
 {
 	t_vec2i	pixel;
@@ -45,7 +31,7 @@ void	draw_circle(t_data *data, t_vec2i pos, int radius, int color)
 		{
 			dist = sqrt(pixel.x * pixel.x + pixel.y * pixel.y);
 			if (dist < radius)
-				ft_put_pixel(data->mlx_data->img, pos.x + pixel.x, pos.y
+				ft_put_pixel(data->mlx_data->img_buffer, pos.x + pixel.x, pos.y
 					+ pixel.y, color);
 		}
 	}
@@ -73,7 +59,7 @@ void	draw_line(t_data *data, t_vec2i start, t_vec2i end, int color)
 	init_bresenham(&bres, start, end);
 	while (1)
 	{
-		ft_put_pixel(data->mlx_data->img, start.x, start.y, color);
+		ft_put_pixel(data->mlx_data->img_buffer, start.x, start.y, color);
 		if (start.x == end.x && start.y == end.y)
 			break ;
 		bres.error_adjustment = 2 * bres.error;
@@ -87,5 +73,33 @@ void	draw_line(t_data *data, t_vec2i start, t_vec2i end, int color)
 			bres.error += bres.delta_x;
 			start.y += bres.step_y;
 		}
+	}
+}
+
+void	draw_square(t_data *data, t_vec2i pos, int size, int color)
+{
+	t_vec2i	pixel;
+
+	pixel.y = 0;
+	while (++pixel.y < size - 1)
+	{
+		pixel.x = 0;
+		while (++pixel.x < size - 1)
+			ft_put_pixel(data->mlx_data->img_buffer, pos.x + pixel.x, pos.y + pixel.y,
+				color);
+	}
+}
+
+void	draw_background(t_data *data, t_vec2i offset, int size)
+{
+	t_vec2i	pixel;
+
+	pixel.y = -1;
+	while (++pixel.y < data->map_data->height * size)
+	{
+		pixel.x = -1;
+		while (++pixel.x < data->map_data->width * size)
+			ft_put_pixel(data->mlx_data->img_buffer, offset.x + pixel.x, offset.y
+				+ pixel.y, BLACK);
 	}
 }

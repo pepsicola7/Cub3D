@@ -16,8 +16,10 @@
 # define WIN_WIDTH 600
 
 # define FOV 60
-# define MOVE_SPEED 0.02
-# define ROTATE_SPEED 0.02
+# define MOVE_SPEED 1.0
+# define ROTATE_SPEED 1.0
+# define TILT_SPEED 400
+# define JUMP_SPEED 75.0
 
 # define BLUE 0x0000FFFF
 # define LIGHT_BLUE 0xADD8F6FF
@@ -186,18 +188,18 @@ int					init_data(t_data *data);
 /*------------------Math Utils-----------------*/
 
 float				deg_to_rad(int degre);
-int					get_map_index(t_data *data, int x, int y);
+int					get_map_value(t_data *data, int x, int y);
 
 /*---------------Rendering Utils---------------*/
 
 void				ft_put_pixel(mlx_image_t *img, uint32_t x, uint32_t y,
 						uint32_t color);
-void				draw_quads(t_data *data, t_vec2i start, t_vec2i end,
-						int color);
 void				draw_line(t_data *data, t_vec2i start, t_vec2i end,
 						int color);
 void				draw_circle(t_data *data, t_vec2i pos, int radius,
 						int color);
+void				draw_background(t_data *data, t_vec2i offset, int size);
+void				draw_square(t_data *data, t_vec2i pos, int size, int color);
 
 /*----------------Key Handling-----------------*/
 
@@ -208,8 +210,9 @@ void				handle_rotation(t_data *data);
 void				handle_camera_tilt(t_data *data);
 void				handle_jump(t_data *data, float delta_time);
 
-/*-----------------Raycasting------------------*/
+/*-----------------Rendering-------------------*/
 
 void				render_raycast(void *param);
+void				render_minimap(t_data *data);
 
 #endif

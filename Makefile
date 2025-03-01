@@ -16,7 +16,7 @@ HEADERS_BONUS := -I./bonus/includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
 SRCS    := srcs/main.c srcs/init.c srcs/raycasting.c srcs/render_utils.c
-SRCS_BONUS := bonus/srcs/main_bonus.c bonus/srcs/init_bonus.c bonus/srcs/raycasting_bonus.c bonus/srcs/render_utils_bonus.c
+SRCS_BONUS := bonus/srcs/main_bonus.c bonus/srcs/init_bonus.c bonus/srcs/raycasting_bonus.c bonus/srcs/render_utils_bonus.c bonus/srcs/minimap_bonus.c
 OBJS    := $(SRCS:.c=.o)
 OBJS_BONUS := $(SRCS_BONUS:.c=.o)
 
@@ -47,7 +47,6 @@ libmlx:
 %.o: %.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "$(YELLOW)Compiling: $(PURPLE)$(notdir $<)\n$(RESET)"
 
-# Bonus object files compilation rule
 bonus/%.o: bonus/%.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS_BONUS) && printf "$(YELLOW)Compiling Bonus: $(PURPLE)$(notdir $<)\n$(RESET)"
 
@@ -73,16 +72,16 @@ clean:
 
 fclean: clean
 	@echo "$(CYAN)Cleaning libft...$(RESET)"
-	#@make -C $(LIBFT) fclean > /dev/null
 	@echo "$(GREEN)Libft cleaned successfully!$(RESET)"
 	@echo "$(CYAN)Cleaning MLX42...$(RESET)"
-	#@rm -rf $(LIBMLX)/build
 	@echo "$(GREEN)MLX42 cleaned successfully!$(RESET)"
 	@echo "$(CYAN)Cleaning $(NAME)...$(RESET)"
 	@rm -f $(NAME)
 	@echo "$(GREEN)$(NAME) cleaned successfully!$(RESET)"
 
 re: fclean all
+
+rebonus: fclean bonus
 
 help:
 	@echo "$(CYAN)Available commands:$(RESET)"
@@ -94,4 +93,4 @@ help:
 	@echo "$(YELLOW)make re$(RESET) - removes object files, libraries and the executable, then recompiles the project"
 	@echo "$(YELLOW)make help$(RESET) - displays this message"
 
-.PHONY: all clean fclean re libft libmlx bonus dev help
+.PHONY: all clean fclean re libft libmlx bonus dev help rebonus

@@ -36,24 +36,6 @@ void	exit_program(t_data *data, int status)
 	exit(status);
 }
 
-// void	draw_player(t_data *data, t_vec2i pos, int size)
-// {
-// 	t_vec2i	center;
-// 	t_vec2i	end;
-//
-// 	center.x = pos.x + size / 2;
-// 	center.y = pos.y + size / 2;
-// 	end.x = center.x + cos(deg_to_rad(data->player->rotation)) * size / 2;
-// 	end.y = center.y + sin(deg_to_rad(data->player->rotation)) * size / 2;
-// 	draw_line(data, center, end, RED);
-// 	draw_circle(data, center, size / 2, GREEN);
-// }
-
-// void render_minimap(t_data *data)
-// {
-// 	(void)data;
-// }
-
 void	ft_swap_pointers(void **ptr1, void **ptr2)
 {
 	void	*tmp;
@@ -77,6 +59,7 @@ void	render_all(void *vdata)
 		data->mlx_data->img_buffer = mlx_new_image(data->mlx_data->mlx,
 				data->mlx_data->mlx->width, data->mlx_data->mlx->height);
 	render_raycast(data);
+	render_minimap(data);
 	ft_swap_pointers((void **)&data->mlx_data->img,
 		(void **)&data->mlx_data->img_buffer);
 	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);

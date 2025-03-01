@@ -239,7 +239,7 @@ void	handle_movement(t_data *data)
 
 	if (data->player->key_state.w == data->player->key_state.s)
 		return ;
-	speed = MOVE_SPEED;
+	speed = MOVE_SPEED * data->mlx_data->mlx->delta_time;
 	if (data->player->key_state.w)
 		speed *= 1.0f;
 	if (data->player->key_state.s)
@@ -261,7 +261,7 @@ void	handle_strafe(t_data *data)
 
 	if (data->player->key_state.a == data->player->key_state.d)
 		return ;
-	speed = MOVE_SPEED;
+	speed = MOVE_SPEED * data->mlx_data->mlx->delta_time;
 	if (data->player->key_state.shift)
 		speed *= 2.0f;
 	if (data->player->key_state.d)
@@ -287,9 +287,9 @@ void	handle_rotation(t_data *data)
 	if (data->player->key_state.left == data->player->key_state.right)
 		return ;
 	if (data->player->key_state.right)
-		angle = ROTATE_SPEED;
+		angle = ROTATE_SPEED * data->mlx_data->mlx->delta_time;
 	if (data->player->key_state.left)
-		angle = -ROTATE_SPEED;
+		angle = -ROTATE_SPEED * data->mlx_data->mlx->delta_time;
 	cos_angle = cosf(angle);
 	sin_angle = sinf(angle);
 	old_dir_x = data->player->dir.x;
@@ -312,9 +312,9 @@ void	handle_camera_tilt(t_data *data)
 		return ;
 	offset = data->player->camera_y_offset;
 	if (data->player->key_state.up)
-		offset += 10;
+		offset += (int)TILT_SPEED * data->mlx_data->mlx->delta_time;
 	if (data->player->key_state.down)
-		offset -= 10;
+		offset -= (int)TILT_SPEED * data->mlx_data->mlx->delta_time;
 	if (offset > 600)
 		offset = 600;
 	if (offset < -600)

@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-inline int	get_map_value(t_data *data, int x, int y)
+int	get_map_value(t_data *data, int x, int y)
 {
 	if (x < 0 || x >= data->map_data->width || y < 0
 		|| y >= data->map_data->height)
@@ -318,6 +318,14 @@ void	handle_key_press(t_data *data, mlx_key_data_t keydata, bool is_pressed)
 		data->player->key_state.control = is_pressed;
 }
 
+void make_player_jump(t_data *data)
+{
+		data->player->is_jumping = 1;
+		data->player->is_grounded = 0;
+		data->player->vertical_velocity = data->player->jump_force;
+		data->player->can_jump = false;
+}
+
 void	handle_jump(t_data *data, float d_time)
 {
 	float	previous_height;
@@ -326,12 +334,7 @@ void	handle_jump(t_data *data, float d_time)
 	previous_height = data->player->current_height;
 	if (data->player->key_state.space && data->player->is_grounded
 		&& data->player->can_jump)
-	{
-		data->player->is_jumping = 1;
-		data->player->is_grounded = 0;
-		data->player->vertical_velocity = data->player->jump_force;
-		data->player->can_jump = false;
-	}
+		make_player_jump(data);
 	if (!data->player->key_state.space)
 		data->player->can_jump = true;
 	if (!data->player->is_grounded)
@@ -347,7 +350,7 @@ void	handle_jump(t_data *data, float d_time)
 			data->player->vertical_velocity = 0.0f;
 		}
 		height_delta = data->player->current_height - previous_height;
-		data->player->camera_y_offset += height_delta * 65.0f;
+		data->player->camera_y_offset += height_delta * JUMP_SPEED;
 	}
 }
 
@@ -358,7 +361,7 @@ void	handle_movement(t_data *data)
 
 	if (data->player->key_state.w == data->player->key_state.s)
 		return ;
-	speed = MOVE_SPEED;
+	speed = MOVE_SPEED * data->mlx_data->mlx->delta_time;
 	if (data->player->key_state.w)
 		speed *= 1.0f;
 	if (data->player->key_state.s)
@@ -380,7 +383,7 @@ void	handle_strafe(t_data *data)
 
 	if (data->player->key_state.a == data->player->key_state.d)
 		return ;
-	speed = MOVE_SPEED;
+	speed = MOVE_SPEED * data->mlx_data->mlx->delta_time;
 	if (data->player->key_state.shift)
 		speed *= 2.0f;
 	if (data->player->key_state.d)
@@ -406,9 +409,9 @@ void	handle_rotation(t_data *data)
 	if (data->player->key_state.left == data->player->key_state.right)
 		return ;
 	if (data->player->key_state.right)
-		angle = ROTATE_SPEED;
+		angle = ROTATE_SPEED * data->mlx_data->mlx->delta_time;
 	if (data->player->key_state.left)
-		angle = -ROTATE_SPEED;
+		angle = -ROTATE_SPEED * data->mlx_data->mlx->delta_time;
 	cos_angle = cosf(angle);
 	sin_angle = sinf(angle);
 	old_dir_x = data->player->dir.x;
@@ -431,9 +434,9 @@ void	handle_camera_tilt(t_data *data)
 		return ;
 	offset = data->player->camera_y_offset;
 	if (data->player->key_state.up)
-		offset += 10;
+		offset += (int)TILT_SPEED * data->mlx_data->mlx->delta_time;
 	if (data->player->key_state.down)
-		offset -= 10;
+		offset -= (int)TILT_SPEED * data->mlx_data->mlx->delta_time;
 	if (offset > 600)
 		offset = 600;
 	if (offset < -600)

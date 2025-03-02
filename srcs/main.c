@@ -76,12 +76,6 @@ void	render_all(void *vdata)
 	render_raycast(data);
 	ft_swap_pointers((void **)&data->mlx_data->img,
 		(void **)&data->mlx_data->img_buffer);
-	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
-	if (data->mlx_data->img_buffer)
-	{
-		mlx_delete_image(data->mlx_data->mlx, data->mlx_data->img_buffer);
-		data->mlx_data->img_buffer = NULL;
-	}
 }
 
 int	main(int ac, char **av)
@@ -97,9 +91,10 @@ int	main(int ac, char **av)
 	data = ft_calloc(1, sizeof(t_data));
 	if (!data)
 		return (1);
+	mlx_set_setting(MLX_FULLSCREEN, true);
 	if (init_data(data) == -1)
 		exit_program(data, 1);
-	// render_minimap(data);
+	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 	mlx_key_hook(data->mlx_data->mlx, key_callback, data);
 	mlx_loop_hook(data->mlx_data->mlx, render_all, data);
 	mlx_loop(data->mlx_data->mlx);

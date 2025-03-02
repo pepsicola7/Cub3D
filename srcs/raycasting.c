@@ -330,5 +330,5 @@ void	key_callback(mlx_key_data_t keydata, void *vdata)
 	if (keydata.key == MLX_KEY_ESCAPE)
 		exit_program(data, 0);
 	handle_key_press(data, keydata, keydata.action == MLX_PRESS
-		|| keydata.action == MLX_REPEAT);
+		|| keydata.action == MLX_REPEAT;
 }

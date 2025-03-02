@@ -22,7 +22,13 @@ void	draw_player(t_data *data, t_vec2i offset, int square_size)
 
 void	get_minimap_size(t_data *data, int *square_size, t_vec2i *offset)
 {
-	*square_size = (data->mlx_data->mlx->width / 5) / data->map_data->width;
+	int	divider;
+
+	if (data->player->key_state.tab)
+		divider = 3;
+	else
+		divider = 5;
+	*square_size = (data->mlx_data->mlx->width / divider) / data->map_data->width;
 	if (*square_size < 2)
 		*square_size = 2;
 	offset->x = data->mlx_data->mlx->width - data->map_data->width

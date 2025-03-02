@@ -27,8 +27,6 @@ void	example_map(t_data *data)
 	data->player->pos = (t_vec2f){1.5f, 1.5f};
 	data->player->dir = (t_vec2f){1.0f, 0.0f};
 	data->player->plane = (t_vec2f){0.0f, 0.66f};
-	data->mlx_data->old_height = data->mlx_data->mlx->height;
-	data->mlx_data->old_width = data->mlx_data->mlx->width;
 	data->texture->ceiling_color = LIGHT_BLUE;
 	data->texture->floor_color = GREY;
 	data->texture->north = mlx_load_png("textures/north.png");

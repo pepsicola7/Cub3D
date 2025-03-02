@@ -12,13 +12,13 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define WIN_HEIGHT 600
-# define WIN_WIDTH 600
+# define WIN_HEIGHT	1080
+# define WIN_WIDTH 1920
 
 # define FOV 60
 # define MOVE_SPEED 1.0
 # define ROTATE_SPEED 1.0
-# define TILT_SPEED 175
+# define TILT_SPEED	400
 
 # define BLUE 0x0000FFFF
 # define LIGHT_BLUE 0xADD8F6FF
@@ -96,8 +96,6 @@ typedef struct s_mlx
 	mlx_t			*mlx;
 	mlx_image_t		*img;
 	mlx_image_t		*img_buffer;
-	int32_t			old_height;
-	int32_t			old_width;
 }					t_mlx;
 
 typedef struct s_map

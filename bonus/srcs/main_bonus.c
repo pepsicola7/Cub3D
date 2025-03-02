@@ -60,14 +60,8 @@ void	render_all(void *vdata)
 				data->mlx_data->mlx->width, data->mlx_data->mlx->height);
 	render_raycast(data);
 	render_minimap(data);
-	ft_swap_pointers((void **)&data->mlx_data->img,
-		(void **)&data->mlx_data->img_buffer);
-	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
-	if (data->mlx_data->img_buffer)
-	{
-		mlx_delete_image(data->mlx_data->mlx, data->mlx_data->img_buffer);
-		data->mlx_data->img_buffer = NULL;
-	}
+	ft_swap_pointers((void **)&data->mlx_data->img->pixels,
+		(void **)&data->mlx_data->img_buffer->pixels);
 }
 
 int	main(int ac, char **av)
@@ -83,10 +77,15 @@ int	main(int ac, char **av)
 	data = ft_calloc(1, sizeof(t_data));
 	if (!data)
 		return (1);
+	mlx_set_setting(MLX_FULLSCREEN, false);
 	if (init_data(data) == -1)
 		exit_program(data, 1);
-	// render_minimap(data);
+	mlx_set_cursor_mode(data->mlx_data->mlx, MLX_MOUSE_DISABLED);
+	mlx_set_mouse_pos(data->mlx_data->mlx, data->mlx_data->mlx->width / 2,
+		data->mlx_data->mlx->height / 2);
+	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 	mlx_key_hook(data->mlx_data->mlx, key_callback, data);
+	mlx_cursor_hook(data->mlx_data->mlx, handle_cursor, data);
 	mlx_loop_hook(data->mlx_data->mlx, render_all, data);
 	mlx_loop(data->mlx_data->mlx);
 	free_data(data);

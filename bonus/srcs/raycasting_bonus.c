@@ -319,6 +319,8 @@ void	handle_key_press(t_data *data, mlx_key_data_t keydata, bool is_pressed)
 		data->player->key_state.space = is_pressed;
 	else if (keydata.key == MLX_KEY_LEFT_CONTROL)
 		data->player->key_state.control = is_pressed;
+	else if (keydata.key == MLX_KEY_TAB)
+		data->player->key_state.tab = is_pressed;
 }
 
 void	make_player_jump(t_data *data)
@@ -407,32 +409,70 @@ void	handle_strafe(t_data *data)
 		data->player->pos.y = new_pos.y;
 }
 
-void	handle_rotation(t_data *data)
+void	change_player_yaw(t_data *data, float yaw)
 {
-	float	angle;
 	float	old_dir_x;
 	float	old_plane_x;
-	float	cos_angle;
-	float	sin_angle;
+	float	cos_yaw;
+	float	sin_yaw;
+
+	cos_yaw = cosf(yaw);
+	sin_yaw = sinf(yaw);
+	old_dir_x = data->player->dir.x;
+	old_plane_x = data->player->plane.x;
+	data->player->dir.x = data->player->dir.x * cos_yaw - data->player->dir.y
+		* sin_yaw;
+	data->player->dir.y = old_dir_x * sin_yaw + data->player->dir.y
+		* cos_yaw;
+	data->player->plane.x = data->player->plane.x * cos_yaw
+		- data->player->plane.y * sin_yaw;
+	data->player->plane.y = old_plane_x * sin_yaw + data->player->plane.y
+		* cos_yaw;
+}
+
+void	change_player_pitch(t_data *data, float pitch)
+{
+	data->player->camera_y_offset -= pitch;
+	if (data->player->camera_y_offset > 600)
+		data->player->camera_y_offset = 600;
+	if (data->player->camera_y_offset < -600)
+		data->player->camera_y_offset = -600;
+}
+
+void	handle_cursor(double xpos, double ypos, void *param)
+{
+	static bool	first_call = true;
+	t_data	*data;
+	float	yaw;
+	float	pitch;
+
+	data = (t_data *)param;
+	if (first_call)
+	{
+		mlx_set_mouse_pos(data->mlx_data->mlx, data->mlx_data->mlx->width / 2,
+			data->mlx_data->mlx->height / 2);
+		first_call = false;
+		return ;
+	}
+	yaw = (xpos - (data->mlx_data->mlx->width / 2)) * MOUSE_SENSITIVITY;
+	pitch = (ypos - (data->mlx_data->mlx->height / 2));
+	change_player_yaw(data, yaw * data->mlx_data->mlx->delta_time);
+	change_player_pitch(data, pitch);
+	mlx_set_mouse_pos(data->mlx_data->mlx, data->mlx_data->mlx->width / 2,
+		data->mlx_data->mlx->height / 2);
+}
+
+void	handle_rotation(t_data *data)
+{
+	float	yaw;
 
 	if (data->player->key_state.left == data->player->key_state.right)
 		return ;
 	if (data->player->key_state.right)
-		angle = ROTATE_SPEED * data->mlx_data->mlx->delta_time;
-	if (data->player->key_state.left)
-		angle = -ROTATE_SPEED * data->mlx_data->mlx->delta_time;
-	cos_angle = cosf(angle);
-	sin_angle = sinf(angle);
-	old_dir_x = data->player->dir.x;
-	old_plane_x = data->player->plane.x;
-	data->player->dir.x = data->player->dir.x * cos_angle - data->player->dir.y
-		* sin_angle;
-	data->player->dir.y = old_dir_x * sin_angle + data->player->dir.y
-		* cos_angle;
-	data->player->plane.x = data->player->plane.x * cos_angle
-		- data->player->plane.y * sin_angle;
-	data->player->plane.y = old_plane_x * sin_angle + data->player->plane.y
-		* cos_angle;
+		yaw = ROTATE_SPEED * data->mlx_data->mlx->delta_time;
+	else if (data->player->key_state.left)
+		yaw = -ROTATE_SPEED * data->mlx_data->mlx->delta_time;
+	change_player_yaw(data, yaw);
 }
 
 void	handle_camera_tilt(t_data *data)
@@ -455,24 +495,23 @@ void	handle_camera_tilt(t_data *data)
 
 void	door_actions(t_data *data)
 {
-	t_vec2i	pos;
-	char	tile;
+	char	map_value;
 	t_vec2f	ray;
 	float	distance;
 
+	if (get_map_value(data, (int)data->player->pos.x, (int)data->player->pos.y) == '3')
+		return ;
 	ray.x = data->player->pos.x + data->player->dir.x * 0.5;
 	ray.y = data->player->pos.y + data->player->dir.y * 0.5;
-	pos.x = (int)ray.x;
-	pos.y = (int)ray.y;
 	distance = sqrt(pow(data->player->pos.x - ray.x, 2)
 			+ pow(data->player->pos.y - ray.y, 2));
 	if (distance < 1.0)
 	{
-		tile = get_map_value(data, pos.x, pos.y);
-		if (tile == '2')
-			data->map_data->map[pos.y * data->map_data->width + pos.x] = '3';
-		else if (tile == '3')
-			data->map_data->map[pos.y * data->map_data->width + pos.x] = '2';
+		map_value = get_map_value(data, (int)ray.x, (int)ray.y);
+		if (map_value == '2')
+			data->map_data->map[(int)ray.y * data->map_data->width + (int)ray.x] = '3';
+		else if (map_value == '3')
+			data->map_data->map[(int)ray.y * data->map_data->width + (int)ray.x] = '2';
 	}
 }
 

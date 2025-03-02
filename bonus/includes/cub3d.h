@@ -18,8 +18,10 @@
 # define FOV 60
 # define MOVE_SPEED 1.0
 # define ROTATE_SPEED 1.0
+# define MOUSE_SENSITIVITY 0.1
 # define TILT_SPEED 400
-# define JUMP_SPEED 75.0
+# define JUMP_SPEED 125
+# define NUM_FRAMES 4
 
 # define BLUE 0x0000FFFF
 # define LIGHT_BLUE 0xADD8F6FF
@@ -47,6 +49,12 @@ typedef struct s_vec2i
 	int				x;
 	int				y;
 }					t_vec2i;
+
+typedef struct s_sprite
+{
+	mlx_texture_t	frames[NUM_FRAMES];
+	mlx_texture_t	*current_frame;
+}					t_sprite;
 
 typedef struct s_floor_ceiling
 {
@@ -135,6 +143,7 @@ typedef struct s_key_state
 	bool			shift;
 	bool			space;
 	bool			control;
+	bool			tab;
 }					t_key_state;
 
 typedef struct s_player
@@ -208,6 +217,7 @@ void				handle_strafe(t_data *data);
 void				handle_rotation(t_data *data);
 void				handle_camera_tilt(t_data *data);
 void				handle_jump(t_data *data, float delta_time);
+void				handle_cursor(double xpos, double ypos, void *param);
 
 /*-----------------Rendering-------------------*/
 

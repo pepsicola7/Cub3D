@@ -372,7 +372,7 @@ void	handle_movement(t_data *data)
 		speed *= 1.0f;
 	if (data->player->key_state.s)
 		speed *= -1.0f;
-	else if (data->player->key_state.shift)
+	if (data->player->key_state.shift)
 		speed *= 2.0f;
 	new_pos.x = data->player->pos.x + data->player->dir.x * speed;
 	new_pos.y = data->player->pos.y + data->player->dir.y * speed;

@@ -28,7 +28,8 @@ void	get_minimap_size(t_data *data, int *square_size, t_vec2i *offset)
 		divider = 3;
 	else
 		divider = 5;
-	*square_size = (data->mlx_data->mlx->width / divider) / data->map_data->width;
+	*square_size = (data->mlx_data->mlx->width / divider)
+		/ data->map_data->width;
 	if (*square_size < 2)
 		*square_size = 2;
 	offset->x = data->mlx_data->mlx->width - data->map_data->width
@@ -36,7 +37,8 @@ void	get_minimap_size(t_data *data, int *square_size, t_vec2i *offset)
 	offset->y = 20;
 }
 
-void	draw_minimap_tile(t_data *data, t_vec2i pos, int square_size, int map_value)
+void	draw_minimap_tile(t_data *data, t_vec2i pos, int square_size,
+		int map_value)
 {
 	int	color;
 
@@ -59,7 +61,7 @@ void	render_minimap(t_data *data)
 	t_vec2i	offset;
 	t_vec2i	grid;
 	t_vec2i	pos;
-	int map_value;
+	int		map_value;
 
 	get_minimap_size(data, &square_size, &offset);
 	draw_background(data, offset, square_size);

@@ -60,6 +60,7 @@ void	render_all(void *vdata)
 				data->mlx_data->mlx->width, data->mlx_data->mlx->height);
 	render_raycast(data);
 	render_minimap(data);
+	draw_sprite(data);
 	ft_swap_pointers((void **)&data->mlx_data->img->pixels,
 		(void **)&data->mlx_data->img_buffer->pixels);
 }

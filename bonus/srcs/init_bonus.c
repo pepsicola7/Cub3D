@@ -1,41 +1,40 @@
 #include "cub3d.h"
 
-void init_player_jump(t_player *player)
+void	init_player_jump(t_player *player)
 {
-    player->gravity = 15.0f;
-    player->jump_force = 6.0f;
-    player->vertical_velocity = 0.0f;
-    player->is_jumping = 0;
-    player->is_grounded = 1;
-    player->jump_height = 0.5f;
-    player->base_height = 0.0f;
-    player->current_height = 0.0f;
-    player->ground_level = 0.0f;
-    player->can_jump = true;
+	player->gravity = 15.0f;
+	player->jump_force = 6.0f;
+	player->vertical_velocity = 0.0f;
+	player->is_jumping = 0;
+	player->is_grounded = 1;
+	player->jump_height = 0.5f;
+	player->base_height = 0.0f;
+	player->current_height = 0.0f;
+	player->ground_level = 0.0f;
+	player->can_jump = true;
 }
 
 void	example_map(t_data *data)
 {
-	data->map_data->map = ft_strdup(
-	"1111111111111111111111111"
-    "1000000000000000000000001"
-    "1001111100111111001111101"
-    "1001000100100020002000101"
-    "1001000100100010001000101"
-    "1001111100112111001111101"
-    "1000000000000000000000001"
-    "1011111011112101111110101"
-    "1000001000000001000000101"
-    "1000001001112101000000101"
-    "1011101001000101011100101"
-    "1010001001000101000000101"
-    "1011111001111101111100101"
-    "1000000000000000000000001"
-    "1111011111110111111101111"
-    "1000010000000100000000001"
-    "1000010111110101111101111"
-    "1000000000000000000000001"
-    "1111111111111111111111111");
+	data->map_data->map = ft_strdup("1111111111111111111111111"
+									"1000000000000000000000001"
+									"1001111100111111001111101"
+									"1001000100100020002000101"
+									"1001000100100010001000101"
+									"1001111100112111001111101"
+									"1000000000000000000000001"
+									"1011111011112101111110101"
+									"1000001000000001000000101"
+									"1000001001112101000000101"
+									"1011101001000101011100101"
+									"1010001001000101000000101"
+									"1011111001111101111100101"
+									"1000000000000000000000001"
+									"1111011111110111111101111"
+									"1000010000000100000000001"
+									"1000010111110101111101111"
+									"1000000000000000000000001"
+									"1111111111111111111111111");
 	data->map_data->width = 25;
 	data->map_data->height = 19;
 	data->player->pos = (t_vec2f){1.5f, 1.5f};
@@ -66,5 +65,6 @@ int	init_data(t_data *data)
 	if (!data->mlx_data->mlx || !data->mlx_data->img)
 		return (-1);
 	example_map(data);
+	init_sprite(data);
 	return (0);
 }

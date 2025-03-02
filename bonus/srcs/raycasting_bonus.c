@@ -422,8 +422,7 @@ void	change_player_yaw(t_data *data, float yaw)
 	old_plane_x = data->player->plane.x;
 	data->player->dir.x = data->player->dir.x * cos_yaw - data->player->dir.y
 		* sin_yaw;
-	data->player->dir.y = old_dir_x * sin_yaw + data->player->dir.y
-		* cos_yaw;
+	data->player->dir.y = old_dir_x * sin_yaw + data->player->dir.y * cos_yaw;
 	data->player->plane.x = data->player->plane.x * cos_yaw
 		- data->player->plane.y * sin_yaw;
 	data->player->plane.y = old_plane_x * sin_yaw + data->player->plane.y
@@ -442,9 +441,9 @@ void	change_player_pitch(t_data *data, float pitch)
 void	handle_cursor(double xpos, double ypos, void *param)
 {
 	static bool	first_call = true;
-	t_data	*data;
-	float	yaw;
-	float	pitch;
+	t_data		*data;
+	float		yaw;
+	float		pitch;
 
 	data = (t_data *)param;
 	if (first_call)
@@ -499,7 +498,8 @@ void	door_actions(t_data *data)
 	t_vec2f	ray;
 	float	distance;
 
-	if (get_map_value(data, (int)data->player->pos.x, (int)data->player->pos.y) == '3')
+	if (get_map_value(data, (int)data->player->pos.x,
+			(int)data->player->pos.y) == '3')
 		return ;
 	ray.x = data->player->pos.x + data->player->dir.x * 0.5;
 	ray.y = data->player->pos.y + data->player->dir.y * 0.5;
@@ -509,9 +509,11 @@ void	door_actions(t_data *data)
 	{
 		map_value = get_map_value(data, (int)ray.x, (int)ray.y);
 		if (map_value == '2')
-			data->map_data->map[(int)ray.y * data->map_data->width + (int)ray.x] = '3';
+			data->map_data->map[(int)ray.y * data->map_data->width
+				+ (int)ray.x] = '3';
 		else if (map_value == '3')
-			data->map_data->map[(int)ray.y * data->map_data->width + (int)ray.x] = '2';
+			data->map_data->map[(int)ray.y * data->map_data->width
+				+ (int)ray.x] = '2';
 	}
 }
 

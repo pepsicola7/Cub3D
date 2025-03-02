@@ -16,7 +16,7 @@ HEADERS_BONUS := -I./bonus/includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
 SRCS    := srcs/main.c srcs/init.c srcs/raycasting.c srcs/render_utils.c
-SRCS_BONUS := bonus/srcs/main_bonus.c bonus/srcs/init_bonus.c bonus/srcs/raycasting_bonus.c bonus/srcs/render_utils_bonus.c bonus/srcs/minimap_bonus.c
+SRCS_BONUS := bonus/srcs/main_bonus.c bonus/srcs/init_bonus.c bonus/srcs/raycasting_bonus.c bonus/srcs/render_utils_bonus.c bonus/srcs/minimap_bonus.c bonus/srcs/sprites_bonus.c
 OBJS    := $(SRCS:.c=.o)
 OBJS_BONUS := $(SRCS_BONUS:.c=.o)
 

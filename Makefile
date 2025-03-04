@@ -37,7 +37,7 @@ libft:
 libmlx:
 	@if [ ! -d "$(LIBMLX)" ]; then \
 		echo "$(CYAN)Cloning MLX42...$(RESET)"; \
-		git clone https://github.com/codam-coding-college/MLX42.git $(LIBMLX) /dev/null; \
+		git clone https://github.com/codam-coding-college/MLX42.git $(LIBMLX) > /dev/null; \
 		echo "$(GREEN)MLX42 cloned successfully!$(RESET)"; \
 	fi
 	@echo "$(CYAN)Building MLX42...$(RESET)"

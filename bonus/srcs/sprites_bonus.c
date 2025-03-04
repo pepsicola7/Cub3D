@@ -18,12 +18,12 @@ void	init_sprite(t_data *data)
 	{
 		data->texture->sprite->frames_image[i] = mlx_texture_to_image(data->mlx_data->mlx,
 				data->texture->sprite->frames_texture[i]);
+		data->texture->sprite->frames_image[i]->enabled = false;
 		mlx_image_to_window(data->mlx_data->mlx,
 			data->texture->sprite->frames_image[i], 100, 100);
-		data->texture->sprite->frames_image[i]->instances[0].enabled = false;
 	}
 	data->texture->sprite->current_frame_index = 0;
-	data->texture->sprite->frames_image[0]->instances[0].enabled = true;
+	data->texture->sprite->frames_image[0]->enabled = true;
 }
 
 void	draw_sprite(t_data *data)
@@ -33,8 +33,8 @@ void	draw_sprite(t_data *data)
 	frame_index = (int)mlx_get_time() % 8;
 	if (data->texture->sprite->current_frame_index != frame_index)
 	{
-		data->texture->sprite->frames_image[data->texture->sprite->current_frame_index]->instances[0].enabled = false;
-		data->texture->sprite->frames_image[frame_index]->instances[0].enabled = true;
+		data->texture->sprite->frames_image[data->texture->sprite->current_frame_index]->enabled = false;
+		data->texture->sprite->frames_image[frame_index]->enabled = true;
 		data->texture->sprite->current_frame_index = frame_index;
 	}
 }

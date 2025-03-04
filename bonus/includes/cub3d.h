@@ -174,6 +174,7 @@ typedef struct s_texture_data
 	mlx_texture_t	*south;
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
+	mlx_texture_t	*doors;
 	mlx_texture_t	*floor;
 	mlx_texture_t	*ceiling;
 	t_sprite		*sprite;

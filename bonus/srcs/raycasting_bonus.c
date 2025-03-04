@@ -29,7 +29,7 @@ inline void	perform_dda(t_data *data, t_ray *ray)
 		}
 		map_value = get_map_value(data, ray->map_x, ray->map_y);
 		if (map_value == '1' || map_value == '2')
-			ray->hit = 1;
+			ray->hit = map_value - '0';
 	}
 	if (ray->side == 0)
 		ray->perp_wall_dist = (ray->side_dist.x - ray->delta_dist.x);
@@ -69,7 +69,9 @@ float	calculate_wall_x(t_data *data, t_ray *ray)
 
 mlx_texture_t	*get_wall_texture(t_data *data, t_ray *ray)
 {
-	if (ray->side == 0)
+	if (ray->hit == 2)
+		return (data->texture->doors);
+	else if (ray->side == 0)
 	{
 		if (ray->step_x > 0)
 			return (data->texture->east);

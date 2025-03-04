@@ -30,6 +30,7 @@ void	exit_program(t_data *data, int status)
 	mlx_delete_texture(data->texture->south);
 	mlx_delete_texture(data->texture->east);
 	mlx_delete_texture(data->texture->west);
+	mlx_delete_texture(data->texture->doors);
 	mlx_delete_texture(data->texture->floor);
 	mlx_delete_texture(data->texture->ceiling);
 	free_data(data);
@@ -78,7 +79,7 @@ int	main(int ac, char **av)
 	data = ft_calloc(1, sizeof(t_data));
 	if (!data)
 		return (1);
-	mlx_set_setting(MLX_FULLSCREEN, false);
+	mlx_set_setting(MLX_FULLSCREEN, true);
 	if (init_data(data) == -1)
 		exit_program(data, 1);
 	mlx_set_cursor_mode(data->mlx_data->mlx, MLX_MOUSE_DISABLED);

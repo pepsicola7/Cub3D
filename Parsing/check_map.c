@@ -26,7 +26,7 @@ int	check_element(char **map)
 			if (map[i][j] != '1' && map[i][j] != '0' && map[i][j] != 'N'
 			&& map[i][j] != 'S' && map[i][j] != 'E' && map[i][j] != 'W' && map[i][j] != ' ')
 			{
-				printf("Error of the element\n");
+				ft_putstr_fd("Error: Invalid element found in map\n", 2);
 				return (0);
 			}
 			j++;
@@ -59,9 +59,9 @@ int	check_joueur(char **map)
 	if (player_count == 1)
 		return (1);
 	if (player_count == 0)
-		printf("Error: Aucun joueur trouvé sur la carte\n");
+		ft_putstr_fd("Error: No player found\n", 2);
 	else
-		printf("Error: Trop de joueurs trouvés (%d)\n", player_count);
+		ft_putstr_fd("Error: Too many players found\n", 2);
 	return (0);
 }
 
@@ -106,7 +106,7 @@ int	check_line_vide(char **map)
 	{
 		if (map[i][0] == '\0' || ft_strcmp(map[i], "\n") == 0)
 		{
-			printf("Error: empty line detected\n");
+			ft_putstr_fd("Error: Found empty line in map\n", 2);
 			return (0);
 		}
 		i++;
@@ -114,6 +114,9 @@ int	check_line_vide(char **map)
 	return (1);
 }
 
+/*TODO: Modify the check_map function to check for the following:*/
+/*- Only check if the map is surrounded by walls (1), even if the player is surrounded by walls,*/
+/*- if a walkable path (0) exists next to a space or the end of the map, the map is invalid.*/
 int	check_mur(t_data *data)
 {
 	char	**map;
@@ -126,7 +129,6 @@ int	check_mur(t_data *data)
 	if (!map)
 		return (0);
 	flood_fill(map, x, y, data);
-	// ft_printf_map(map);
 	if (!check_flood(map, data->map_data->height))
 	{
 		printf("Error: Player is trapped!\n");

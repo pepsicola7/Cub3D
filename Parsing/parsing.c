@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/02/28 16:30:50 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/04 15:47:22 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	count_hors_map(t_data *data, char *filename)
 int	parsing(t_data *data, char *filename)
 {
 	data->map_data = ft_calloc(sizeof(t_map), 1);
-	data->texture = ft_calloc(sizeof(t_map), 1);
+	data->texture = ft_calloc(sizeof(t_texture_data), 1);
 	data->map_data->map_fd = open(filename, O_RDONLY);
 	if (data->map_data->map_fd < 0)
 	{

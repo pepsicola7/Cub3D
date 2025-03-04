@@ -7,7 +7,7 @@ YELLOW	:= \033[1;33m
 RESET 	:= \033[0m
 
 NAME    := cub3d
-CFLAGS  := -Wall -Wextra -Werror -Ofast -g3 -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer -D_REENTRANT
+CFLAGS  := -Wall -Wextra -Werror -Ofast -fsanitize=address,leak,undefined -g3 -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer -D_REENTRANT
 LIBMLX  := MLX42
 LIBFT   := libft
 
@@ -52,7 +52,7 @@ bonus/%.o: bonus/%.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS_BONUS) && printf "$(YELLOW)Compiling Bonus: $(PURPLE)$(notdir $<)\n$(RESET)"
 
 $(NAME): $(OBJS)
-	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+	@$(CC) -fsanitize=address,leak,undefined $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 
 bonus: libft libmlx $(OBJS_BONUS)

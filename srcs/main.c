@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 15:12:44 by lpolizzi          #+#    #+#             */
-/*   Updated: 2025/02/16 17:01:33 by lpolizzi         ###   ########.fr       */
+/*   Updated: 2025/03/04 15:49:03 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ int	main(int ac, char **av)
 	if (!data)
 		return (1);
 	mlx_set_setting(MLX_FULLSCREEN, true);
-	parsing(data, av[1]);
+	if (parsing(data, av[1]) == 0)
+		return (1);
 	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 	mlx_key_hook(data->mlx_data->mlx, key_callback, data);
 	mlx_loop_hook(data->mlx_data->mlx, render_all, data);

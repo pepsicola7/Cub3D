@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/03/04 15:47:22 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/04 16:03:07 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,17 +98,11 @@ int	parsing(t_data *data, char *filename)
 	}
 	count_line(data, filename);
 	read_map_1(data, filename);
-	if (!data->texture->floor_color || !data->texture->ceiling_color)
-	{
-		printf("The forme of the color incorrect\n");
-		return (0);
-	}
 	if (!data->texture->east || !data->texture->north
 		|| !data->texture->south || !data->texture->west)
-	{
-		printf("The forme of the texture incorrect\n");
 		return (0);
-	}
+	if (!data->texture->floor_color || !data->texture->ceiling_color)
+		return (0);
 	read_map_2(data, filename);
 	return (1);
 }

@@ -85,4 +85,5 @@ void	flood_fill(char **map, int x, int y, t_data *data);
 int		check_flood(char **map, int height);
 void	direction_ew(t_data *data, char direction);
 void	direction_ns(t_data *data, char direction);
+void	fill_map(t_data *data, char *line);
 #endif

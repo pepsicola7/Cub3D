@@ -6,36 +6,11 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/02/27 16:35:10 by peli             ###   ########.fr       */
+/*   Updated: 2025/02/28 16:30:50 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	fill_map(t_data *data, char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line && ft_strcmp(line, "\n") == 0) // Ignore les lignes vides initiales
-	{
-		free(line);
-		line = get_next_line(data->map_data->map_fd);
-	}
-	data->map_data->map = ft_calloc(data->map_data->height + 1, sizeof(char *));
-	while (line)
-	{
-		int len = ft_strlen(line);
-		if (len > 0 && line[len - 1] == '\n')
-			line[len - 1] = '\0';
-		data->map_data->map[i] = ft_strdup(line);
-		free(line);
-		line = get_next_line(data->map_data->map_fd);
-		i++;
-	}
-	data->map_data->map[i] = NULL;
-	// ft_printf_map(data->map_data->map);
-}
 
 int	read_map_2(t_data *data, char *filename)
 {
@@ -111,24 +86,6 @@ void	count_hors_map(t_data *data, char *filename)
 		line = get_next_line(data->map_data->map_fd);
 	}
 	data->map_data->height = data->map_data->ligne_total - count;
-}
-
-void	count_line(t_data *data, char *filename)
-{
-	char	*line;
-	int		count;
-
-	count = 0;
-	line = get_next_line(data->map_data->map_fd);
-	while (line)
-	{
-		count++;
-		free(line);
-		line = get_next_line(data->map_data->map_fd);
-	}
-	close(data->map_data->map_fd);
-	data->map_data->ligne_total = count;
-	count_hors_map(data, filename);
 }
 
 int	parsing(t_data *data, char *filename)

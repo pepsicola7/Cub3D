@@ -14,11 +14,9 @@
 
 int	read_map_2(t_data *data, char *filename)
 {
-	int		i;
 	char	*line;
 	int		config_count;
 
-	i = 0;
 	config_count = 0;
 	data->map_data->map_fd = open(filename, O_RDONLY);
 	line = get_next_line(data->map_data->map_fd);
@@ -91,7 +89,7 @@ void	count_hors_map(t_data *data, char *filename)
 int	parsing(t_data *data, char *filename)
 {
 	data->map_data = ft_calloc(sizeof(t_map), 1);
-	data->texture_data = ft_calloc(sizeof(t_map), 1);
+	data->texture = ft_calloc(sizeof(t_map), 1);
 	data->map_data->map_fd = open(filename, O_RDONLY);
 	if (data->map_data->map_fd < 0)
 	{
@@ -99,18 +97,18 @@ int	parsing(t_data *data, char *filename)
 		return (0);
 	}
 	count_line(data, filename);
-	// read_map_1(data, filename);
-	// if (!data->texture_data->floor_color || !data->texture_data->ceiling_color)
-	// {
-	// 	printf("The forme of the color incorrect\n");
-	// 	return (0);
-	// }
-	// if (!data->texture_data->east || !data->texture_data->north
-	// 	|| !data->texture_data->south || !data->texture_data->west)
-	// {
-	// 	printf("The forme of the texture incorrect\n");
-	// 	return (0);
-	// }
+	read_map_1(data, filename);
+	if (!data->texture->floor_color || !data->texture->ceiling_color)
+	{
+		printf("The forme of the color incorrect\n");
+		return (0);
+	}
+	if (!data->texture->east || !data->texture->north
+		|| !data->texture->south || !data->texture->west)
+	{
+		printf("The forme of the texture incorrect\n");
+		return (0);
+	}
 	read_map_2(data, filename);
 	return (1);
 }

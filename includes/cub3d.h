@@ -100,7 +100,7 @@ typedef struct s_mlx
 
 typedef struct s_map
 {
-	char			*map;
+	char			*map_1d;
 	char			**map;
 	int				map_fd;
 	int				ligne_total;

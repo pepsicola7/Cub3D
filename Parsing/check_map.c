@@ -120,8 +120,8 @@ int	check_mur(t_data *data)
 	int		x;
 	int		y;
 
-	x = data->player_data->pos.x;
-	y = data->player_data->pos.y;
+	x = data->player->pos.x;
+	y = data->player->pos.y;
 	map = copy_map(data->map_data->map, data->map_data->height);
 	if (!map)
 		return (0);

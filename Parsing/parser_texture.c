@@ -27,13 +27,13 @@ int	get_texture(char *line, t_data *data)
 	if (!texture)
 		return (printf("The texture isn't exist"), 0);
 	if (ft_strncmp(line, "NO ", 3))
-		data->texture_data->north = texture;
+		data->texture->north = texture;
 	if (ft_strncmp(line, "SO ", 3))
-		data->texture_data->south = texture;
+		data->texture->south = texture;
 	if (ft_strncmp(line, "WE ", 3))
-		data->texture_data->west = texture;
+		data->texture->west = texture;
 	if (ft_strncmp(line, "EA ", 3))
-		data->texture_data->east = texture;
+		data->texture->east = texture;
 	return (1);
 }
 
@@ -68,9 +68,9 @@ int	get_color(char *line, t_data *data)
 		return (printf("Erreur: Valeur RGB incorrecte\n"), 0);
 	}
 	if (ft_strncmp(line, "F ", 2) == 0)
-		data->texture_data->floor_color = r << 16 | g << 8 | b;
+		data->texture->floor_color = r << 16 | g << 8 | b;
 	if (ft_strncmp(line, "C ", 2) == 0)
-		data->texture_data->ceiling_color = r << 16 | g << 8 | b;
+		data->texture->ceiling_color = r << 16 | g << 8 | b;
 	free_split(str);
 	return (1);
 }

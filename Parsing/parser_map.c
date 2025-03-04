@@ -14,11 +14,9 @@
 
 char	*replace_line(char *line, int width)
 {
-	int		line_len;
 	int		j;
 	char	*new_line;
 
-	line_len = ft_strlen(line);
 	new_line = ft_calloc(width + 1, sizeof(char));
 	if (!new_line)
 		return (NULL);
@@ -91,7 +89,7 @@ void	remplace_map(t_data *data)
 // 			j++;
 // 		}
 // 		new_line[j] = '\0';
-// 		free(data->map_data->map[i]); 
+// 		free(data->map_data->map[i]);
 // 		data->map_data->map[i] = new_line;
 // 		i++;
 // 	}

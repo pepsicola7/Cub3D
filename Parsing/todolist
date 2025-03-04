@@ -1,0 +1,22 @@
+1. La map doit être fermée/entourée de murs
+2. Mais la partie de la map (avec les 1 et 0, qui définissent les murs et espaces vides) ne doit pas contenir de lignes vides.
+3. La map doit être composée d’uniquement ces 6 caractères : 
+   0 pour les espaces vides
+   1 pour les murs
+   N,S,E ou W qui représentent la position de départ du joueur et son orientation
+4. ✅ Les textures des murs :
+	NO ./textures/north.xpm  → Texture pour le mur Nord  
+	SO ./textures/south.xpm  → Texture pour le mur Sud  
+	WE ./textures/west.xpm   → Texture pour le mur Ouest  
+	EA ./textures/east.xpm   → Texture pour le mur Est  
+	🡆 Chaque ligne indique la direction du mur et le chemin du fichier texture (.xpm) à utiliser.
+5. ✅ Les couleurs du sol et du plafond :
+	F 220,100,0  → Couleur du sol (Floor) en RGB (Rouge:220, Vert:100, Bleu:0)  
+	C 225,30,0   → Couleur du plafond (Ceiling) en RGB (Rouge:225, Vert:30, Bleu:0)  
+	🡆 Ces couleurs sont utilisées si le projet n'a pas de texture pour le sol et le plafond.
+	🡆 Elles sont stockées en format R,G,B (valeurs de 0 à 255).
+	Attention : r << 16 | g << 8 | b  // Convertir en format 0xRRGGBB
+	
+Cas d'erruer : Error\n suivi une ligne d'explicite 
+
+R et S ???

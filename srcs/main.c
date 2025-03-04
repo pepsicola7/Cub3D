@@ -92,8 +92,7 @@ int	main(int ac, char **av)
 	if (!data)
 		return (1);
 	mlx_set_setting(MLX_FULLSCREEN, true);
-	if (init_data(data) == -1)
-		exit_program(data, 1);
+	parsing(data, av[1]);
 	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 	mlx_key_hook(data->mlx_data->mlx, key_callback, data);
 	mlx_loop_hook(data->mlx_data->mlx, render_all, data);

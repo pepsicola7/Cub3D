@@ -27,13 +27,13 @@ int	get_texture(char *line, t_data *data)
 	texture = mlx_load_png(path[1]);
 	if (!texture)
 		return (printf("The texture isn't exist\n"), 0);
-	if (ft_strncmp(line, "NO ", 3))
+	if (!ft_strncmp(line, "NO ", 3))
 		data->texture->north = texture;
-	if (ft_strncmp(line, "SO ", 3))
+	if (!ft_strncmp(line, "SO ", 3))
 		data->texture->south = texture;
-	if (ft_strncmp(line, "WE ", 3))
+	if (!ft_strncmp(line, "WE ", 3))
 		data->texture->west = texture;
-	if (ft_strncmp(line, "EA ", 3))
+	if (!ft_strncmp(line, "EA ", 3))
 		data->texture->east = texture;
 	return (1);
 }
@@ -58,9 +58,12 @@ int	get_color(char *line, t_data *data)
 
 	i = 0;
 	str = ft_split(line, ',');
+	printf("str[0]: %s\n", str[0] + 2);
+	printf("str[1]: %s\n", str[1]);
+	printf("str[2]: %s\n", str[2]);
 	while (str[i])
 		i++;
-	r = ft_atoi(str[0]);
+	r = ft_atoi(str[0] + 2);
 	g = ft_atoi(str[1]);
 	b = ft_atoi(str[2]);
 	if (i != 3 || r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
@@ -92,7 +95,7 @@ int	read_map_1(t_data *data, char *filename)
 		}
 		if (ft_strncmp(line, "F ", 2) == 0 || ft_strncmp(line, "C ", 2) == 0)
 		{
-			if (get_color(line, data))
+			if (!get_color(line, data))
 				return (free(line), 0);
 		}
 		free (line);

@@ -16,19 +16,23 @@ void	map_width(t_data *data)
 {
 	int		i;
 	int		j;
+	int		max;
 	char	**map;
 
 	i = 0;
 	j = 0;
+	max = 0;
 	map = data->map_data->map;
 	while (map[i])
 	{
+		j = 0;
 		while (map[i][j])
 			j++;
+		if (j > max)
+			max = j;
 		i++;
 	}
 	data->map_data->width = j - 1;
-	// printf("width is %d", j - 1);
 }
 
 void	free_map_partial(char **map, int index)
@@ -50,7 +54,7 @@ char	**copy_map(char **map, int height)
 	char	**map_copy;
 
 	i = 0;
-	map_copy = ft_calloc(height, sizeof(char *));
+	map_copy = ft_calloc(height, sizeof(char *) + 1);
 	if (!map_copy)
 		return (NULL);
 	while (map[i])

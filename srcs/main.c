@@ -71,11 +71,10 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	data = ft_calloc(1, sizeof(t_data));
-	if (!data)
-		return (1);
 	mlx_set_setting(MLX_FULLSCREEN, true);
-	if (parsing(data, av[1]) == 0)
+	if (!data || !parsing(data, av[1]) || !init_mlx(data))
 		return (1);
+	printf("Map parsed\n");
 	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 	mlx_key_hook(data->mlx_data->mlx, key_callback, data);
 	mlx_loop_hook(data->mlx_data->mlx, render_all, data);

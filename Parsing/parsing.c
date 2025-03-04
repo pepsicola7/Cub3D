@@ -98,11 +98,19 @@ int	parsing(t_data *data, char *filename)
 	}
 	count_line(data, filename);
 	read_map_1(data, filename);
+	printf("Texture south: %p\n", data->texture->south);
+	printf("Texture north: %p\n", data->texture->north);
+	printf("Texture east: %p\n", data->texture->east);
+	printf("Texture west: %p\n", data->texture->west);
 	if (!data->texture->east || !data->texture->north
 		|| !data->texture->south || !data->texture->west)
 		return (0);
+	printf("Textures parsed\n");
+	printf("Floor color: %d\n", data->texture->floor_color);
+	printf("Ceiling color: %d\n", data->texture->ceiling_color);
 	if (!data->texture->floor_color || !data->texture->ceiling_color)
 		return (0);
+	printf("Colors parsed\n");
 	read_map_2(data, filename);
 	return (1);
 }

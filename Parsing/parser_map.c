@@ -16,27 +16,30 @@ char	*replace_line(char *line, int width)
 {
 	int		j;
 	char	*new_line;
+	int		len;
 
+	if (!line)
+		return (NULL);
+	len = ft_strlen(line);
+	if (width < len)
+		width = len;
 	new_line = ft_calloc(width + 1, sizeof(char));
 	if (!new_line)
 		return (NULL);
-	j = 0;
-	while (line[j])
+	j = -1;
+	while (++j < width && line[j])
 	{
 		if (line[j] == '\t' || line[j] == ' ')
 			new_line[j] = '1';
 		else
 			new_line[j] = line[j];
-		j++;
 	}
 	while (j < width)
-	{
-		new_line[j] = '1';
-		j++;
-	}
+		new_line[j++] = '1';
 	new_line[j] = '\0';
 	return (new_line);
 }
+
 
 void	remplace_map(t_data *data)
 {
@@ -55,7 +58,6 @@ void	remplace_map(t_data *data)
 		map[i] = new_line;
 		i++;
 	}
-	// ft_printf_map(data->map_data->map);
 }
 
 // void	remplace_map(t_data *data)

@@ -156,7 +156,7 @@ void				exit_program(t_data *data, int status);
 
 /*----------------Initialization---------------*/
 
-int					init_data(t_data *data);
+int					init_mlx(t_data *data);
 
 /*------------------Math Utils-----------------*/
 

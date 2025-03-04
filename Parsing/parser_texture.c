@@ -14,18 +14,19 @@
 
 int	get_texture(char *line, t_data *data)
 {
-	char			*path;
+	char			**path;
 	mlx_texture_t	*texture;
 
-	path = ft_strchr(line, ' '); //penser a ignrer tous les espaces blanches
-	if (!path)
+	path = ft_split(line, ' ');
+	if (!path || !path[1])
 	{
-		printf ("There have no name of texture");
+		printf ("There have no name of texture\n");
 		return (0);
 	}
-	texture = mlx_load_png(path);
+	path[1] = ft_strtrim(path[1], "\n");
+	texture = mlx_load_png(path[1]);
 	if (!texture)
-		return (printf("The texture isn't exist"), 0);
+		return (printf("The texture isn't exist\n"), 0);
 	if (ft_strncmp(line, "NO ", 3))
 		data->texture->north = texture;
 	if (ft_strncmp(line, "SO ", 3))

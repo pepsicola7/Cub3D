@@ -20,13 +20,17 @@ int	get_texture(char *line, t_data *data)
 	path = ft_split(line, ' ');
 	if (!path || !path[1])
 	{
-		printf ("There have no name of texture\n");
+		ft_putstr_fd("Error: missing path for texture\n", 2);
 		return (0);
 	}
 	path[1] = ft_strtrim(path[1], "\n");
+	printf("path[1]: %s\n", path[1]);
 	texture = mlx_load_png(path[1]);
 	if (!texture)
-		return (printf("The texture isn't exist\n"), 0);
+	{
+		ft_putstr_fd("Error: unable to open texture\n", 2);
+		return (0);
+	}
 	if (!ft_strncmp(line, "NO ", 3))
 		data->texture->north = texture;
 	if (!ft_strncmp(line, "SO ", 3))

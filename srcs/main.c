@@ -56,7 +56,6 @@ void	render_all(void *vdata)
 		data->mlx_data->img_buffer = mlx_new_image(data->mlx_data->mlx,
 				data->mlx_data->mlx->width, data->mlx_data->mlx->height);
 	render_raycast(data);
-	printf("Debug in render_all\n");
 	ft_swap_pointers((void **)&data->mlx_data->img,
 		(void **)&data->mlx_data->img_buffer);
 }
@@ -75,7 +74,6 @@ int	main(int ac, char **av)
 	mlx_set_setting(MLX_FULLSCREEN, true);
 	if (!data || !parsing(data, av[1]) || !init_mlx(data))
 		return (1);
-	printf("Debug in main\n");
 	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 	mlx_key_hook(data->mlx_data->mlx, key_callback, data);
 	mlx_loop_hook(data->mlx_data->mlx, render_all, data);

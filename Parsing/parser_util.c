@@ -32,7 +32,7 @@ void	map_width(t_data *data)
 			max = j;
 		i++;
 	}
-	data->map_data->width = j - 1;
+	data->map_data->width = max;
 }
 
 void	free_map_partial(char **map, int index)

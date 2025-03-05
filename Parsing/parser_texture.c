@@ -24,7 +24,6 @@ int	get_texture(char *line, t_data *data)
 		return (0);
 	}
 	path[1] = ft_strtrim(path[1], "\n");
-	printf("path[1]: %s\n", path[1]);
 	texture = mlx_load_png(path[1]);
 	if (!texture)
 	{
@@ -62,9 +61,6 @@ int	get_color(char *line, t_data *data)
 
 	i = 0;
 	str = ft_split(line, ',');
-	printf("str[0]: %s\n", str[0] + 2);
-	printf("str[1]: %s\n", str[1]);
-	printf("str[2]: %s\n", str[2]);
 	while (str[i])
 		i++;
 	r = ft_atoi(str[0] + 2);

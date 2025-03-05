@@ -25,7 +25,7 @@ inline void	perform_dda(t_data *data, t_ray *ray)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if (get_map_value(data, ray->map_x, ray->map_y) == '1')
+		if (get_map_value(data, ray->map_x, ray->map_y) != '0')
 			ray->hit = 1;
 	}
 	if (ray->side == 0)

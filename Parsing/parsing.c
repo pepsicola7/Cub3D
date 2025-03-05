@@ -26,11 +26,11 @@ int	read_map_2(t_data *data, char *filename)
 		{
 			free(line);
 			line = get_next_line(data->map_data->map_fd);
-			continue;
+			continue ;
 		}
-		if (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0 ||
-			ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0 ||
-			ft_strncmp(line, "F", 1) == 0 || ft_strncmp(line, "C", 1) == 0)
+		if (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0
+			|| ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0
+			|| ft_strncmp(line, "F", 1) == 0 || ft_strncmp(line, "C", 1) == 0)
 			config_count++;
 		else
 		{
@@ -40,7 +40,7 @@ int	read_map_2(t_data *data, char *filename)
 				ft_putstr_fd("Error: missing configuration in map file\n", 2);
 				return (0);
 			}
-			break;
+			break ;
 		}
 		free(line);
 		line = get_next_line(data->map_data->map_fd);
@@ -66,18 +66,19 @@ void	count_hors_map(t_data *data, char *filename)
 			free(line);
 			count++;
 			line = get_next_line(data->map_data->map_fd);
-			continue;
+			continue ;
 		}
-		if (!(ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0 ||
-			ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0 ||
-			ft_strncmp(line, "F", 1) == 0 || ft_strncmp(line, "C", 1) == 0))
+		if (!(ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0
+				|| ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA",
+					2) == 0 || ft_strncmp(line, "F", 1) == 0 || ft_strncmp(line,
+					"C", 1) == 0))
 		{
 			while (line)
 			{
 				free(line);
 				line = get_next_line(data->map_data->map_fd);
 			}
-			break;
+			break ;
 		}
 		count++;
 		free(line);
@@ -88,26 +89,38 @@ void	count_hors_map(t_data *data, char *filename)
 
 void	put_map_1d(t_data *data)
 {
-	int		i;
-	int		j;
-	int		k;
+	int	i;
+	int	j;
+	int	k;
 
 	i = 0;
 	k = 0;
-	data->map_data->map_1d = ft_calloc(sizeof(char), data->map_data->width * data->map_data->height);
+	data->map_data->map_1d = ft_calloc(sizeof(char), data->map_data->width
+			* data->map_data->height);
 	while (i < data->map_data->height)
 	{
 		j = 0;
 		while (j < data->map_data->width)
 		{
-			data->map_data->map_1d[k] = data->map_data->map[i][j];
-			printf("[%c]", data->map_data->map_1d[k]);
+			if (data->map_data->map[i][j] == 'N'
+				|| data->map_data->map[i][j] == 'S'
+				|| data->map_data->map[i][j] == 'E'
+				|| data->map_data->map[i][j] == 'W')
+				data->map_data->map_1d[k] = '0';
+			else
+				data->map_data->map_1d[k] = data->map_data->map[i][j];
 			j++;
 			k++;
 		}
-		printf("\n");
 		i++;
 	}
+	for (int i = 0; i < data->map_data->width * data->map_data->height; i++)
+	{
+		printf("%c ", data->map_data->map_1d[i]);
+		if ((i + 1) % data->map_data->width == 0)
+			printf("\n");
+	}
+	printf("\n");
 }
 
 int	parsing(t_data *data, char *filename)
@@ -122,12 +135,8 @@ int	parsing(t_data *data, char *filename)
 	}
 	count_line(data, filename);
 	read_map_1(data, filename);
-	printf("North: %p\n", data->texture->north);
-	printf("South: %p\n", data->texture->south);
-	printf("East: %p\n", data->texture->east);
-	printf("West: %p\n", data->texture->west);
-	if (!data->texture->east || !data->texture->north
-		|| !data->texture->south || !data->texture->west)
+	if (!data->texture->east || !data->texture->north || !data->texture->south
+		|| !data->texture->west)
 	{
 		ft_putstr_fd("Error: missing texture in map file\n", 2);
 		return (0);

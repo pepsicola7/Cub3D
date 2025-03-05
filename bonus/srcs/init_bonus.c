@@ -38,8 +38,8 @@ void	example_map(t_data *data)
 	data->map_data->width = 25;
 	data->map_data->height = 19;
 	data->player->pos = (t_vec2f){1.5f, 1.5f};
-	data->player->dir = (t_vec2f){1.0f, 0.0f};
-	data->player->plane = (t_vec2f){0.0f, 0.66f};
+	data->player->dir = (t_vec2f){0.0f, 1.0f};
+	data->player->plane = (t_vec2f){-0.66f, 0.0f};
 	data->texture->north = mlx_load_png("textures/north.png");
 	data->texture->south = mlx_load_png("textures/south.png");
 	data->texture->east = mlx_load_png("textures/east.png");

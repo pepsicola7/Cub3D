@@ -70,7 +70,7 @@ float	calculate_wall_x(t_data *data, t_ray *ray)
 mlx_texture_t	*get_wall_texture(t_data *data, t_ray *ray)
 {
 	if (ray->hit == 2)
-		return (data->texture->doors[(int)mlx_get_time() % 6]);
+		return (data->texture->doors[(int)(mlx_get_time() * 8.0) % 6]);
 	else if (ray->side == 0)
 	{
 		if (ray->step_x > 0)

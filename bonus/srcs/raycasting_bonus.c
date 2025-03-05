@@ -70,7 +70,7 @@ float	calculate_wall_x(t_data *data, t_ray *ray)
 mlx_texture_t	*get_wall_texture(t_data *data, t_ray *ray)
 {
 	if (ray->hit == 2)
-		return (data->texture->doors);
+		return (data->texture->doors[(int)mlx_get_time() % 6]);
 	else if (ray->side == 0)
 	{
 		if (ray->step_x > 0)
@@ -442,17 +442,16 @@ void	change_player_pitch(t_data *data, float pitch)
 
 void	handle_cursor(double xpos, double ypos, void *param)
 {
-	static bool	first_call = true;
+	static int	call_num = -2;
 	t_data		*data;
 	float		yaw;
 	float		pitch;
 
 	data = (t_data *)param;
-	if (first_call)
+	if (call_num++ < 0)
 	{
 		mlx_set_mouse_pos(data->mlx_data->mlx, data->mlx_data->mlx->width / 2,
 			data->mlx_data->mlx->height / 2);
-		first_call = false;
 		return ;
 	}
 	yaw = (xpos - (data->mlx_data->mlx->width / 2)) * MOUSE_SENSITIVITY;

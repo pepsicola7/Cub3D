@@ -21,7 +21,7 @@
 # define MOUSE_SENSITIVITY 0.1
 # define TILT_SPEED 400
 # define JUMP_SPEED 125
-# define NUM_FRAMES 8
+# define NUM_FRAMES 6
 
 # define BLUE 0x0000FFFF
 # define LIGHT_BLUE 0xADD8F6FF
@@ -49,13 +49,6 @@ typedef struct s_vec2i
 	int				x;
 	int				y;
 }					t_vec2i;
-
-typedef struct s_sprite
-{
-	mlx_texture_t	*frames_texture[NUM_FRAMES];
-	mlx_image_t		*frames_image[NUM_FRAMES];
-	int				current_frame_index;
-}					t_sprite;
 
 typedef struct s_floor_ceiling
 {
@@ -174,10 +167,9 @@ typedef struct s_texture_data
 	mlx_texture_t	*south;
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
-	mlx_texture_t	*doors;
+	mlx_texture_t	*doors[NUM_FRAMES];
 	mlx_texture_t	*floor;
 	mlx_texture_t	*ceiling;
-	t_sprite		*sprite;
 }					t_texture_data;
 
 typedef struct s_data
@@ -226,7 +218,6 @@ void				handle_cursor(double xpos, double ypos, void *param);
 
 void				render_raycast(void *param);
 void				render_minimap(t_data *data);
-void				draw_sprite(t_data *data);
-void				init_sprite(t_data *data);
+void				init_door_textures(t_data *data);
 
 #endif

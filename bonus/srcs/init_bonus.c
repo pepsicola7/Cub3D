@@ -44,9 +44,9 @@ void	example_map(t_data *data)
 	data->texture->south = mlx_load_png("textures/south.png");
 	data->texture->east = mlx_load_png("textures/east.png");
 	data->texture->west = mlx_load_png("textures/west.png");
-	data->texture->doors = mlx_load_png("textures/door.png");
 	data->texture->floor = mlx_load_png("textures/floor.png");
 	data->texture->ceiling = mlx_load_png("textures/ceiling.png");
+	init_door_textures(data);
 	ft_memset(&data->player->key_state, 0, sizeof(t_key_state));
 	init_player_jump(data->player);
 }
@@ -66,6 +66,5 @@ int	init_data(t_data *data)
 	if (!data->mlx_data->mlx || !data->mlx_data->img)
 		return (-1);
 	example_map(data);
-	init_sprite(data);
 	return (0);
 }

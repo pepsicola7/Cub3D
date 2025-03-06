@@ -41,7 +41,7 @@ char	*replace_line(char *line, int width)
 }
 
 
-void	remplace_map(t_data *data)
+void	replace_map(t_data *data)
 {
 	char	**map;
 	int		i;
@@ -60,7 +60,7 @@ void	remplace_map(t_data *data)
 	}
 }
 
-// void	remplace_map(t_data *data)
+// void	replace_map(t_data *data)
 // {
 // 	char	**map;
 // 	int		i;
@@ -155,13 +155,12 @@ int	check_description(t_data *data)
 	if (!check_joueur(map))
 		return (0);
 	if (!check_espace(map, data))
-		return (printf("Error of the espace\n"), 0);
+		return (0);
 	if (!check_line_vide(map))
 		return (0);
 	position_player(data);
 	if (!check_mur(data))
 		return (0);
-	remplace_map(data);
-		return (0);
+	replace_map(data);
 	return (1);
 }

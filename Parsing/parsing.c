@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/03/04 16:03:07 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/06 14:54:24 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	read_map_2(t_data *data, char *filename)
 	}
 	fill_map(data, line);
 	close(data->map_data->map_fd);
-	if (check_description(data))
+	if (!check_description(data))
 		return (0);
 	return (1);
 }
@@ -146,7 +146,8 @@ int	parsing(t_data *data, char *filename)
 		ft_putstr_fd("Error: missing color in map file\n", 2);
 		return (0);
 	}
-	read_map_2(data, filename);
+	if (!read_map_2(data, filename))
+		return (0);
 	put_map_1d(data);
 	return (1);
 }

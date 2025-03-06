@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:16:27 by peli              #+#    #+#             */
-/*   Updated: 2025/02/28 16:26:01 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/06 14:53:29 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int	check_description(t_data *data)
 	if (!check_joueur(map))
 		return (0);
 	if (!check_espace(map, data))
-		return (printf("error of the espace\n"), 0);
+		return (printf("Error of the espace\n"), 0);
 	if (!check_line_vide(map))
 		return (0);
 	position_player(data);

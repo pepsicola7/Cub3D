@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:38:55 by peli              #+#    #+#             */
-/*   Updated: 2025/03/06 14:28:23 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/06 14:44:22 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	check_element(char **map)
 		while (map[i][j] != '\0' && map[i][j] != '\n')
 		{
 			if (map[i][j] != '1' && map[i][j] != '0' && map[i][j] != 'N'
-			&& map[i][j] != 'S' && map[i][j] != 'E' && map[i][j] != 'W' && map[i][j] != ' ')
+			&& map[i][j] != 'S' && map[i][j] != 'E'
+			&& map[i][j] != 'W' && map[i][j] != ' ')
 			{
 				ft_putstr_fd("Error: Invalid element found in map\n", 2);
 				return (0);
@@ -65,37 +66,26 @@ int	check_joueur(char **map)
 	return (0);
 }
 
-int check_espace(char **map, t_data *data)
+int	check_espace(char **map, t_data *data)
 {
-	int	i;
-	int	j;
-	int	line_length;
+	int	i, j, len;
 
-	i = 0;
-	while (map[i])
+	i = -1;
+	while (map[++i])
 	{
-		j = 0;
-		line_length = (int)ft_strlen(map[i]);
-		while (map[i][j])
+		len = (int)ft_strlen(map[i]);
+		j = -1;
+		while (map[i][++j])
 		{
-			if (map[i][j] == ' ')
-			{
-				if (i == 0 || i == data->map_data->height - 1 || j == 0 || j == line_length - 1)
-				{
-					if ((i > 0 && map[i - 1][j] == '0') || (i < data->map_data->height - 1 && map[i + 1][j] == '0')
-						|| (j > 0 && map[i][j - 1] == '0') || (j < line_length - 1 && map[i][j + 1] == '0'))
-						return (0);
-				}
-				else if ((i > 0 && map[i - 1][j] == '0') || (i < data->map_data->height - 1 && map[i + 1][j] == '0')
-					|| (j > 0 && map[i][j - 1] == '0') || (j < line_length - 1 && map[i][j + 1] == '0'))
-					return (0);
-			}
-			j++;
+			if (map[i][j] == ' ' && 
+				((i > 0 && map[i - 1][j] == '0') || (i < data->map_data->height - 1 && map[i + 1][j] == '0') ||
+				(j > 0 && map[i][j - 1] == '0') || (j < len - 1 && map[i][j + 1] == '0')))
+				return (0);
 		}
-		i++;
 	}
 	return (1);
 }
+
 
 int	check_line_vide(char **map)
 {

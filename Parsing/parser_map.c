@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:16:27 by peli              #+#    #+#             */
-/*   Updated: 2025/03/07 12:23:32 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/07 16:45:19 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ void	flood_fill(char **map, int x, int y, t_data *data)
 		return;
 	if (map[x][y] == '1' || map[x][y] == 'F')
 		return;
-	if (map[x][y] != '0')
-		return;
+	// if (map[x][y] != '0')
+	// 	return;
 	map[x][y] = 'F';
 	flood_fill(map, x, y + 1, data);
 	flood_fill(map, x, y - 1, data);
@@ -89,6 +89,7 @@ int	check_flood(char **map, int height)
 	{
 		j = -1;
 		line_length = ft_strlen(map[i]);
+		while (map[i][++j])
 		{
 			if (map[i][j] == 'F')
 			{

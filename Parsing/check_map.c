@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:38:55 by peli              #+#    #+#             */
-/*   Updated: 2025/03/07 12:23:41 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/07 16:45:37 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ int	check_mur(t_data *data)
 	map = copy_map(data->map_data->map, data->map_data->height);
 	if (!map)
 		return (0);
-	flood_fill(map, x, y, data);
+	flood_fill(map, y, x -1, data);
 	if (!check_flood(map, data->map_data->height))
 	{
 		printf("Error: Player is trapped!\n");

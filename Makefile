@@ -7,7 +7,7 @@ YELLOW	:= \033[1;33m
 RESET 	:= \033[0m
 
 NAME    := cub3d
-CFLAGS  := -Wall -Wextra -Werror -Ofast -g3 -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer -D_REENTRANT
+CFLAGS  := -Wall -Wextra -Werror -Ofast -g3 -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer -D_REENTRANT -fsanitize=address
 LIBMLX  := MLX42
 LIBFT   := libft
 

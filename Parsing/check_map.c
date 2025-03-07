@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:38:55 by peli              #+#    #+#             */
-/*   Updated: 2025/03/06 14:44:22 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/07 12:23:41 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,9 @@ int	check_joueur(char **map)
 
 int	check_espace(char **map, t_data *data)
 {
-	int	i, j, len;
+	int	i;
+	int	j;
+	int	len;
 
 	i = -1;
 	while (map[++i])
@@ -77,15 +79,16 @@ int	check_espace(char **map, t_data *data)
 		j = -1;
 		while (map[i][++j])
 		{
-			if (map[i][j] == ' ' && 
-				((i > 0 && map[i - 1][j] == '0') || (i < data->map_data->height - 1 && map[i + 1][j] == '0') ||
-				(j > 0 && map[i][j - 1] == '0') || (j < len - 1 && map[i][j + 1] == '0')))
+			if (map[i][j] == ' ' && (
+				(i > 0 && map[i - 1][j] && map[i - 1][j] == '0') ||
+				(i < data->map_data->height - 1 && map[i + 1][j] && map[i + 1][j] == '0') ||
+				(j > 0 && map[i][j - 1] && map[i][j - 1] == '0') ||
+				(j < len - 1 && map[i][j + 1] && map[i][j + 1] == '0')))
 				return (0);
 		}
 	}
 	return (1);
 }
-
 
 int	check_line_vide(char **map)
 {
@@ -129,9 +132,6 @@ int	check_wall(char **map, int height)
 	return (1);
 }
 
-/*TODO: Modify the check_map function to check for the following:*/
-/*- Only check if the map is surrounded by walls (1), even if the player is surrounded by walls,*/
-/*- if a walkable path (0) exists next to a space or the end of the map, the map is invalid.*/
 int	check_mur(t_data *data)
 {
 	char	**map;

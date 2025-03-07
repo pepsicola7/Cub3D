@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:16:27 by peli              #+#    #+#             */
-/*   Updated: 2025/03/06 14:53:29 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/07 12:23:32 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,44 +60,6 @@ void	replace_map(t_data *data)
 	}
 }
 
-// void	replace_map(t_data *data)
-// {
-// 	char	**map;
-// 	int		i;
-// 	int		j;
-// 	int		line_len;
-// 	char	*new_line;
-
-// 	i = 0;
-// 	map = data->map_data->map;
-// 	while (map[i])
-// 	{
-// 		line_len = ft_strlen(map[i]);
-// 		new_line = ft_calloc(data->map_data->width + 1, sizeof(char));
-// 		if (!new_line)
-// 			return ;
-// 		j = 0;
-// 		while (map[i][j])
-// 		{
-// 			if (map[i][j] == '\t' || map[i][j] == ' ')
-// 				new_line[j] = '1';
-// 			else
-// 				new_line[j] = map[i][j];
-// 			j++;
-// 		}
-// 		while (j < data->map_data->width)
-// 		{
-// 			new_line[j] = '1';
-// 			j++;
-// 		}
-// 		new_line[j] = '\0';
-// 		free(data->map_data->map[i]);
-// 		data->map_data->map[i] = new_line;
-// 		i++;
-// 	}
-// 	ft_printf_map(data->map_data->map);
-// }
-
 void	flood_fill(char **map, int x, int y, t_data *data)
 {
 	int	height = data->map_data->height;
@@ -122,12 +84,11 @@ int	check_flood(char **map, int height)
 	int	j;
 	int	line_length;
 
-	i = 0;
-	while (map[i])
+	i = -1;
+	while (map[++i])
 	{
-		j = 0;
-		line_length = ft_strlen(map[i]); // Taille de la ligne actuelle
-		while (map[i][j])
+		j = -1;
+		line_length = ft_strlen(map[i]);
 		{
 			if (map[i][j] == 'F')
 			{
@@ -137,12 +98,36 @@ int	check_flood(char **map, int height)
 					map[i + 1][j] == '0' || map[i - 1][j] == '0')
 					return (0);
 			}
-			j++;
 		}
-		i++;
 	}
 	return (1);
 }
+
+int	check_joueur_extra(char **map, t_data *data)
+{
+	int	i, j, len;
+
+	i = -1;
+	while (map[++i])
+	{
+		len = (int)ft_strlen(map[i]);
+		j = -1;
+		while (map[i][++j])
+		{
+			if (ft_strchr("NSEW", map[i][j]))
+			{
+				if ((i == 0 || i == data->map_data->height - 1 || j == 0 || j >= len - 1) ||
+					(i > 0 && (!map[i - 1] || !map[i - 1][j] || map[i - 1][j] == ' ')) ||
+					(i < data->map_data->height - 1 && (!map[i + 1] || !map[i + 1][j] || map[i + 1][j] == ' ')) ||
+					(j > 0 && (!map[i][j - 1] || map[i][j - 1] == ' ')) ||
+					(j < len - 1 && (!map[i][j + 1] || map[i][j + 1] == ' ')))
+					return (0);
+			}
+		}
+	}
+	return (1);
+}
+
 
 int	check_description(t_data *data)
 {
@@ -160,6 +145,8 @@ int	check_description(t_data *data)
 		return (0);
 	position_player(data);
 	if (!check_mur(data))
+		return (0);
+	if (!check_joueur_extra(map, data))
 		return (0);
 	replace_map(data);
 	return (1);

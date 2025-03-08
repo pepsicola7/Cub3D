@@ -5,7 +5,7 @@ int	get_map_value(t_data *data, int x, int y)
 	if (x < 0 || x >= data->map_data->width || y < 0
 		|| y >= data->map_data->height)
 		return (1);
-	return (data->map_data->map[y * data->map_data->width + x]);
+	return (data->map_data->map_1d[y * data->map_data->width + x]);
 }
 
 inline void	perform_dda(t_data *data, t_ray *ray)
@@ -510,10 +510,10 @@ void	door_actions(t_data *data)
 	{
 		map_value = get_map_value(data, (int)ray.x, (int)ray.y);
 		if (map_value == '2')
-			data->map_data->map[(int)ray.y * data->map_data->width
+			data->map_data->map_1d[(int)ray.y * data->map_data->width
 				+ (int)ray.x] = '3';
 		else if (map_value == '3')
-			data->map_data->map[(int)ray.y * data->map_data->width
+			data->map_data->map_1d[(int)ray.y * data->map_data->width
 				+ (int)ray.x] = '2';
 	}
 }

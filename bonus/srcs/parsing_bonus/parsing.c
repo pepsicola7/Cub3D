@@ -129,7 +129,7 @@ int	parsing(t_data *data, char *filename)
 	count_line(data, filename);
 	read_map_1(data, filename);
 	if (!data->texture->east || !data->texture->north || !data->texture->south
-		|| !data->texture->west || !data->texture->floor_color || !data->texture->ceiling_color)
+		|| !data->texture->west || !data->texture->floor || !data->texture->ceiling)
 		return (0);
 	if (!read_map_2(data, filename))
 	{
@@ -137,5 +137,6 @@ int	parsing(t_data *data, char *filename)
 		return (0);
 	}
 	put_map_1d(data);
+	init_door_textures(data);
 	return (1);
 }

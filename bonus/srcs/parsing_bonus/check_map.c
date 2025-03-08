@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:38:55 by peli              #+#    #+#             */
-/*   Updated: 2025/03/07 16:45:37 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/07 12:23:41 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	check_element(char **map)
 		j = 0;
 		while (map[i][j] != '\0' && map[i][j] != '\n')
 		{
-			if (map[i][j] != '1' && map[i][j] != '0' && map[i][j] != 'N'
+			if (!(map[i][j] >= '0' && map[i][j] <= '3') && map[i][j] != 'N'
 			&& map[i][j] != 'S' && map[i][j] != 'E'
 			&& map[i][j] != 'W' && map[i][j] != ' ')
 			{
@@ -80,10 +80,10 @@ int	check_espace(char **map, t_data *data)
 		while (map[i][++j])
 		{
 			if (map[i][j] == ' ' && (
-				(i > 0 && map[i - 1][j] && map[i - 1][j] == '0') ||
-				(i < data->map_data->height - 1 && map[i + 1][j] && map[i + 1][j] == '0') ||
-				(j > 0 && map[i][j - 1] && map[i][j - 1] == '0') ||
-				(j < len - 1 && map[i][j + 1] && map[i][j + 1] == '0')))
+				(i > 0 && map[i - 1][j] && (map[i - 1][j] == '0' || map[i - 1][j] == '2' || map[i - 1][j] == '3')) ||
+				(i < data->map_data->height - 1 && map[i + 1][j] && (map[i + 1][j] == '0' || map[i + 1][j] == '2' || map[i + 1][j] == '3')) ||
+				(j > 0 && map[i][j - 1] && (map[i][j - 1] == '0' || map[i][j - 1] == '2' || map[i][j - 1] == '3')) ||
+				(j < len - 1 && map[i][j + 1] && (map[i][j + 1] == '0' || map[i][j + 1] == '2' || map[i][j + 1] == '3'))))
 				return (0);
 		}
 	}
@@ -120,12 +120,14 @@ int	check_wall(char **map, int height)
 		{
 			while (map[i][j])
 			{
-				if (map[i][j] == '0' || map[i][j] == '0')
+				if (map[i][j] == '0' || map[i][j] == '2' || map[i][j] == '3')
 					return (0);
 				j++;
 			}
 		}
-		else if (map[i][0] == '0' || map[i][ft_strlen(map[i]) - 1] == '0')
+		else if (map[i][0] == '0' || map[i][0] == '2' || map[i][0] == '3' ||
+				 map[i][ft_strlen(map[i]) - 1] == '0' || map[i][ft_strlen(map[i]) - 1] == '2' ||
+				 map[i][ft_strlen(map[i]) - 1] == '3')
 				return (0);
 		i++;
 	}

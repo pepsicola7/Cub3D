@@ -119,7 +119,10 @@ typedef struct s_mlx
 
 typedef struct s_map
 {
-	char			*map;
+	char			*map_1d;
+	char			**map;
+	int				map_fd;
+	int				ligne_total;
 	int				width;
 	int				height;
 }					t_map;
@@ -187,6 +190,8 @@ void				exit_program(t_data *data, int status);
 /*----------------Initialization---------------*/
 
 int					init_data(t_data *data);
+void				init_player_jump(t_player *player);
+int					init_mlx(t_data *data);
 
 /*------------------Math Utils-----------------*/
 
@@ -220,4 +225,30 @@ void				render_raycast(void *param);
 void				render_minimap(t_data *data);
 void				init_door_textures(t_data *data);
 
+int					init_data(t_data *data);
+int					parsing(t_data *data, char *filename);
+int					read_map_1(t_data *data, char *filename);
+int					get_color(char *line, t_data *data);
+void				free_split(char **arr);
+int					get_texture(char *line, t_data *data);
+int					read_map_2(t_data *data, char *filename);
+int					check_description(t_data *data);
+void				count_line(t_data *data, char *filename);
+void				count_hors_map(t_data *data, char *filename);
+void				free_map(char **map);
+void				map_width(t_data *data);
+void				free_map_partial(char **map, int index);
+char				**copy_map(t_data *data, char **map, int height);
+void				free_map(char **map);
+int					check_element(char **map);
+int					check_joueur(char **map);
+int					check_espace(char **map, t_data *data);
+int					check_line_vide(char **map);
+int					check_mur(t_data *data);
+void				position_player(t_data *data);
+void				direction_ew(t_data *data, char direction);
+void				direction_ns(t_data *data, char direction);
+void				flood_fill(char **map, int x, int y, t_data *data);
+int					check_flood(char **map, int height);
+void				fill_map(t_data *data, char *line);
 #endif

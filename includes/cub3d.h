@@ -188,7 +188,6 @@ void				render_raycast(void *param);
 
 int		init_data(t_data *data);
 int		parsing(t_data *data, char *filename);
-void	ft_printf_map(char **map);
 int		read_map_1(t_data *data, char *filename);
 int		get_color(char *line, t_data *data);
 void	free_split(char **arr);
@@ -200,7 +199,7 @@ void	count_hors_map(t_data *data, char *filename);
 void	free_map(char **map);
 void	map_width(t_data *data);
 void	free_map_partial(char **map, int index);
-char	**copy_map(char **map, int height);
+char	**copy_map(t_data *data, char **map, int height);
 void	free_map(char **map);
 int		check_element(char **map);
 int		check_joueur(char **map);

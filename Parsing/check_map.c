@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:38:55 by peli              #+#    #+#             */
-/*   Updated: 2025/03/07 16:45:37 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/09 15:06:50 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,16 +79,19 @@ int	check_espace(char **map, t_data *data)
 		j = -1;
 		while (map[i][++j])
 		{
-			if (map[i][j] == ' ' && (
-				(i > 0 && map[i - 1][j] && map[i - 1][j] == '0') ||
-				(i < data->map_data->height - 1 && map[i + 1][j] && map[i + 1][j] == '0') ||
-				(j > 0 && map[i][j - 1] && map[i][j - 1] == '0') ||
-				(j < len - 1 && map[i][j + 1] && map[i][j + 1] == '0')))
-				return (0);
+			if (map[i][j] == ' ')
+			{
+				if ((i > 0 && map[i - 1] && j < (int)ft_strlen(map[i - 1]) && map[i - 1][j] == '0') ||
+					(i < data->map_data->height - 1 && map[i + 1] && j < (int)ft_strlen(map[i + 1]) && map[i + 1][j] == '0') ||
+					(j > 0 && map[i][j - 1] && map[i][j - 1] == '0') ||
+					(j < len - 1 && map[i][j + 1] && map[i][j + 1] == '0'))
+					return (0);
+			}
 		}
 	}
 	return (1);
 }
+
 
 int	check_line_vide(char **map)
 {
@@ -132,6 +135,19 @@ int	check_wall(char **map, int height)
 	return (1);
 }
 
+void	ft_printf_map(char **map)
+{
+	int	i;
+
+	i = 0;
+	while (map[i])
+	{
+		printf("%s\n", map[i]);
+		i++;
+	}
+	return ;
+}
+
 int	check_mur(t_data *data)
 {
 	char	**map;
@@ -144,6 +160,7 @@ int	check_mur(t_data *data)
 	if (!map)
 		return (0);
 	flood_fill(map, y, x -1, data);
+	ft_printf_map(map);
 	if (!check_wall(map, data->map_data->height) || !check_flood(map, data->map_data->height))
 	{
 		ft_putstr_fd("Error: The map is not closed!\n", 2);

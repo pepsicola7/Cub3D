@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:16:27 by peli              #+#    #+#             */
-/*   Updated: 2025/03/07 16:45:19 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/09 14:41:02 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ int	check_description(t_data *data)
 	char	**map;
 
 	map_width(data);
+	printf ("Hight is %d, width is %d\n", data->map_data->height, data->map_data->width);
 	map = data->map_data->map;
 	if (!check_element(map))
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:31:21 by peli              #+#    #+#             */
-/*   Updated: 2025/02/28 16:31:10 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/09 15:07:04 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,3 +29,4 @@ void	count_line(t_data *data, char *filename)
 	data->map_data->ligne_total = count;
 	count_hors_map(data, filename);
 }
+

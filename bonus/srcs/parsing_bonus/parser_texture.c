@@ -12,6 +12,16 @@
 
 #include "cub3d.h"
 
+void	free_split(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
+}
+
 int	get_texture(char *line, t_data *data)
 {
 	char			**path;
@@ -26,6 +36,11 @@ int	get_texture(char *line, t_data *data)
 	}
 	path_texture = ft_strtrim(path[1], "\n");
 	texture = mlx_load_png(path_texture);
+	if (!texture)
+	{
+		ft_putstr_fd("Error: unable to open texture\n", 2);
+		return (0);
+	}
 	if (!ft_strncmp(line, "NO ", 3))
 		data->texture->north = texture;
 	if (!ft_strncmp(line, "SO ", 3))
@@ -41,16 +56,6 @@ int	get_texture(char *line, t_data *data)
 	free_split(path);
 	free(path_texture);
 	return (1);
-}
-
-void	free_split(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
 }
 
 int	check_is_number(char **str)

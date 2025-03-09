@@ -17,7 +17,8 @@ void	free_data(t_data *data)
 	free(data->mlx_data);
 	free(data->player);
 	free(data->texture);
-	free(data->map_data->map);
+	free_split(data->map_data->map);
+	free(data->map_data->map_1d);
 	free(data->map_data);
 	free(data);
 }

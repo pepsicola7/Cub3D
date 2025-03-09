@@ -52,7 +52,7 @@ bonus/%.o: bonus/%.c
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS_BONUS) && printf "$(YELLOW)Compiling Bonus: $(PURPLE)$(notdir $<)\n$(RESET)"
 
 $(NAME): $(OBJS)
-	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+	@$(CC) -fsanitize=address,leak,undefined $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 
 bonus: libft libmlx $(OBJS_BONUS)

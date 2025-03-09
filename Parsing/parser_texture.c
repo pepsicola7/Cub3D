@@ -12,9 +12,20 @@
 
 #include "cub3d.h"
 
+void	free_split(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+		free(arr[i++]);
+	free(arr);
+}
+
 int	get_texture(char *line, t_data *data)
 {
 	char			**path;
+	char *path_texture;
 	mlx_texture_t	*texture;
 
 	path = ft_split(line, ' ');
@@ -23,8 +34,8 @@ int	get_texture(char *line, t_data *data)
 		ft_putstr_fd("Error: missing path for texture\n", 2);
 		return (0);
 	}
-	path[1] = ft_strtrim(path[1], "\n");
-	texture = mlx_load_png(path[1]);
+	path_texture = ft_strtrim(path[1], "\n");
+	texture = mlx_load_png(path_texture);
 	if (!texture)
 	{
 		ft_putstr_fd("Error: unable to open texture\n", 2);
@@ -38,17 +49,9 @@ int	get_texture(char *line, t_data *data)
 		data->texture->west = texture;
 	if (!ft_strncmp(line, "EA ", 3))
 		data->texture->east = texture;
+	free_split(path);
+	free(path_texture);
 	return (1);
-}
-
-void	free_split(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i])
-		free(arr[i++]);
-	free(arr);
 }
 
 int	check_is_number(char **str)

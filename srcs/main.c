@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 15:12:44 by lpolizzi          #+#    #+#             */
-/*   Updated: 2025/03/06 14:54:38 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/09 15:18:53 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,10 @@ int	main(int ac, char **av)
 	data = ft_calloc(1, sizeof(t_data));
 	mlx_set_setting(MLX_FULLSCREEN, true);
 	if (!data || !parsing(data, av[1]) || !init_mlx(data))
+	{
+		free_data(data);
 		return (1);
+	}
 	mlx_image_to_window(data->mlx_data->mlx, data->mlx_data->img, 0, 0);
 	mlx_key_hook(data->mlx_data->mlx, key_callback, data);
 	mlx_loop_hook(data->mlx_data->mlx, render_all, data);

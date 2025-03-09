@@ -36,6 +36,8 @@ int	get_texture(char *line, t_data *data)
 	}
 	path_texture = ft_strtrim(path[1], "\n");
 	texture = mlx_load_png(path_texture);
+	free_split(path);
+	free(path_texture);
 	if (!texture)
 	{
 		ft_putstr_fd("Error: unable to open texture\n", 2);
@@ -53,8 +55,6 @@ int	get_texture(char *line, t_data *data)
 		data->texture->floor = texture;
 	if (!ft_strncmp(line, "C ", 2))
 		data->texture->ceiling = texture;
-	free_split(path);
-	free(path_texture);
 	return (1);
 }
 

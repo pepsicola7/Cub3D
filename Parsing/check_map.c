@@ -161,6 +161,7 @@ int	check_mur(t_data *data)
 		return (0);
 	flood_fill(map, y, x -1, data);
 	ft_printf_map(map);
+	ft_printf_map(data->map_data->map);
 	if (!check_wall(map, data->map_data->height) || !check_flood(map, data->map_data->height))
 	{
 		ft_putstr_fd("Error: The map is not closed!\n", 2);

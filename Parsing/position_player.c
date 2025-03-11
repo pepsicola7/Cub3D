@@ -55,10 +55,10 @@ void	position_player(t_data *data)
 	int		j;
 	char	direction;
 
-	i = 0;
+	i = -1;
 	map = data->map_data->map;
 	data->player = ft_calloc(1, sizeof(t_player));
-	while (map[i])
+	while (map[++i])
 	{
 		j = 0;
 		while (map[i][j])
@@ -66,7 +66,7 @@ void	position_player(t_data *data)
 			if (map[i][j] =='N' || map[i][j] =='S' || map[i][j] =='E' || map[i][j] =='W')
 			{
 				data->player->pos.y = i + 0.5;
-				data->player->pos.x = j + 1.5;
+				data->player->pos.x = j + 0.5;
 				direction = map[i][j];
 				direction_ns(data, direction);
 				direction_ew(data, direction);
@@ -74,6 +74,5 @@ void	position_player(t_data *data)
 			}
 			j++;
 		}
-		i++;
 	}
 }

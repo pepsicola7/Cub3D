@@ -109,11 +109,14 @@ void	put_map_1d(t_data *data)
 				data->map_data->map_1d[k] = '0';
 			else
 				data->map_data->map_1d[k] = data->map_data->map[i][j];
+			printf("%c", data->map_data->map_1d[k]);
 			j++;
 			k++;
 		}
+		printf("\n");
 		i++;
 	}
+
 }
 
 int	parsing(t_data *data, char *filename)

@@ -1,24 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   map_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 20:38:30 by lpolizzi          #+#    #+#             */
-/*   Updated: 2025/03/11 20:38:31 by lpolizzi         ###   ########.fr       */
+/*   Created: 2025/03/11 20:38:37 by lpolizzi          #+#    #+#             */
+/*   Updated: 2025/03/11 20:38:38 by lpolizzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	init_mlx(t_data *data)
+int	get_map_value(t_data *data, int x, int y)
 {
-	data->mlx_data = ft_calloc(1, sizeof(t_mlx));
-	data->mlx_data->mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, "cub3d", true);
-	data->mlx_data->img = mlx_new_image(data->mlx_data->mlx, WIN_WIDTH,
-			WIN_HEIGHT);
-	if (!data->mlx_data->mlx || !data->mlx_data->img)
-		return (0);
-	return (1);
+	if (x < 0 || x >= data->map_data->width || y < 0
+		|| y >= data->map_data->height)
+		return (1);
+	return (data->map_data->map_1d[y * data->map_data->width + x]);
 }

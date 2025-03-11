@@ -7,7 +7,7 @@ YELLOW	:= \033[1;33m
 RESET 	:= \033[0m
 
 NAME    := cub3d
-CFLAGS  := -Wall -Wextra -Werror -Ofast -g3 -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer -fsanitize=address,leak,undefined
+CFLAGS  := -Wall -Wextra -Werror -O3 -ffast-math -g3 -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer -fsanitize=address,leak,undefined
 LIBMLX  := MLX42
 LIBFT   := libft
 
@@ -15,13 +15,13 @@ HEADERS := -I./includes -I $(LIBMLX)/include
 HEADERS_BONUS := -I./bonus/includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -lm
 
-SRCS    := srcs/init.c srcs/raycasting.c srcs/render_utils.c srcs/main.c Parsing/parsing.c Parsing/parser_texture.c Parsing/parser_map.c Parsing/printf.c Parsing/check_map.c Parsing/parser_util.c Parsing/position_player.c
+SRCS    := srcs/init.c srcs/cast_ray.c srcs/render_utils.c srcs/main.c srcs/draw_vertical_line.c srcs/draw_wall.c srcs/movements.c srcs/map_utils.c srcs/handle_keys.c Parsing/parsing.c Parsing/parser_texture.c Parsing/parser_map.c Parsing/printf.c Parsing/check_map.c Parsing/parser_util.c Parsing/position_player.c
 SRCS_BONUS := bonus/srcs/main_bonus.c bonus/srcs/init_bonus.c bonus/srcs/raycasting_bonus.c bonus/srcs/render_utils_bonus.c bonus/srcs/minimap_bonus.c bonus/srcs/sprites_bonus.c bonus/srcs/parsing_bonus/check_map.c  bonus/srcs/parsing_bonus/parser_map.c  bonus/srcs/parsing_bonus/parser_texture.c  bonus/srcs/parsing_bonus/parser_util.c  bonus/srcs/parsing_bonus/parsing.c  bonus/srcs/parsing_bonus/position_player.c  bonus/srcs/parsing_bonus/printf.c
 
 OBJS    := $(SRCS:.c=.o)
 OBJS_BONUS := $(SRCS_BONUS:.c=.o)
 
-CC      := cc
+CC      := clang
 
 all: libft libmlx $(NAME)
 

@@ -1,21 +1,28 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/11 20:42:10 by lpolizzi          #+#    #+#             */
+/*   Updated: 2025/03/11 21:07:52 by lpolizzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	ft_draw_pixel(uint8_t *pixel, uint32_t color)
-{
-	*(pixel++) = (uint8_t)(color >> 24);
-	*(pixel++) = (uint8_t)(color >> 16);
-	*(pixel++) = (uint8_t)(color >> 8);
-	*(pixel++) = (uint8_t)(color & 0xFF);
-}
+#include "cub3d.h"
 
 void	ft_put_pixel(mlx_image_t *image, uint32_t x, uint32_t y, uint32_t color)
 {
-	uint8_t	*pixelstart;
+	uint8_t	*pixel;
 
-	if (x >= image->width || y >= image->height || !image || !image->pixels)
+	if (!image || !image->pixels || x >= image->width || y >= image->height)
 		return ;
-	pixelstart = &image->pixels[(y * image->width + x) * sizeof(uint32_t)];
-	ft_draw_pixel(pixelstart, color);
+	pixel = &image->pixels[(y * image->width + x) * sizeof(uint32_t)];
+	pixel[0] = (uint8_t)((color >> 24) & 0xFF);
+	pixel[1] = (uint8_t)((color >> 16) & 0xFF);
+	pixel[2] = (uint8_t)((color >> 8) & 0xFF);
+	pixel[3] = (uint8_t)(color & 0xFF);
 }
 
 void	draw_quads(t_data *data, t_vec2i start, t_vec2i size, int color)

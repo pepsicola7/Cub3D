@@ -186,6 +186,20 @@ void				handle_camera_tilt(t_data *data);
 
 void				render_raycast(void *param);
 
+/*------------------Map Utils------------------*/
+
+int	get_map_value(t_data *data, int x, int y);
+
+/*------------------Rendering------------------*/
+
+void	draw_textured_vertical_line(t_data *data, t_ray *ray, int x);
+void	draw_floor(t_data *data, int x, int draw_end);
+void	draw_ceiling(t_data *data, int x, int draw_start);
+void	draw_wall(t_data *data, t_draw_context *ctx, int x);
+void	init_draw_context(t_data *data, t_ray *ray, t_draw_context *ctx);
+mlx_texture_t	*get_wall_texture(t_data *data, t_ray *ray);
+float	calculate_wall_x(t_data *data, t_ray *ray);
+
 int		init_data(t_data *data);
 int		parsing(t_data *data, char *filename);
 int		read_map_1(t_data *data, char *filename);

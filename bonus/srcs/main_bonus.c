@@ -66,9 +66,6 @@ void	render_all(void *vdata)
 	handle_rotation(data);
 	handle_camera_tilt(data);
 	handle_jump(data, data->mlx_data->mlx->delta_time);
-	if (!data->mlx_data->img_buffer)
-		data->mlx_data->img_buffer = mlx_new_image(data->mlx_data->mlx,
-				data->mlx_data->mlx->width, data->mlx_data->mlx->height);
 	render_raycast(data);
 	render_minimap(data);
 	ft_swap_pointers((void **)&data->mlx_data->img->pixels,

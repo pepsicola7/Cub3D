@@ -8,7 +8,7 @@ int	get_map_value(t_data *data, int x, int y)
 	return (data->map_data->map_1d[y * data->map_data->width + x]);
 }
 
-inline void	perform_dda(t_data *data, t_ray *ray)
+void	perform_dda(t_data *data, t_ray *ray)
 {
 	int	map_value;
 
@@ -118,7 +118,10 @@ void	draw_wall(t_data *data, t_draw_context *ctx, int x)
 		ctx->tex_pos += ctx->step;
 		pixel = ctx->wall_texture->pixels + (tex_y * ctx->wall_texture->width
 				+ ctx->tex_x) * ctx->wall_texture->bytes_per_pixel;
-		color = (pixel[0] << 24) | (pixel[1] << 16) | (pixel[2] << 8) | pixel[3];
+		color = ((unsigned int)pixel[0] << 24) |
+        ((unsigned int)pixel[1] << 16) |
+        ((unsigned int)pixel[2] << 8)  |
+        ((unsigned int)pixel[3]);
 		ft_put_pixel(data->mlx_data->img_buffer, x, y++, color);
 	}
 }
@@ -157,7 +160,10 @@ void	draw_ceiling_pixel(t_data *data, t_floor_ceiling *fc, int x, int y)
 	fc->pixel = data->texture->ceiling->pixels + (fc->tex_y
 			* data->texture->ceiling->width + fc->tex_x)
 		* data->texture->ceiling->bytes_per_pixel;
-	fc->color = (fc->pixel[0] << 24) | (fc->pixel[1] << 16) | (fc->pixel[2] << 8) | fc->pixel[3];
+	fc->color = ((unsigned int)fc->pixel[0] << 24) |
+            ((unsigned int)fc->pixel[1] << 16) |
+            ((unsigned int)fc->pixel[2] << 8)  |
+            ((unsigned int)fc->pixel[3]);
 	ft_put_pixel(data->mlx_data->img_buffer, x, y, fc->color);
 }
 
@@ -201,7 +207,10 @@ void	draw_floor_pixel(t_data *data, t_floor_ceiling *fc, int x, int y)
 	fc->pixel = data->texture->floor->pixels + (fc->tex_y
 			* data->texture->floor->width + fc->tex_x)
 		* data->texture->floor->bytes_per_pixel;
-	fc->color = (fc->pixel[0] << 24) | (fc->pixel[1] << 16) | (fc->pixel[2] << 8) | fc->pixel[3];
+	fc->color = ((unsigned int)fc->pixel[0] << 24) |
+            ((unsigned int)fc->pixel[1] << 16) |
+            ((unsigned int)fc->pixel[2] << 8)  |
+            ((unsigned int)fc->pixel[3]);
 	ft_put_pixel(data->mlx_data->img_buffer, x, y, fc->color);
 }
 
@@ -466,6 +475,7 @@ void	handle_rotation(t_data *data)
 {
 	float	yaw;
 
+	yaw = 0.0f;
 	if (data->player->key_state.left == data->player->key_state.right)
 		return ;
 	if (data->player->key_state.right)

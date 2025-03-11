@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-inline int	get_map_value(t_data *data, int x, int y)
+int	get_map_value(t_data *data, int x, int y)
 {
 	if (x < 0 || x >= data->map_data->width || y < 0
 		|| y >= data->map_data->height)
@@ -8,7 +8,7 @@ inline int	get_map_value(t_data *data, int x, int y)
 	return (data->map_data->map_1d[y * data->map_data->width + x]);
 }
 
-inline void	perform_dda(t_data *data, t_ray *ray)
+void	perform_dda(t_data *data, t_ray *ray)
 {
 	ray->hit = 0;
 	while (ray->hit == 0)
@@ -113,7 +113,10 @@ void	draw_wall(t_data *data, t_draw_context *ctx, int x)
 		ctx->tex_pos += ctx->step;
 		pixel = ctx->wall_texture->pixels + (tex_y * ctx->wall_texture->width
 				+ ctx->tex_x) * ctx->wall_texture->bytes_per_pixel;
-		color = (pixel[0] << 24) | (pixel[1] << 16) | (pixel[2] << 8) | pixel[3];
+		color = ((unsigned int)pixel[0] << 24) |
+        ((unsigned int)pixel[1] << 16) |
+        ((unsigned int)pixel[2] << 8)  |
+        ((unsigned int)pixel[3]);
 		ft_put_pixel(data->mlx_data->img_buffer, x, y++, color);
 	}
 }

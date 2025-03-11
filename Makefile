@@ -57,12 +57,12 @@ $(NAME): $(OBJS)
 
 bonus: libft libmlx $(OBJS_BONUS)
 	@echo "$(CYAN)Compiling $(NAME) with bonus...$(RESET)"
-	@$(CC) $(OBJS_BONUS) $(LIBS) $(HEADERS_BONUS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBS) $(HEADERS_BONUS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 
 dev: fclean libft libmlx bonus
 	@echo "$(CYAN)Compiling $(NAME) with sanitizers (bonus included)...$(RESET)"
-	@$(CC) $(OBJS_BONUS) $(LIBS) -fsanitize=address,leak,undefined -g3 $(HEADERS_BONUS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBS) -fsanitize=address,leak,undefined -g3 $(HEADERS_BONUS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 	@echo "$(RED)Development mode enabled!$(RESET)"
 

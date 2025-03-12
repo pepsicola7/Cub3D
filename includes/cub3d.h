@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
+/*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 11:32:42 by lpolizzi          #+#    #+#             */
-/*   Updated: 2025/03/12 11:32:43 by lpolizzi         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:29:48 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ void				init_draw_context(t_data *data, t_ray *ray,
 						t_draw_context *ctx);
 mlx_texture_t		*get_wall_texture(t_data *data, t_ray *ray);
 float				calculate_wall_x(t_data *data, t_ray *ray);
-int					get_rgba(int r, int g, int b, int a);
+unsigned int					get_rgba(int r, int g, int b, int a);
 
 int					init_data(t_data *data);
 int					parsing(t_data *data, char *filename);
@@ -241,4 +241,6 @@ int					check_flood(char **map, int height);
 void				direction_ew(t_data *data, char direction);
 void				direction_ns(t_data *data, char direction);
 void				fill_map(t_data *data, char *line);
+int					check_joueur_extra(char **map, t_data *data);
+void				replace_map(t_data *data);
 #endif

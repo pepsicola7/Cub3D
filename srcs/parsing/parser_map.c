@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:16:27 by peli              #+#    #+#             */
-/*   Updated: 2025/03/09 14:41:02 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/12 15:18:36 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ char	*replace_line(char *line, int width)
 	return (new_line);
 }
 
-
 void	replace_map(t_data *data)
 {
 	char	**map;
@@ -62,15 +61,15 @@ void	replace_map(t_data *data)
 
 void	flood_fill(char **map, int x, int y, t_data *data)
 {
-	int	height = data->map_data->height;
-	int	width = data->map_data->width;
+	int	height;
+	int	width;
 
+	height = data->map_data->height;
+	width = data->map_data->width;
 	if (x < 0 || x >= height || y < 0 || y >= width)
-		return;
+		return ;
 	if (map[x][y] == '1' || map[x][y] == 'F')
-		return;
-	// if (map[x][y] != '0')
-	// 	return;
+		return ;
 	map[x][y] = 'F';
 	flood_fill(map, x, y + 1, data);
 	flood_fill(map, x, y - 1, data);
@@ -106,7 +105,9 @@ int	check_flood(char **map, int height)
 
 int	check_joueur_extra(char **map, t_data *data)
 {
-	int	i, j, len;
+	int	i;
+	int	j;
+	int	len;
 
 	i = -1;
 	while (map[++i])
@@ -117,39 +118,16 @@ int	check_joueur_extra(char **map, t_data *data)
 		{
 			if (ft_strchr("NSEW", map[i][j]))
 			{
-				if ((i == 0 || i == data->map_data->height - 1 || j == 0 || j >= len - 1) ||
-					(i > 0 && (!map[i - 1] || !map[i - 1][j] || map[i - 1][j] == ' ')) ||
-					(i < data->map_data->height - 1 && (!map[i + 1] || !map[i + 1][j] || map[i + 1][j] == ' ')) ||
+				if ((i == 0 || i == data->map_data->height - 1
+						|| j == 0 || j >= len - 1) || (i > 0 && (!map[i - 1]
+							|| !map[i - 1][j] || map[i - 1][j] == ' '))
+					|| (i < data->map_data->height - 1 && (!map[i + 1]
+					|| !map[i + 1][j] || map[i + 1][j] == ' ')) ||
 					(j > 0 && (!map[i][j - 1] || map[i][j - 1] == ' ')) ||
 					(j < len - 1 && (!map[i][j + 1] || map[i][j + 1] == ' ')))
 					return (0);
 			}
 		}
 	}
-	return (1);
-}
-
-
-int	check_description(t_data *data)
-{
-	char	**map;
-
-	map_width(data);
-	printf ("Hight is %d, width is %d\n", data->map_data->height, data->map_data->width);
-	map = data->map_data->map;
-	if (!check_element(map))
-		return (0);
-	if (!check_joueur(map))
-		return (0);
-	if (!check_espace(map, data))
-		return (0);
-	if (!check_line_vide(map))
-		return (0);
-	position_player(data);
-	if (!check_mur(data))
-		return (0);
-	if (!check_joueur_extra(map, data))
-		return (0);
-	replace_map(data);
 	return (1);
 }

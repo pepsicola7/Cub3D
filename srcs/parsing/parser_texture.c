@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:15:34 by peli              #+#    #+#             */
-/*   Updated: 2025/03/07 14:57:04 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/12 15:06:41 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_split(char **arr)
 int	get_texture(char *line, t_data *data)
 {
 	char			**path;
-	char *path_texture;
+	char			*path_texture;
 	mlx_texture_t	*texture;
 
 	path = ft_split(line, ' ');
@@ -39,10 +39,7 @@ int	get_texture(char *line, t_data *data)
 	free_split(path);
 	free(path_texture);
 	if (!texture)
-	{
-		ft_putstr_fd("Error: unable to open texture\n", 2);
-		return (0);
-	}
+		return (ft_putstr_fd("Error: unable to open texture\n", 2), 0);
 	if (!ft_strncmp(line, "NO ", 3))
 		data->texture->north = texture;
 	if (!ft_strncmp(line, "SO ", 3))
@@ -113,7 +110,8 @@ int	read_map_1(t_data *data, char *filename)
 	while (line)
 	{
 		if (ft_strncmp(line, "NO ", 3) == 0 || ft_strncmp(line, "SO ", 3) == 0
-			|| ft_strncmp(line, "WE ", 3) == 0 || ft_strncmp(line, "EA ", 3) == 0)
+			|| ft_strncmp(line, "WE ", 3) == 0
+			|| ft_strncmp(line, "EA ", 3) == 0)
 		{
 			if (!get_texture(line, data))
 				return (free(line), 0);

@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/03/09 15:23:40 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/12 15:59:47 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	read_map_2(t_data *data, char *filename)
 		return (0);
 	return (1);
 }
+
 void	count_hors_map(t_data *data, char *filename)
 {
 	char	*line;
@@ -109,14 +110,11 @@ void	put_map_1d(t_data *data)
 				data->map_data->map_1d[k] = '0';
 			else
 				data->map_data->map_1d[k] = data->map_data->map[i][j];
-			printf("%c", data->map_data->map_1d[k]);
 			j++;
 			k++;
 		}
-		printf("\n");
 		i++;
 	}
-
 }
 
 int	parsing(t_data *data, char *filename)
@@ -132,7 +130,8 @@ int	parsing(t_data *data, char *filename)
 	count_line(data, filename);
 	read_map_1(data, filename);
 	if (!data->texture->east || !data->texture->north || !data->texture->south
-		|| !data->texture->west || !data->texture->floor_color || !data->texture->ceiling_color)
+		|| !data->texture->west || !data->texture->floor_color
+		|| !data->texture->ceiling_color)
 		return (0);
 	if (!read_map_2(data, filename))
 	{

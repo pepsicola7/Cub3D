@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:03:09 by peli              #+#    #+#             */
-/*   Updated: 2025/02/28 16:20:18 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/12 15:08:45 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,11 @@ void	position_player(t_data *data)
 	data->player = ft_calloc(1, sizeof(t_player));
 	while (map[++i])
 	{
-		j = 0;
-		while (map[i][j])
+		j = -1;
+		while (map[i][++j])
 		{
-			if (map[i][j] =='N' || map[i][j] =='S' || map[i][j] =='E' || map[i][j] =='W')
+			if (map[i][j] == 'N' || map[i][j] == 'S'
+				|| map[i][j] == 'E' || map[i][j] == 'W')
 			{
 				data->player->pos.y = i + 0.5;
 				data->player->pos.x = j + 0.5;
@@ -72,7 +73,6 @@ void	position_player(t_data *data)
 				direction_ew(data, direction);
 				return ;
 			}
-			j++;
 		}
 	}
 }

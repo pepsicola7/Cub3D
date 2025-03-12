@@ -213,7 +213,7 @@ void				init_draw_context(t_data *data, t_ray *ray,
 						t_draw_context *ctx);
 mlx_texture_t		*get_wall_texture(t_data *data, t_ray *ray);
 float				calculate_wall_x(t_data *data, t_ray *ray);
-unsigned int					get_rgba(int r, int g, int b, int a);
+unsigned int		get_rgba(int r, int g, int b, int a);
 
 int					init_data(t_data *data);
 int					parsing(t_data *data, char *filename);

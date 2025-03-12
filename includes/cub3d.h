@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 11:32:42 by lpolizzi          #+#    #+#             */
-/*   Updated: 2025/03/12 17:29:48 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/12 17:53:33 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,4 +243,5 @@ void				direction_ns(t_data *data, char direction);
 void				fill_map(t_data *data, char *line);
 int					check_joueur_extra(char **map, t_data *data);
 void				replace_map(t_data *data);
+int					help_read_map_2(t_data *data, char **l, int *config_count);
 #endif

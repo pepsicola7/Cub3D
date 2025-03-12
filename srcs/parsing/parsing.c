@@ -6,40 +6,11 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/03/12 15:59:47 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/12 17:53:00 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-int	help_read_map_2(t_data *data, char **l, int *config_count)
-{
-	while (*l)
-	{
-		if (ft_strcmp(*l, "\n") == 0 && *config_count < 6)
-		{
-			free(*l);
-			*l = get_next_line(data->map_data->map_fd);
-			continue ;
-		}
-		if (ft_strncmp(*l, "NO", 2) == 0 || ft_strncmp(*l, "SO", 2) == 0
-			|| ft_strncmp(*l, "WE", 2) == 0 || ft_strncmp(*l, "EA", 2) == 0
-			|| ft_strncmp(*l, "F", 1) == 0 || ft_strncmp(*l, "C", 1) == 0)
-			(*config_count)++;
-		else
-		{
-			if (*config_count < 6)
-			{
-				ft_putstr_fd("Error: missing configuration in map file\n", 2);
-				return (free(*l), 0);
-			}
-			break ;
-		}
-		free(*l);
-		*l = get_next_line(data->map_data->map_fd);
-	}
-	return (1);
-}
 
 int	read_map_2(t_data *data, char *filename)
 {

@@ -6,11 +6,11 @@
 /*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 11:37:41 by lpolizzi          #+#    #+#             */
-/*   Updated: 2025/03/12 11:37:42 by lpolizzi         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:24:44 by lpolizzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "cub3d_bonus.h"
 
 void	draw_background(t_data *data, t_vec2i offset, int size)
 {

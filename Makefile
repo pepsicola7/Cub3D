@@ -15,8 +15,8 @@ HEADERS := -I./includes -I $(LIBMLX)/include
 HEADERS_BONUS := -I./bonus/includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -lm
 
-SRCS    := srcs/init.c srcs/cast_ray.c srcs/render_utils.c srcs/main.c srcs/draw_vertical_line.c srcs/draw_wall.c srcs/movements.c srcs/map_and_color_utils.c srcs/handle_keys.c Parsing/parsing.c Parsing/parser_texture.c Parsing/parser_map.c Parsing/printf.c Parsing/check_map.c Parsing/parser_util.c Parsing/position_player.c
-SRCS_BONUS := bonus/srcs/main_bonus.c bonus/srcs/init_bonus.c bonus/srcs/raycasting_bonus.c bonus/srcs/render_utils_bonus.c bonus/srcs/minimap_bonus.c bonus/srcs/sprites_bonus.c bonus/srcs/parsing_bonus/check_map.c  bonus/srcs/parsing_bonus/parser_map.c  bonus/srcs/parsing_bonus/parser_texture.c  bonus/srcs/parsing_bonus/parser_util.c  bonus/srcs/parsing_bonus/parsing.c  bonus/srcs/parsing_bonus/position_player.c  bonus/srcs/parsing_bonus/printf.c
+SRCS    := srcs/init.c srcs/cast_ray.c srcs/render_utils.c srcs/main.c srcs/draw_vertical_line.c srcs/draw_wall.c srcs/movements.c srcs/map_and_color_utils.c srcs/handle_keys.c srcs/parsing/parsing.c srcs/parsing/parser_texture.c srcs/parsing/parser_map.c srcs/parsing/printf.c srcs/parsing/check_map.c srcs/parsing/parser_util.c srcs/parsing/position_player.c
+SRCS_BONUS := bonus/srcs/main_bonus.c bonus/srcs/init_bonus.c bonus/srcs/camera_bonus.c bonus/srcs/cast_ray_bonus.c bonus/srcs/draw_ceiling_bonus.c bonus/srcs/draw_floor_bonus.c bonus/srcs/draw_vertical_line_bonus.c bonus/srcs/draw_wall_bonus.c bonus/srcs/handle_keypress_bonus.c bonus/srcs/init_bonus.c bonus/srcs/main_bonus.c bonus/srcs/map__utils_bonus.c bonus/srcs/minimap_bonus.c bonus/srcs/movements_bonus.c bonus/srcs/render_utils_bonus.c bonus/srcs/minimap_bonus.c bonus/srcs/sprites_bonus.c bonus/srcs/parsing_bonus/check_map.c  bonus/srcs/parsing_bonus/parser_map.c  bonus/srcs/parsing_bonus/parser_texture.c  bonus/srcs/parsing_bonus/parser_util.c  bonus/srcs/parsing_bonus/parsing.c  bonus/srcs/parsing_bonus/position_player.c  bonus/srcs/parsing_bonus/printf.c
 
 OBJS    := $(SRCS:.c=.o)
 OBJS_BONUS := $(SRCS_BONUS:.c=.o)

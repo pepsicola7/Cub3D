@@ -1,20 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_wall.c                                        :+:      :+:    :+:   */
+/*   draw_wall_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 20:35:39 by lpolizzi          #+#    #+#             */
-/*   Updated: 2025/03/11 20:58:56 by lpolizzi         ###   ########.fr       */
+/*   Created: 2025/03/12 12:24:15 by lpolizzi          #+#    #+#             */
+/*   Updated: 2025/03/12 12:24:42 by lpolizzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "cub3d_bonus.h"
 
 mlx_texture_t	*get_wall_texture(t_data *data, t_ray *ray)
 {
-	if (ray->side == 0)
+	if (ray->hit == 2)
+		return (data->texture->doors[(int)(mlx_get_time() * 8.0) % 6]);
+	else if (ray->side == 0)
 	{
 		if (ray->step_x > 0)
 			return (data->texture->east);

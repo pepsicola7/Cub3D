@@ -66,7 +66,7 @@ char	**copy_map(t_data *data, char **map, int height)
 	char	**map_copy;
 
 	i = 0;
-	map_copy = ft_calloc(height, sizeof(char *) + 1);
+	map_copy = ft_calloc(height + 1, sizeof(char *));
 	if (!map_copy)
 		return (NULL);
 	while (map[i])

@@ -14,7 +14,8 @@
 
 unsigned int	get_rgba(int r, int g, int b, int a)
 {
-	return ((unsigned int)r << 24 | (unsigned int)g << 16 | (unsigned int)b << 8 | a);
+	return ((unsigned int)r << 24 | (unsigned int)g << 16
+		| (unsigned int)b << 8 | a);
 }
 
 int	get_map_value(t_data *data, int x, int y)

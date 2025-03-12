@@ -1,4 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minimap_bonus.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/12 11:37:41 by lpolizzi          #+#    #+#             */
+/*   Updated: 2025/03/12 11:37:42 by lpolizzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
+
+void	draw_background(t_data *data, t_vec2i offset, int size)
+{
+	t_vec2i	pixel;
+
+	pixel.y = -1;
+	while (++pixel.y < data->map_data->height * size)
+	{
+		pixel.x = -1;
+		while (++pixel.x < data->map_data->width * size)
+			ft_put_pixel(data->mlx_data->img_buffer, offset.x + pixel.x,
+				offset.y + pixel.y, BLACK);
+	}
+}
 
 void	draw_player(t_data *data, t_vec2i offset, int square_size)
 {

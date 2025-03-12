@@ -12,6 +12,11 @@
 
 #include "cub3d.h"
 
+int	get_rgba(int r, int g, int b, int a)
+{
+	return (r << 24 | g << 16 | b << 8 | a);
+}
+
 int	get_map_value(t_data *data, int x, int y)
 {
 	if (x < 0 || x >= data->map_data->width || y < 0

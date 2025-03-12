@@ -97,9 +97,9 @@ int	get_color(char *line, t_data *data)
 		return (ft_putstr_fd("Error: RGB value is incorrect.", 2), 0);
 	}
 	if (ft_strncmp(line, "F ", 2) == 0)
-		data->texture->floor_color = r << 16 | g << 8 | b;
+		data->texture->floor_color = get_rgba(r, g, b, 255);
 	if (ft_strncmp(line, "C ", 2) == 0)
-		data->texture->ceiling_color = r << 16 | g << 8 | b;
+		data->texture->ceiling_color = get_rgba(r, g, b, 255);
 	free_split(str);
 	return (1);
 }

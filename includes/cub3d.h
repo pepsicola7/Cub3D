@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/12 11:32:42 by lpolizzi          #+#    #+#             */
+/*   Updated: 2025/03/12 11:32:43 by lpolizzi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -12,13 +24,13 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define WIN_HEIGHT	1080
+# define WIN_HEIGHT 1080
 # define WIN_WIDTH 1920
 
 # define FOV 60
 # define MOVE_SPEED 1.0
 # define ROTATE_SPEED 1.0
-# define TILT_SPEED	400
+# define TILT_SPEED 400
 
 # define BLUE 0x0000FFFF
 # define LIGHT_BLUE 0xADD8F6FF
@@ -188,42 +200,45 @@ void				render_raycast(void *param);
 
 /*------------------Map Utils------------------*/
 
-int	get_map_value(t_data *data, int x, int y);
+int					get_map_value(t_data *data, int x, int y);
 
 /*------------------Rendering------------------*/
 
-void	draw_textured_vertical_line(t_data *data, t_ray *ray, int x);
-void	draw_floor(t_data *data, int x, int draw_end);
-void	draw_ceiling(t_data *data, int x, int draw_start);
-void	draw_wall(t_data *data, t_draw_context *ctx, int x);
-void	init_draw_context(t_data *data, t_ray *ray, t_draw_context *ctx);
-mlx_texture_t	*get_wall_texture(t_data *data, t_ray *ray);
-float	calculate_wall_x(t_data *data, t_ray *ray);
+void				draw_textured_vertical_line(t_data *data, t_ray *ray,
+						int x);
+void				draw_floor(t_data *data, int x, int draw_end);
+void				draw_ceiling(t_data *data, int x, int draw_start);
+void				draw_wall(t_data *data, t_draw_context *ctx, int x);
+void				init_draw_context(t_data *data, t_ray *ray,
+						t_draw_context *ctx);
+mlx_texture_t		*get_wall_texture(t_data *data, t_ray *ray);
+float				calculate_wall_x(t_data *data, t_ray *ray);
+int					get_rgba(int r, int g, int b, int a);
 
-int		init_data(t_data *data);
-int		parsing(t_data *data, char *filename);
-int		read_map_1(t_data *data, char *filename);
-int		get_color(char *line, t_data *data);
-void	free_split(char **arr);
-int		get_texture(char *line, t_data *data);
-int		read_map_2(t_data *data, char *filename);
-int		check_description(t_data *data);
-void	count_line(t_data *data, char *filename);
-void	count_hors_map(t_data *data, char *filename);
-void	free_map(char **map);
-void	map_width(t_data *data);
-void	free_map_partial(char **map, int index);
-char	**copy_map(t_data *data, char **map, int height);
-void	free_map(char **map);
-int		check_element(char **map);
-int		check_joueur(char **map);
-int		check_espace(char **map, t_data *data);
-int		check_line_vide(char **map);
-int		check_mur(t_data *data);
-void	position_player(t_data *data);
-void	flood_fill(char **map, int x, int y, t_data *data);
-int		check_flood(char **map, int height);
-void	direction_ew(t_data *data, char direction);
-void	direction_ns(t_data *data, char direction);
-void	fill_map(t_data *data, char *line);
+int					init_data(t_data *data);
+int					parsing(t_data *data, char *filename);
+int					read_map_1(t_data *data, char *filename);
+int					get_color(char *line, t_data *data);
+void				free_split(char **arr);
+int					get_texture(char *line, t_data *data);
+int					read_map_2(t_data *data, char *filename);
+int					check_description(t_data *data);
+void				count_line(t_data *data, char *filename);
+void				count_hors_map(t_data *data, char *filename);
+void				free_map(char **map);
+void				map_width(t_data *data);
+void				free_map_partial(char **map, int index);
+char				**copy_map(t_data *data, char **map, int height);
+void				free_map(char **map);
+int					check_element(char **map);
+int					check_joueur(char **map);
+int					check_espace(char **map, t_data *data);
+int					check_line_vide(char **map);
+int					check_mur(t_data *data);
+void				position_player(t_data *data);
+void				flood_fill(char **map, int x, int y, t_data *data);
+int					check_flood(char **map, int height);
+void				direction_ew(t_data *data, char direction);
+void				direction_ns(t_data *data, char direction);
+void				fill_map(t_data *data, char *line);
 #endif

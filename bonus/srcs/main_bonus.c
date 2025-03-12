@@ -6,7 +6,7 @@
 /*   By: lpolizzi <lpolizzi@student.42nice.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 15:12:44 by lpolizzi          #+#    #+#             */
-/*   Updated: 2025/02/26 18:01:06 by lpolizzi         ###   ########.fr       */
+/*   Updated: 2025/03/12 11:39:40 by lpolizzi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,11 @@ void	free_data(t_data *data)
 	free(data);
 }
 
-void delete_door_textures(t_data *data)
+void	exit_program(t_data *data, int status)
 {
 	int	i;
 
 	i = -1;
-	while (++i < NUM_FRAMES)
-		mlx_delete_texture(data->texture->doors[i]);
-}
-
-void	exit_program(t_data *data, int status)
-{
 	if (data->mlx_data->mlx)
 		mlx_terminate(data->mlx_data->mlx);
 	mlx_delete_texture(data->texture->north);
@@ -42,7 +36,8 @@ void	exit_program(t_data *data, int status)
 	mlx_delete_texture(data->texture->west);
 	mlx_delete_texture(data->texture->floor);
 	mlx_delete_texture(data->texture->ceiling);
-	delete_door_textures(data);
+	while (++i < NUM_FRAMES)
+		mlx_delete_texture(data->texture->doors[i]);
 	free_data(data);
 	exit(status);
 }

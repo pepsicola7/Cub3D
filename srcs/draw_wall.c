@@ -79,10 +79,10 @@ void	draw_wall(t_data *data, t_draw_context *ctx, int x)
 		ctx->tex_pos += ctx->step;
 		pixel = ctx->wall_texture->pixels + (tex_y * ctx->wall_texture->width
 				+ ctx->tex_x) * ctx->wall_texture->bytes_per_pixel;
-		color = ((uint8_t)pixel[0] << 24)
-			| ((uint8_t)pixel[1] << 16)
-			| ((uint8_t)pixel[2] << 8)
-			| ((uint8_t)pixel[3]);
+		color = ((unsigned int)pixel[0] << 24)
+			| ((unsigned int)pixel[1] << 16)
+			| ((unsigned int)pixel[2] << 8)
+			| ((unsigned int)pixel[3]);
 		ft_put_pixel(data->mlx_data->img_buffer, x, y++, color);
 	}
 }

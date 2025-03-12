@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "cub3d_bonus.h"
 
 void	handle_key_press(t_data *data, mlx_key_data_t keydata, bool is_pressed)
 {

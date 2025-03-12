@@ -12,31 +12,6 @@
 
 #include "cub3d_bonus.h"
 
-int	check_element(char **map)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (map[i])
-	{
-		j = 0;
-		while (map[i][j] != '\0' && map[i][j] != '\n')
-		{
-			if (!(map[i][j] >= '0' && map[i][j] <= '3') && map[i][j] != 'N'
-			&& map[i][j] != 'S' && map[i][j] != 'E'
-			&& map[i][j] != 'W' && map[i][j] != ' ')
-			{
-				ft_putstr_fd("Error: Invalid element found in map\n", 2);
-				return (0);
-			}
-			j++;
-		}
-		i++;
-	}
-	return (1);
-}
-
 int	check_joueur(char **map)
 {
 	int	i;
@@ -51,7 +26,7 @@ int	check_joueur(char **map)
 		while (map[i][j] != '\0' && map[i][j] != '\n')
 		{
 			if (map[i][j] == 'E' || map[i][j] == 'S' || map[i][j] == 'N'
-			|| map[i][j] == 'W')
+				|| map[i][j] == 'W')
 				player_count++;
 			j++;
 		}
@@ -79,11 +54,15 @@ int	check_espace(char **map, t_data *data)
 		j = -1;
 		while (map[i][++j])
 		{
-			if (map[i][j] == ' ' && (
-				(i > 0 && map[i - 1][j] && (map[i - 1][j] == '0' || map[i - 1][j] == '2' || map[i - 1][j] == '3')) ||
-				(i < data->map_data->height - 1 && map[i + 1][j] && (map[i + 1][j] == '0' || map[i + 1][j] == '2' || map[i + 1][j] == '3')) ||
-				(j > 0 && map[i][j - 1] && (map[i][j - 1] == '0' || map[i][j - 1] == '2' || map[i][j - 1] == '3')) ||
-				(j < len - 1 && map[i][j + 1] && (map[i][j + 1] == '0' || map[i][j + 1] == '2' || map[i][j + 1] == '3'))))
+			if (map[i][j] == ' ' && ((i > 0 && map[i - 1][j] && (map[i
+							- 1][j] == '0' || map[i - 1][j] == '2' || map[i
+							- 1][j] == '3')) || (i < data->map_data->height - 1
+						&& map[i + 1][j] && (map[i + 1][j] == '0' || map[i
+							+ 1][j] == '2' || map[i + 1][j] == '3')) || (j > 0
+						&& map[i][j - 1] && (map[i][j - 1] == '0' || map[i][j
+							- 1] == '2' || map[i][j - 1] == '3')) || (j < len
+						- 1 && map[i][j + 1] && (map[i][j + 1] == '0'
+							|| map[i][j + 1] == '2' || map[i][j + 1] == '3'))))
 				return (0);
 		}
 	}
@@ -125,10 +104,10 @@ int	check_wall(char **map, int height)
 				j++;
 			}
 		}
-		else if (map[i][0] == '0' || map[i][0] == '2' || map[i][0] == '3' ||
-				 map[i][ft_strlen(map[i]) - 1] == '0' || map[i][ft_strlen(map[i]) - 1] == '2' ||
-				 map[i][ft_strlen(map[i]) - 1] == '3')
-				return (0);
+		else if (map[i][0] == '0' || map[i][0] == '2' || map[i][0] == '3'
+			|| map[i][ft_strlen(map[i]) - 1] == '0' || map[i][ft_strlen(map[i])
+			- 1] == '2' || map[i][ft_strlen(map[i]) - 1] == '3')
+			return (0);
 		i++;
 	}
 	return (1);
@@ -145,8 +124,9 @@ int	check_mur(t_data *data)
 	map = copy_map(data, data->map_data->map, data->map_data->height);
 	if (!map)
 		return (0);
-	flood_fill(map, y, x -1, data);
-	if (!check_wall(map, data->map_data->height) || !check_flood(map, data->map_data->height))
+	flood_fill(map, y, x - 1, data);
+	if (!check_wall(map, data->map_data->height) || !check_flood(map,
+			data->map_data->height))
 	{
 		ft_putstr_fd("Error: The map is not closed!\n", 2);
 		free_map(map);

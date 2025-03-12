@@ -40,7 +40,6 @@ char	*replace_line(char *line, int width)
 	return (new_line);
 }
 
-
 void	replace_map(t_data *data)
 {
 	char	**map;
@@ -60,24 +59,6 @@ void	replace_map(t_data *data)
 	}
 }
 
-void	flood_fill(char **map, int x, int y, t_data *data)
-{
-	int	height = data->map_data->height;
-	int	width = data->map_data->width;
-
-	if (x < 0 || x >= height || y < 0 || y >= width)
-		return;
-	if (map[x][y] == '1' || map[x][y] == 'F')
-		return;
-	// if (map[x][y] != '0')
-	// 	return;
-	map[x][y] = 'F';
-	flood_fill(map, x, y + 1, data);
-	flood_fill(map, x, y - 1, data);
-	flood_fill(map, x + 1, y, data);
-	flood_fill(map, x - 1, y, data);
-}
-
 int	check_flood(char **map, int height)
 {
 	int	i;
@@ -95,8 +76,8 @@ int	check_flood(char **map, int height)
 			{
 				if (j == 0 || j == line_length - 1 || i == 0 || i == height - 1)
 					return (0);
-				if (map[i][j + 1] == '0' || map[i][j - 1] == '0' ||
-					map[i + 1][j] == '0' || map[i - 1][j] == '0')
+				if (map[i][j + 1] == '0' || map[i][j - 1] == '0' || map[i
+					+ 1][j] == '0' || map[i - 1][j] == '0')
 					return (0);
 			}
 		}
@@ -106,7 +87,9 @@ int	check_flood(char **map, int height)
 
 int	check_joueur_extra(char **map, t_data *data)
 {
-	int	i, j, len;
+	int	i;
+	int	j;
+	int	len;
 
 	i = -1;
 	while (map[++i])
@@ -117,18 +100,19 @@ int	check_joueur_extra(char **map, t_data *data)
 		{
 			if (ft_strchr("NSEW", map[i][j]))
 			{
-				if ((i == 0 || i == data->map_data->height - 1 || j == 0 || j >= len - 1) ||
-					(i > 0 && (!map[i - 1] || !map[i - 1][j] || map[i - 1][j] == ' ')) ||
-					(i < data->map_data->height - 1 && (!map[i + 1] || !map[i + 1][j] || map[i + 1][j] == ' ')) ||
-					(j > 0 && (!map[i][j - 1] || map[i][j - 1] == ' ')) ||
-					(j < len - 1 && (!map[i][j + 1] || map[i][j + 1] == ' ')))
+				if ((i == 0 || i == data->map_data->height - 1 || j == 0
+						|| j >= len - 1) || (i > 0 && (!map[i - 1] || !map[i
+								- 1][j] || map[i - 1][j] == ' '))
+					|| (i < data->map_data->height - 1 && (!map[i + 1] || !map[i
+							+ 1][j] || map[i + 1][j] == ' ')) || (j > 0
+						&& (!map[i][j - 1] || map[i][j - 1] == ' ')) || (j < len
+						- 1 && (!map[i][j + 1] || map[i][j + 1] == ' ')))
 					return (0);
 			}
 		}
 	}
 	return (1);
 }
-
 
 int	check_description(t_data *data)
 {

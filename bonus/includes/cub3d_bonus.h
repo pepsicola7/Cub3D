@@ -233,6 +233,17 @@ void				handle_cursor(double xpos, double ypos, void *param);
 
 /*-----------------Rendering-------------------*/
 
+void				draw_textured_vertical_line(t_data *data, t_ray *ray,
+						int x);
+void				set_wall_distance(t_data *data, t_ray *ray,
+						t_floor_ceiling *fc);
+void				init_draw_context(t_data *data, t_ray *ray,
+						t_draw_context *ctx);
+void				draw_ceiling(t_data *data, t_ray *ray, int x,
+						int draw_start);
+void				draw_wall(t_data *data, t_draw_context *ctx, int x);
+void				draw_floor(t_data *data, t_ray *ray, int x, int draw_end);
+
 void				render_raycast(void *param);
 void				render_minimap(t_data *data);
 void				init_door_textures(t_data *data);
@@ -263,4 +274,5 @@ void				direction_ns(t_data *data, char direction);
 void				flood_fill(char **map, int x, int y, t_data *data);
 int					check_flood(char **map, int height);
 void				fill_map(t_data *data, char *line);
+int					help_read_map_2(t_data *data, char **l, int *config_count);
 #endif

@@ -22,6 +22,22 @@ void	free_split(char **arr)
 	free(arr);
 }
 
+void	put_texture(t_data *data, mlx_texture_t *texture, char *line)
+{
+	if (!ft_strncmp(line, "NO ", 3))
+		data->texture->north = texture;
+	if (!ft_strncmp(line, "SO ", 3))
+		data->texture->south = texture;
+	if (!ft_strncmp(line, "WE ", 3))
+		data->texture->west = texture;
+	if (!ft_strncmp(line, "EA ", 3))
+		data->texture->east = texture;
+	if (!ft_strncmp(line, "F ", 2))
+		data->texture->floor = texture;
+	if (!ft_strncmp(line, "C ", 2))
+		data->texture->ceiling = texture;
+}
+
 int	get_texture(char *line, t_data *data)
 {
 	char			**path;
@@ -43,18 +59,7 @@ int	get_texture(char *line, t_data *data)
 		ft_putstr_fd("Error: unable to open texture\n", 2);
 		return (0);
 	}
-	if (!ft_strncmp(line, "NO ", 3))
-		data->texture->north = texture;
-	if (!ft_strncmp(line, "SO ", 3))
-		data->texture->south = texture;
-	if (!ft_strncmp(line, "WE ", 3))
-		data->texture->west = texture;
-	if (!ft_strncmp(line, "EA ", 3))
-		data->texture->east = texture;
-	if (!ft_strncmp(line, "F ", 2))
-		data->texture->floor = texture;
-	if (!ft_strncmp(line, "C ", 2))
-		data->texture->ceiling = texture;
+	put_texture(data, texture, line);
 	return (1);
 }
 

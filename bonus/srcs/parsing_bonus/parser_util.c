@@ -85,22 +85,10 @@ char	**copy_map(t_data *data, char **map, int height)
 	return (map_copy);
 }
 
-void	free_map(char **map)
-{
-	int	i;
-
-	i = 0;
-	while (map[i])
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
-}
-
 void	fill_map(t_data *data, char *line)
 {
 	int	i;
+	int	len;
 
 	i = 0;
 	while (line && ft_strcmp(line, "\n") == 0)
@@ -111,7 +99,7 @@ void	fill_map(t_data *data, char *line)
 	data->map_data->map = ft_calloc(data->map_data->height + 1, sizeof(char *));
 	while (line)
 	{
-		int len = ft_strlen(line);
+		len = ft_strlen(line);
 		if (len > 0 && line[len - 1] == '\n')
 			line[len - 1] = '\0';
 		data->map_data->map[i] = ft_strdup(line);

@@ -80,7 +80,7 @@ int	check_description(t_data *data)
 		return (0);
 	if (!check_espace(map, data))
 		return (0);
-	if (!check_line_vide(map))
+	if (!check_line_vide(data, map))
 		return (0);
 	position_player(data);
 	if (!check_mur(data))

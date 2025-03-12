@@ -69,12 +69,12 @@ int	check_espace(char **map, t_data *data)
 	return (1);
 }
 
-int	check_line_vide(char **map)
+int	check_line_vide(t_data *data, char **map)
 {
 	int	i;
 
 	i = 0;
-	while (map[i])
+	while (map[i] && i < data->map_data->height)
 	{
 		if (map[i][0] == '\0' || ft_strcmp(map[i], "\n") == 0)
 		{

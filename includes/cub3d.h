@@ -233,7 +233,7 @@ void				free_map(char **map);
 int					check_element(char **map);
 int					check_joueur(char **map);
 int					check_espace(char **map, t_data *data);
-int					check_line_vide(char **map);
+int					check_line_vide(t_data *data, char **map);
 int					check_mur(t_data *data);
 void				position_player(t_data *data);
 void				flood_fill(char **map, int x, int y, t_data *data);

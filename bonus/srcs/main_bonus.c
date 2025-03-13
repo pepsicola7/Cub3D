@@ -14,8 +14,25 @@
 
 void	free_data(t_data *data)
 {
+	int	i;
+
+	i = -1;
 	free(data->mlx_data);
 	free(data->player);
+	if (data->texture->north)
+		mlx_delete_texture(data->texture->north);
+	if (data->texture->south)
+		mlx_delete_texture(data->texture->south);
+	if (data->texture->east)
+		mlx_delete_texture(data->texture->east);
+	if (data->texture->west)
+		mlx_delete_texture(data->texture->west);
+	if (data->texture->floor)
+		mlx_delete_texture(data->texture->floor);
+	if (data->texture->ceiling)
+		mlx_delete_texture(data->texture->ceiling);
+	while (++i < NUM_FRAMES && data->texture->doors[i])
+		mlx_delete_texture(data->texture->doors[i]);
 	free(data->texture);
 	free_split(data->map_data->map);
 	free(data->map_data->map_1d);
@@ -25,19 +42,8 @@ void	free_data(t_data *data)
 
 void	exit_program(t_data *data, int status)
 {
-	int	i;
-
-	i = -1;
-	if (data->mlx_data->mlx)
+	if (data && data->mlx_data && data->mlx_data->mlx)
 		mlx_terminate(data->mlx_data->mlx);
-	mlx_delete_texture(data->texture->north);
-	mlx_delete_texture(data->texture->south);
-	mlx_delete_texture(data->texture->east);
-	mlx_delete_texture(data->texture->west);
-	mlx_delete_texture(data->texture->floor);
-	mlx_delete_texture(data->texture->ceiling);
-	while (++i < NUM_FRAMES)
-		mlx_delete_texture(data->texture->doors[i]);
 	free_data(data);
 	exit(status);
 }
@@ -71,7 +77,7 @@ int	main(int ac, char **av)
 {
 	t_data	*data;
 
-	(void)av;
+	data = NULL;
 	if (ac < 2)
 	{
 		ft_putstr_fd("Error: No map file provided\n", 2);
@@ -80,7 +86,7 @@ int	main(int ac, char **av)
 	data = ft_calloc(1, sizeof(t_data));
 	mlx_set_setting(MLX_FULLSCREEN, true);
 	if (!data || !parsing(data, av[1]) || !init_mlx(data))
-		return (1);
+		exit_program(data, 1);
 	mlx_set_cursor_mode(data->mlx_data->mlx, MLX_MOUSE_DISABLED);
 	mlx_set_mouse_pos(data->mlx_data->mlx, data->mlx_data->mlx->width / 2,
 		data->mlx_data->mlx->height / 2);

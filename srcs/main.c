@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/16 15:12:44 by lpolizzi          #+#    #+#             */
-/*   Updated: 2025/03/09 15:18:53 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/13 16:53:46 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,11 @@ void	render_all(void *vdata)
 	ft_swap_pointers((void **)&data->mlx_data->img,
 		(void **)&data->mlx_data->img_buffer);
 }
-
+/*
+1. git stash
+2. git pull
+3. git stash pop
+*/
 int	main(int ac, char **av)
 {
 	t_data	*data;

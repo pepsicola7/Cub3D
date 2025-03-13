@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/03/13 15:16:01 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/13 16:42:34 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ int	read_map_2(t_data *data, char *filename)
 	data->map_data->map_fd = open(filename, O_RDONLY);
 	line = get_next_line(data->map_data->map_fd);
 	if (!help_read_map_2(data, &line, &config_count))
+	{
+		close(data->map_data->map_fd);
 		return (0);
+	}
 	fill_map(data, line);
 	close(data->map_data->map_fd);
 	if (!check_description(data))

@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:15:34 by peli              #+#    #+#             */
-/*   Updated: 2025/03/12 15:06:41 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/13 16:40:57 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	get_color(char *line, t_data *data)
 	str = ft_split(line, ',');
 	if (!check_is_number(str))
 	{
-		ft_putstr_fd("Error: Color format is incorrect.", 2);
+		ft_putstr_fd("Error: Color format is incorrect.\n", 2);
 		return (free_split(str), 0);
 	}
 	r = ft_atoi(str[0] + 2);
@@ -93,7 +93,7 @@ int	get_color(char *line, t_data *data)
 	b = ft_atoi(str[2]);
 	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
 	{
-		ft_putstr_fd("Error: Color value is incorrect.", 2);
+		ft_putstr_fd("Error: Color value is incorrect.\n", 2);
 		return (free_split(str), 0);
 	}
 	if (ft_strncmp(line, "F ", 2) == 0)
@@ -117,12 +117,12 @@ int	read_map_1(t_data *data, char *filename)
 			|| ft_strncmp(line, "EA ", 3) == 0)
 		{
 			if (!get_texture(line, data))
-				return (free(line), 0);
+				return (free(line), close(data->map_data->map_fd), 0);
 		}
 		if (ft_strncmp(line, "F ", 2) == 0 || ft_strncmp(line, "C ", 2) == 0)
 		{
 			if (!get_color(line, data))
-				return (free(line), 0);
+				return (free(line), close(data->map_data->map_fd), 0);
 		}
 		free (line);
 		line = get_next_line(data->map_data->map_fd);

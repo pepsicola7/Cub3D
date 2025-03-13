@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/03/13 15:15:48 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/13 15:59:21 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,9 +113,12 @@ int	parsing(t_data *data, char *filename)
 		|| !data->texture->north || !data->texture->south
 		|| !data->texture->west || !data->texture->floor
 		|| !data->texture->ceiling)
-		return (0);
+		return (ft_putstr_fd("Error: invalid map\n", 2), 0);
 	if (!read_map_2(data, filename))
+	{
+		ft_putstr_fd("Error: invalid map\n", 2);
 		return (0);
+	}
 	put_map_1d(data);
 	init_door_textures(data);
 	return (1);

@@ -12,6 +12,11 @@
 
 #include "cub3d_bonus.h"
 
+int	is_invalid_adjacent(char c)
+{
+	return (c == '0' || c == '2' || c == '3');
+}
+
 int	get_map_value(t_data *data, int x, int y)
 {
 	if (x < 0 || x >= data->map_data->width || y < 0

@@ -54,16 +54,17 @@ int	check_espace(char **map, t_data *data)
 		j = -1;
 		while (map[i][++j])
 		{
-			if (map[i][j] == ' ' && ((i > 0 && map[i - 1][j] && (map[i
-							- 1][j] == '0' || map[i - 1][j] == '2' || map[i
-							- 1][j] == '3')) || (i < data->map_data->height - 1
-						&& map[i + 1][j] && (map[i + 1][j] == '0' || map[i
-							+ 1][j] == '2' || map[i + 1][j] == '3')) || (j > 0
-						&& map[i][j - 1] && (map[i][j - 1] == '0' || map[i][j
-							- 1] == '2' || map[i][j - 1] == '3')) || (j < len
-						- 1 && map[i][j + 1] && (map[i][j + 1] == '0'
-							|| map[i][j + 1] == '2' || map[i][j + 1] == '3'))))
-				return (0);
+			if (map[i][j] == ' ')
+			{
+				if ((i > 0 && j < (int)ft_strlen(map[i - 1])
+						&& is_invalid_adjacent(map[i - 1][j]))
+					|| (i < data->map_data->height - 1
+						&& j < (int)ft_strlen(map[i + 1])
+						&& is_invalid_adjacent(map[i + 1][j])) || (j > 0
+						&& is_invalid_adjacent(map[i][j - 1])) || (j < len - 1
+						&& is_invalid_adjacent(map[i][j + 1])))
+					return (0);
+			}
 		}
 	}
 	return (1);

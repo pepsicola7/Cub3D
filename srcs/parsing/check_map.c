@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:38:55 by peli              #+#    #+#             */
-/*   Updated: 2025/03/12 15:04:14 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/13 15:14:29 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,18 @@ int	check_espace(char **map, t_data *data)
 int	check_line_vide(t_data *data, char **map)
 {
 	int	i;
+	int	last_non_empty;
 
 	i = 0;
+	last_non_empty = -1;
 	while (map[i] && i < data->map_data->height)
+	{
+		if (map[i][0] != '\0' && ft_strcmp(map[i], "\n") != 0)
+			last_non_empty = i;
+		i++;
+	}
+	i = 0;
+	while (i <= last_non_empty)
 	{
 		if (map[i][0] == '\0' || ft_strcmp(map[i], "\n") == 0)
 		{

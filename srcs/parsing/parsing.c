@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 14:43:10 by peli              #+#    #+#             */
-/*   Updated: 2025/03/12 17:53:00 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/13 15:16:01 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,7 @@ int	parsing(t_data *data, char *filename)
 		|| !data->texture->ceiling_color)
 		return (0);
 	if (!read_map_2(data, filename))
-	{
-		ft_putstr_fd("Error: invalid map\n", 2);
 		return (0);
-	}
 	put_map_1d(data);
 	return (1);
 }

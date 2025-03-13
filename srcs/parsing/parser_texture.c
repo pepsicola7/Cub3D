@@ -17,7 +17,7 @@ void	free_split(char **arr)
 	int	i;
 
 	i = 0;
-	while (arr[i])
+	while (arr && arr[i])
 		free(arr[i++]);
 	free(arr);
 }
@@ -32,7 +32,7 @@ int	get_texture(char *line, t_data *data)
 	if (!path || !path[1] || path[2])
 	{
 		ft_putstr_fd("Error: missing path for texture\n", 2);
-		return (0);
+		return (free_split(path), 0);
 	}
 	path_texture = ft_strtrim(path[1], "\n");
 	texture = mlx_load_png(path_texture);
@@ -84,14 +84,17 @@ int	get_color(char *line, t_data *data)
 
 	str = ft_split(line, ',');
 	if (!check_is_number(str))
-		return (ft_putstr_fd("Error: Color format is incorrect.", 2), 0);
+	{
+		ft_putstr_fd("Error: Color format is incorrect.", 2);
+		return (free_split(str), 0);
+	}
 	r = ft_atoi(str[0] + 2);
 	g = ft_atoi(str[1]);
 	b = ft_atoi(str[2]);
 	if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255)
 	{
-		free_split(str);
-		return (ft_putstr_fd("Error: RGB value is incorrect.", 2), 0);
+		ft_putstr_fd("Error: Color value is incorrect.", 2);
+		return (free_split(str), 0);
 	}
 	if (ft_strncmp(line, "F ", 2) == 0)
 		data->texture->floor_color = get_rgba(r, g, b, 255);

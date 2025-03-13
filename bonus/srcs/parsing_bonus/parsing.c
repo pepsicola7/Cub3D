@@ -109,8 +109,8 @@ int	parsing(t_data *data, char *filename)
 		return (0);
 	}
 	count_line(data, filename);
-	read_map_1(data, filename);
-	if (!data->texture->east || !data->texture->north || !data->texture->south
+	if (!read_map_1(data, filename) || !data->texture->east
+		|| !data->texture->north || !data->texture->south
 		|| !data->texture->west || !data->texture->floor
 		|| !data->texture->ceiling)
 		return (0);

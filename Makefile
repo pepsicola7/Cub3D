@@ -7,7 +7,7 @@ YELLOW	:= \033[1;33m
 RESET 	:= \033[0m
 
 NAME    := cub3d
-CFLAGS  := -Wall -Wextra -Werror -O3 -ffast-math -g3 -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer #-fsanitize=address,leak,undefined
+CFLAGS  := -Wall -Wextra -Werror -O3 -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer -g3 -fsanitize=address,leak,undefined
 LIBMLX  := MLX42
 LIBFT   := libft
 
@@ -62,7 +62,7 @@ bonus: libft libmlx $(OBJS_BONUS)
 
 dev: fclean libft libmlx bonus
 	@echo "$(CYAN)Compiling $(NAME) with sanitizers (bonus included)...$(RESET)"
-	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBS) -fsanitize=address,leak,undefined -g3 $(HEADERS_BONUS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS_BONUS) $(LIBS) $(HEADERS_BONUS) -o $(NAME)
 	@echo "$(GREEN)$(NAME) compiled successfully!$(RESET)"
 	@echo "$(RED)Development mode enabled!$(RESET)"
 

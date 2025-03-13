@@ -16,6 +16,14 @@ void	free_data(t_data *data)
 {
 	free(data->mlx_data);
 	free(data->player);
+	if (data->texture->north)
+		mlx_delete_texture(data->texture->north);
+	if (data->texture->south)
+		mlx_delete_texture(data->texture->south);
+	if (data->texture->east)
+		mlx_delete_texture(data->texture->east);
+	if (data->texture->west)
+		mlx_delete_texture(data->texture->west);
 	free(data->texture);
 	free_split(data->map_data->map);
 	free(data->map_data->map_1d);
@@ -27,10 +35,6 @@ void	exit_program(t_data *data, int status)
 {
 	if (data->mlx_data->mlx)
 		mlx_terminate(data->mlx_data->mlx);
-	mlx_delete_texture(data->texture->north);
-	mlx_delete_texture(data->texture->south);
-	mlx_delete_texture(data->texture->east);
-	mlx_delete_texture(data->texture->west);
 	free_data(data);
 	exit(status);
 }
@@ -53,9 +57,6 @@ void	render_all(void *vdata)
 	handle_strafe(data);
 	handle_rotation(data);
 	handle_camera_tilt(data);
-	if (!data->mlx_data->img_buffer)
-		data->mlx_data->img_buffer = mlx_new_image(data->mlx_data->mlx,
-				data->mlx_data->mlx->width, data->mlx_data->mlx->height);
 	render_raycast(data);
 	ft_swap_pointers((void **)&data->mlx_data->img,
 		(void **)&data->mlx_data->img_buffer);

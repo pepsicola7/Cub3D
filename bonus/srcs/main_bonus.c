@@ -34,6 +34,7 @@ void	free_data(t_data *data)
 	while (++i < NUM_FRAMES && data->texture->doors[i])
 		mlx_delete_texture(data->texture->doors[i]);
 	free(data->texture);
+	close(data->map_data->map_fd);
 	free_split(data->map_data->map);
 	free(data->map_data->map_1d);
 	free(data->map_data);

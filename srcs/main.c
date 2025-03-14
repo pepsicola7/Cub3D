@@ -25,6 +25,7 @@ void	free_data(t_data *data)
 	if (data->texture->west)
 		mlx_delete_texture(data->texture->west);
 	free(data->texture);
+	close(data->map_data->map_fd);
 	free_split(data->map_data->map);
 	free(data->map_data->map_1d);
 	free(data->map_data);

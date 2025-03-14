@@ -70,6 +70,7 @@ void	count_hors_map(t_data *data, char *filename)
 	line = get_next_line(data->map_data->map_fd);
 	count_lines(data, &line, &count);
 	data->map_data->height = data->map_data->ligne_total - count;
+	close(data->map_data->map_fd);
 }
 
 void	put_map_1d(t_data *data)

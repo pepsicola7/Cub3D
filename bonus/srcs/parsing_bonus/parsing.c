@@ -21,7 +21,7 @@ int	read_map_2(t_data *data, char *filename)
 	data->map_data->map_fd = open(filename, O_RDONLY);
 	line = get_next_line(data->map_data->map_fd);
 	if (!help_read_map_2(data, &line, &config_count))
-		return (0);
+		return (close(data->map_data->map_fd), 0);
 	fill_map(data, line);
 	close(data->map_data->map_fd);
 	if (!check_description(data))
@@ -67,6 +67,7 @@ void	count_hors_map(t_data *data, char *filename)
 	line = get_next_line(data->map_data->map_fd);
 	count_lines(data, &line, &count);
 	data->map_data->height = data->map_data->ligne_total - count;
+	close(data->map_data->map_fd);
 }
 
 void	put_map_1d(t_data *data)
@@ -106,7 +107,7 @@ int	parsing(t_data *data, char *filename)
 	if (data->map_data->map_fd < 0)
 	{
 		ft_putstr_fd("Error: map file not found\n", 2);
-		return (0);
+		return (close(data->map_data->map_fd), 0);
 	}
 	count_line(data, filename);
 	if (!read_map_1(data, filename) || !data->texture->east

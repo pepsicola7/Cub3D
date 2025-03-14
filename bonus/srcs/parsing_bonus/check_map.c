@@ -134,7 +134,7 @@ int	check_mur(t_data *data)
 	map = copy_map(data, data->map_data->map, data->map_data->height);
 	if (!map)
 		return (0);
-	flood_fill(map, y, x - 1, data);
+	flood_fill(map, y, x, data);
 	if (!check_wall(map, data->map_data->height) || !check_flood(map,
 			data->map_data->height))
 	{

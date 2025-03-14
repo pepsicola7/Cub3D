@@ -26,7 +26,7 @@ int	check_joueur(char **map)
 		while (map[i][j] != '\0' && map[i][j] != '\n')
 		{
 			if (map[i][j] == 'E' || map[i][j] == 'S' || map[i][j] == 'N'
-			|| map[i][j] == 'W')
+				|| map[i][j] == 'W')
 				player_count++;
 			j++;
 		}
@@ -57,11 +57,11 @@ int	check_espace(char **map, t_data *data)
 			if (map[i][j] == ' ')
 			{
 				if ((i > 0 && map[i - 1] && j < (int)ft_strlen(map[i - 1])
-						&& map[i - 1][j] == '0') ||
-					(i < data->map_data->height - 1 && map[i + 1]
-					&& j < (int)ft_strlen(map[i + 1]) && map[i + 1][j] == '0')
-					|| (j > 0 && map[i][j - 1] && map[i][j - 1] == '0')
-					|| (j < len - 1 && map[i][j + 1] && map[i][j + 1] == '0'))
+						&& map[i - 1][j] == '0') || (i < data->map_data->height
+						- 1 && map[i + 1] && j < (int)ft_strlen(map[i + 1])
+						&& map[i + 1][j] == '0') || (j > 0 && map[i][j - 1]
+						&& map[i][j - 1] == '0') || (j < len - 1 && map[i][j
+						+ 1] && map[i][j + 1] == '0'))
 					return (0);
 			}
 		}
@@ -131,9 +131,9 @@ int	check_mur(t_data *data)
 	map = copy_map(data, data->map_data->map, data->map_data->height);
 	if (!map)
 		return (0);
-	flood_fill(map, y, x -1, data);
-	if (!check_wall(map, data->map_data->height)
-		|| !check_flood(map, data->map_data->height))
+	flood_fill(map, y, x, data);
+	if (!check_wall(map, data->map_data->height) || !check_flood(map,
+			data->map_data->height))
 	{
 		ft_putstr_fd("Error: The map is not closed!\n", 2);
 		free_map(map);

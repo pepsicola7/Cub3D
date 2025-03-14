@@ -68,31 +68,6 @@ void	free_map(char **map)
 	free(map);
 }
 
-int	check_zero(char **map)
-{
-	size_t	i;
-	int		j;
-
-	i = 1;
-	while (map[i])
-	{
-		if (i == ft_strlen(map[i - 1]))
-			i++;
-		if (ft_strlen(map[i]) > ft_strlen(map[i - 1]))
-		{
-			j = ft_strlen(map[i - 1]);
-			while (map[i][j])
-			{
-				if (map[i][j] == '0')
-					return (printf("Error: Map is not closed\n"), 0);
-				j++;
-			}
-		}
-		i++;
-	}
-	return (1);
-}
-
 int	check_description(t_data *data)
 {
 	char	**map;

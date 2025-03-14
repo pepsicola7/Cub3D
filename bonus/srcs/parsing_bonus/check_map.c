@@ -63,7 +63,7 @@ int	check_espace(char **map, t_data *data)
 						&& is_invalid_adjacent(map[i + 1][j])) || (j > 0
 						&& is_invalid_adjacent(map[i][j - 1])) || (j < len - 1
 						&& is_invalid_adjacent(map[i][j + 1])))
-					return (printf("Error : Espace invalide\n"), 0);
+					return (ft_putstr_fd("Error : Espace invalide\n", 2), 0);
 			}
 		}
 	}

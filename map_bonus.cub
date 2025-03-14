@@ -3,8 +3,8 @@ SO ./textures/south.png
 EA ./textures/east.png
 WE ./textures/west.png
 
-F      220,100,240
-C 255,0,0
+F ./textures/floor.png
+C ./textures/ceiling.png
 
         1111111111111111111111111
         1001000000110000100000001

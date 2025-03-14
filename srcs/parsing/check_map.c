@@ -62,7 +62,7 @@ int	check_espace(char **map, t_data *data)
 						&& map[i + 1][j] == '0') || (j > 0 && map[i][j - 1]
 						&& map[i][j - 1] == '0') || (j < len - 1 && map[i][j
 						+ 1] && map[i][j + 1] == '0'))
-					return (printf("Error : Espace invalide\n"), 0);
+					return (ft_putstr_fd("Error : Espace invalide\n", 2), 0);
 			}
 		}
 	}
@@ -103,7 +103,6 @@ int	check_wall(char **map, int height)
 	i = 0;
 	while (map[i])
 	{
-		printf ("%s\n", map[i]);
 		j = 0;
 		if (i == 0 || i == height - 1)
 		{

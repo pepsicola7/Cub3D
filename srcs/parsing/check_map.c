@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:38:55 by peli              #+#    #+#             */
-/*   Updated: 2025/03/13 15:14:29 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/14 15:49:40 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	check_espace(char **map, t_data *data)
 						&& map[i + 1][j] == '0') || (j > 0 && map[i][j - 1]
 						&& map[i][j - 1] == '0') || (j < len - 1 && map[i][j
 						+ 1] && map[i][j + 1] == '0'))
-					return (0);
+					return (printf("Error : Espace invalide\n"), 0);
 			}
 		}
 	}

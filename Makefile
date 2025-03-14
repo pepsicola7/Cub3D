@@ -7,7 +7,7 @@ YELLOW	:= \033[1;33m
 RESET 	:= \033[0m
 
 NAME    := cub3d
-CFLAGS  := -Wall -Wextra -Werror -O3 -ffast-math -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer -g3 #-fsanitize=address,leak,undefined
+CFLAGS  := -Wall -Wextra -Werror -O3 -ffast-math -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer #-g3 -fsanitize=address,leak,undefined
 LIBMLX  := MLX42
 LIBFT   := libft
 
@@ -34,7 +34,7 @@ SRCS_BONUS := $(addprefix $(BONUS_DIR), $(addsuffix .c, \
 OBJS    := $(SRCS:.c=.o)
 OBJS_BONUS := $(SRCS_BONUS:.c=.o)
 
-CC      := clang
+CC      := cc
 
 all: libft libmlx $(NAME)
 

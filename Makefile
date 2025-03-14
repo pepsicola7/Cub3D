@@ -7,7 +7,7 @@ YELLOW	:= \033[1;33m
 RESET 	:= \033[0m
 
 NAME    := cub3d
-CFLAGS  := -Wall -Wextra -Werror -O3 -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer -g3 #-fsanitize=address,leak,undefined
+CFLAGS  := -Wall -Wextra -Werror -O3 -ffast-math -march=native -flto -fno-math-errno -funroll-loops -fno-stack-protector -fomit-frame-pointer -g3 #-fsanitize=address,leak,undefined
 LIBMLX  := MLX42
 LIBFT   := libft
 
@@ -15,8 +15,21 @@ HEADERS := -I./includes -I $(LIBMLX)/include
 HEADERS_BONUS := -I./bonus/includes -I $(LIBMLX)/include
 LIBS    := $(LIBFT)/libft.a $(LIBMLX)/build/libmlx42.a -ldl -lglfw -lm
 
-SRCS    := srcs/init.c srcs/cast_ray.c srcs/render_utils.c srcs/main.c srcs/draw_vertical_line.c srcs/draw_wall.c srcs/movements.c srcs/map_and_color_utils.c srcs/handle_keys.c srcs/parsing/parsing.c srcs/parsing/parser_texture.c srcs/parsing/parser_map.c srcs/parsing/printf.c srcs/parsing/check_map.c srcs/parsing/parser_util.c srcs/parsing/position_player.c
-SRCS_BONUS := bonus/srcs/camera_bonus.c bonus/srcs/cast_ray_bonus.c bonus/srcs/draw_ceiling_bonus.c bonus/srcs/draw_floor_bonus.c bonus/srcs/draw_vertical_line_bonus.c bonus/srcs/draw_wall_bonus.c bonus/srcs/handle_keypress_bonus.c bonus/srcs/init_bonus.c bonus/srcs/main_bonus.c bonus/srcs/map_utils_bonus.c bonus/srcs/movements_bonus.c bonus/srcs/render_utils_bonus.c bonus/srcs/minimap_bonus.c bonus/srcs/sprites_bonus.c bonus/srcs/parsing_bonus/check_map.c  bonus/srcs/parsing_bonus/parser_map.c  bonus/srcs/parsing_bonus/parser_texture.c  bonus/srcs/parsing_bonus/parser_util.c  bonus/srcs/parsing_bonus/parsing.c  bonus/srcs/parsing_bonus/position_player.c  bonus/srcs/parsing_bonus/printf.c
+SRC_DIR     := srcs/
+PARSING_DIR := srcs/parsing/
+BONUS_DIR   := bonus/srcs/
+BONUS_PARSING_DIR := bonus/srcs/parsing_bonus/
+
+SRCS := $(addprefix $(SRC_DIR), $(addsuffix .c, \
+        init cast_ray render_utils main draw_vertical_line draw_wall movements map_and_color_utils handle_keys)) \
+        $(addprefix $(PARSING_DIR), $(addsuffix .c, \
+        parsing parser_texture parser_map utils check_map parser_util position_player))
+
+SRCS_BONUS := $(addprefix $(BONUS_DIR), $(addsuffix .c, \
+        camera_bonus cast_ray_bonus draw_ceiling_bonus draw_floor_bonus draw_vertical_line_bonus draw_wall_bonus \
+        handle_keypress_bonus init_bonus main_bonus map_utils_bonus movements_bonus render_utils_bonus minimap_bonus sprites_bonus)) \
+        $(addprefix $(BONUS_PARSING_DIR), $(addsuffix .c, \
+        check_map parser_map parser_texture parser_util parsing position_player utils))
 
 OBJS    := $(SRCS:.c=.o)
 OBJS_BONUS := $(SRCS_BONUS:.c=.o)

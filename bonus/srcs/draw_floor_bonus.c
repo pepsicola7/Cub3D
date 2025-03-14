@@ -42,6 +42,9 @@ void	calculate_floor_tex_coords(t_data *data, t_floor_ceiling *fc, int y)
 
 void	draw_floor_pixel(t_data *data, t_floor_ceiling *fc, int x, int y)
 {
+	if (fc->tex_x < 0 || (uint32_t)fc->tex_x >= data->texture->floor->width
+		|| fc->tex_y < 0 || (uint32_t)fc->tex_y >= data->texture->floor->height)
+		return ;
 	fc->pixel = data->texture->floor->pixels + (fc->tex_y
 			* data->texture->floor->width + fc->tex_x)
 		* data->texture->floor->bytes_per_pixel;

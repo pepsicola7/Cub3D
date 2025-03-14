@@ -43,6 +43,10 @@ void	calculate_ceiling_tex_coords(t_data *data, t_floor_ceiling *fc, int y)
 
 void	draw_ceiling_pixel(t_data *data, t_floor_ceiling *fc, int x, int y)
 {
+	if (fc->tex_x < 0 || (uint32_t)fc->tex_x >= data->texture->ceiling->width
+		|| fc->tex_y < 0
+		|| (uint32_t)fc->tex_y >= data->texture->ceiling->height)
+		return ;
 	fc->pixel = data->texture->ceiling->pixels + (fc->tex_y
 			* data->texture->ceiling->width + fc->tex_x)
 		* data->texture->ceiling->bytes_per_pixel;

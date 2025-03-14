@@ -12,28 +12,31 @@
 
 #include "cub3d.h"
 
-int	check_zero(char **map)
+int	check_zero(t_data *data)
 {
-	size_t	i;
+	char	**map;
+	int		i;
 	int		j;
 
-	i = 1;
-	while (map[i])
+	i = -1;
+	map = copy_map(data, data->map_data->map, data->map_data->height);
+	while (map[++i])
 	{
-		if (i == ft_strlen(map[i - 1]))
-			i++;
-		if (ft_strlen(map[i]) > ft_strlen(map[i - 1]))
+		j = -1;
+		while (map[i][++j])
 		{
-			j = ft_strlen(map[i - 1]);
-			while (map[i][j])
+			if (map[i][j] == '0')
 			{
-				if (map[i][j] == '0')
-					return (ft_putstr_fd("Error: Map is not closed\n", 2), 0);
-				j++;
+				if ((i > 0 && map[i - 1][j] == ' ') || (map[i + 1] && map[i
+						+ 1][j] == ' '))
+				{
+					ft_putstr_fd("Error: Map is not closed\n", 2);
+					return (free_split(map), 0);
+				}
 			}
 		}
-		i++;
 	}
+	free_split(map);
 	return (1);
 }
 
@@ -88,8 +91,8 @@ void	position_player(t_data *data)
 		j = -1;
 		while (map[i][++j])
 		{
-			if (map[i][j] == 'N' || map[i][j] == 'S'
-				|| map[i][j] == 'E' || map[i][j] == 'W')
+			if (map[i][j] == 'N' || map[i][j] == 'S' || map[i][j] == 'E'
+				|| map[i][j] == 'W')
 			{
 				data->player->pos.y = i + 0.5;
 				data->player->pos.x = j + 0.5;

@@ -276,6 +276,6 @@ int					check_flood(char **map, int height);
 void				fill_map(t_data *data, char *line);
 int					help_read_map_2(t_data *data, char **l, int *config_count);
 int					is_invalid_adjacent(char c);
-int					check_zero(char **map);
+int					check_zero(t_data *data);
 
 #endif

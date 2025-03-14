@@ -244,6 +244,6 @@ void				fill_map(t_data *data, char *line);
 int					check_joueur_extra(char **map, t_data *data);
 void				replace_map(t_data *data);
 int					help_read_map_2(t_data *data, char **l, int *config_count);
-int					check_zero(char **map);
+int					check_zero(t_data *data);
 
 #endif

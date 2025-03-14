@@ -133,7 +133,7 @@ int	check_description(t_data *data)
 		return (0);
 	if (!check_joueur_extra(map, data))
 		return (0);
-	if (!check_zero(map))
+	if (!check_zero(data))
 		return (0);
 	replace_map(data);
 	return (1);

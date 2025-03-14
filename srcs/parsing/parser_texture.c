@@ -6,7 +6,7 @@
 /*   By: peli <peli@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:15:34 by peli              #+#    #+#             */
-/*   Updated: 2025/03/13 16:40:57 by peli             ###   ########.fr       */
+/*   Updated: 2025/03/14 16:34:01 by peli             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,14 @@ int	check_is_number(char **str)
 	{
 		j = 0;
 		if (i == 0)
-			j += 2;
+		{
+			j++;
+			while (str[i][j] == ' ')
+				j++;
+		}
+		else
+			while (str[i][j] == ' ')
+				j++;
 		while (str[i][j])
 		{
 			if (ft_isdigit(str[i][j] - '0') || str[i][j] == ' ')

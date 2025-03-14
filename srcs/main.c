@@ -61,11 +61,7 @@ void	render_all(void *vdata)
 	ft_swap_pointers((void **)&data->mlx_data->img,
 		(void **)&data->mlx_data->img_buffer);
 }
-/*
-1. git stash
-2. git pull
-3. git stash pop
-*/
+
 int	main(int ac, char **av)
 {
 	t_data	*data;

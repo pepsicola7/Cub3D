@@ -32,9 +32,12 @@ mlx_texture_t	*get_wall_texture(t_data *data, t_ray *ray)
 	}
 }
 
-void	init_draw_context(t_data *data, t_ray *ray, t_draw_context *ctx)
+void	calculate_draw_properties(t_data *data, t_ray *ray, t_draw_context *ctx)
 {
-	ctx->line_height = (int)(data->mlx_data->mlx->height / ray->perp_wall_dist);
+	if (ray->perp_wall_dist <= 0)
+		ctx->line_height = data->mlx_data->mlx->height;
+	else
+		ctx->line_height = (data->mlx_data->mlx->height / ray->perp_wall_dist);
 	ctx->draw_start = (data->mlx_data->mlx->height / 2) - (ctx->line_height / 2)
 		+ data->player->camera_y_offset;
 	ctx->draw_end = (data->mlx_data->mlx->height / 2) + (ctx->line_height / 2)
@@ -48,11 +51,18 @@ void	init_draw_context(t_data *data, t_ray *ray, t_draw_context *ctx)
 		ctx->wall_x = data->player->pos.y + ray->perp_wall_dist * ray->dir.y;
 	else
 		ctx->wall_x = data->player->pos.x + ray->perp_wall_dist * ray->dir.x;
+	if (!isfinite(ctx->wall_x))
+		ctx->wall_x = 0;
 	ctx->wall_x -= floor(ctx->wall_x);
 	ctx->tex_x = (int)(ctx->wall_x * ctx->wall_texture->width);
 	if ((ray->side == 0 && ray->dir.x > 0) || (ray->side == 1
 			&& ray->dir.y < 0))
 		ctx->tex_x = ctx->wall_texture->width - ctx->tex_x - 1;
+}
+
+void	init_draw_context(t_data *data, t_ray *ray, t_draw_context *ctx)
+{
+	calculate_draw_properties(data, ray, ctx);
 	ctx->step = (float)ctx->wall_texture->height / ctx->line_height;
 	ctx->tex_pos = (ctx->draw_start - data->player->camera_y_offset
 			- data->mlx_data->mlx->height / 2 + ctx->line_height / 2)

@@ -36,4 +36,4 @@ It’s a **team project**, and I mainly worked on the **parsing** of configurati
 ## 👥 Team
 This project was developed in collaboration with:  
 - [Peiqi](https://github.com/pepsicola7) – Parsing  
-- [Teammate](https://github.com/LeoPolizzi) – Rendering, game logic
+- [Leo](https://github.com/LeoPolizzi) – Rendering, game logic
